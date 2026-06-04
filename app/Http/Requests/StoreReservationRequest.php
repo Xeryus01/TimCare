@@ -13,6 +13,15 @@ class StoreReservationRequest extends FormRequest
 
     public function rules(): array
     {
+        $user = $this->user();
+
+        $startRule = 'required|regex:/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2})?$/';
+
+        // Only enforce future dates for non-admin and non-teknisi users
+        if (! $user || ! $user->hasAnyRole(['Admin', 'Teknisi'])) {
+            $startRule .= '|after:now';
+        }
+
         return [
             'room_name' => 'required|string|max:100',
             'team_name' => 'nullable|string|max:100',
@@ -20,7 +29,7 @@ class StoreReservationRequest extends FormRequest
             'participants_count' => 'nullable|integer|min:1',
             'operator_needed' => 'nullable|boolean',
             'breakroom_needed' => 'nullable|boolean',
-            'start_time_local' => 'required|regex:/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2})?$/|after:now',
+            'start_time_local' => $startRule,
             'end_time_local' => 'required|regex:/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2})?$/',
             'nota_dinas' => 'required|file|mimes:pdf|max:5120', // 5MB max
         ];
@@ -57,8 +66,12 @@ class StoreReservationRequest extends FormRequest
             'room_name.required' => 'Nama ruang harus diisi',
             'purpose.required' => 'Tujuan reservasi harus diisi',
             'start_time.required' => 'Waktu mulai harus diisi',
+            'start_time_local.required' => 'Waktu mulai harus diisi',
             'start_time.after' => 'Waktu mulai harus di masa depan',
+            'start_time_local.after' => 'Waktu mulai harus di masa depan',
+            'start_time_local.regex' => 'Format waktu mulai tidak valid',
             'end_time.after' => 'Waktu selesai harus setelah waktu mulai',
+            'end_time_local.regex' => 'Format waktu selesai tidak valid',
             'nota_dinas.required' => 'Nota dinas dalam format PDF harus diunggah',
             'nota_dinas.file' => 'Nota dinas harus berupa file',
             'nota_dinas.mimes' => 'Nota dinas harus berformat PDF',
