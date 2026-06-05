@@ -106,18 +106,18 @@
                     <div class="text-center mb-4">
                         <p class="text-xs font-semibold text-gray-200 uppercase tracking-widest">Tim Piket Hari Ini</p>
                     </div>
-                    <div class="flex gap-2 sm:gap-3 justify-center">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                         @foreach($piketData as $item)
                             <?php 
                                 $colors = $colorMap[$item['nama']] ?? ['dot' => 'bg-indigo-400', 'accent' => 'from-indigo-400 to-indigo-500'];
                             ?>
-                            <div class="group relative flex-1 max-w-xs">
+                            <div class="group relative w-full">
                                 <div class="absolute inset-0 bg-gradient-to-r {{ $colors['accent'] }} rounded-md blur opacity-20 group-hover:opacity-40 transition-all duration-300"></div>
-                                <div class="relative bg-white/5 backdrop-blur-sm border border-white/20 rounded-md px-3 py-3 sm:px-4 sm:py-4 hover:border-white/40 hover:bg-white/10 transition-all duration-300 flex flex-col items-center gap-2">
+                                <div class="relative bg-white/5 backdrop-blur-sm border border-white/20 rounded-md px-4 py-4 hover:border-white/40 hover:bg-white/10 transition-all duration-300 flex flex-col items-center gap-2">
                                     <div class="h-2 w-2 {{ $colors['dot'] }} rounded-full"></div>
                                     <div class="text-center w-full min-w-0">
-                                        <p class="text-[10px] sm:text-xs text-gray-300 font-medium uppercase tracking-wider">{{ $item['lokasi'] }}</p>
-                                        <p class="text-xs sm:text-sm font-bold text-white truncate" title="{{ $item['nama'] }}">
+                                        <p class="text-xs text-gray-300 font-medium uppercase tracking-wider">{{ $item['lokasi'] }}</p>
+                                        <p class="text-sm font-bold text-white truncate" title="{{ $item['nama'] }}">
                                             {{ $item['nama'] }}
                                         </p>
                                     </div>
