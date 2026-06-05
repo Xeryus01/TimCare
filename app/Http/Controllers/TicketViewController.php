@@ -217,6 +217,11 @@ class TicketViewController extends Controller
             abort(403);
         }
 
+        if (! $user->hasAnyRole(['Admin', 'Teknisi'])
+            && in_array($ticket->status, [Ticket::STATUS_SOLVED, Ticket::STATUS_SOLVED_WITH_NOTES], true)) {
+            abort(403, 'Tiket yang sudah selesai tidak dapat dikomentari kembali oleh pemohon.');
+        }
+
         $data = $request->validate([
             'message' => 'required|string',
             'status' => [

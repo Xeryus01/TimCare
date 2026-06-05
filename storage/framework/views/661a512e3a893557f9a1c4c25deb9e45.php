@@ -162,7 +162,10 @@
                         <?php endif; ?>
                     </div>
 
-                    <?php if(auth()->user()->hasAnyRole(['Admin','Teknisi']) || auth()->id() === $ticket->requester_id): ?>
+                    <?php if(
+                        auth()->user()->hasAnyRole(['Admin','Teknisi']) ||
+                        (auth()->id() === $ticket->requester_id && ! in_array($ticket->status, [\App\Models\Ticket::STATUS_SOLVED, \App\Models\Ticket::STATUS_SOLVED_WITH_NOTES], true))
+                    ): ?>
                     <form method="POST" action="<?php echo e(route('tickets.comment', $ticket)); ?>" enctype="multipart/form-data" class="mt-5 space-y-4 rounded-xl bg-gray-50 p-4 dark:bg-white/5">
                         <?php echo csrf_field(); ?>
                         <div>
