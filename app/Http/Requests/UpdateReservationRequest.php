@@ -37,6 +37,16 @@ class UpdateReservationRequest extends FormRequest
             'zoom_record_link' => 'nullable|url|max:255',
             'notes' => 'nullable|string|max:2000',
             'approver_id' => 'nullable|integer|exists:users,id',
+            'nota_dinas' => 'nullable|file|mimes:pdf|max:1024',
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'nota_dinas.file' => 'Nota dinas harus berupa file.',
+            'nota_dinas.mimes' => 'Nota dinas harus berformat PDF.',
+            'nota_dinas.max' => 'Ukuran nota dinas maksimal 1MB.',
         ];
     }
 
@@ -90,18 +100,7 @@ class UpdateReservationRequest extends FormRequest
                 $validator->errors()->add('approver_id', 'Hanya Admin yang dapat menugaskan petugas.');
             }
 
-            if ($this->filled('approver_id')) {
-                $reservation = $this->route('reservation');
-                $date = $this->input('start_time') ?: ($reservation?->start_time ?? now());
-                $scheduledIds = PiketSchedule::scheduledTechniciansForDate($date)->pluck('id')->all();
-                $currentApproverId = optional($reservation?->approver)->id;
-
-                if (! in_array($this->input('approver_id'), $scheduledIds, true)
-                    && $this->input('approver_id') !== $currentApproverId
-                ) {
-                    $validator->errors()->add('approver_id', 'Petugas harus merupakan teknisi piket pada minggu pengajuan Zoom tersebut.');
-                }
-            }
+            // Validasi untuk approver_id dihapus - memungkinkan penugasan dari semua teknisi
 
             // If status is being changed to REJECTED, CANCELLED, or COMPLETED, zoom_link is not required
             if ($this->filled('status')) {

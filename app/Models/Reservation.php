@@ -46,7 +46,7 @@ class Reservation extends Model
         return [
             self::STATUS_PENDING => 'Dibuka',
             self::STATUS_APPROVED => 'Diproses Teknisi',
-            self::STATUS_WAITING_MONITORING => 'Menunggu Monitoring',
+            self::STATUS_WAITING_MONITORING => 'Zoom Siap',
             self::STATUS_COMPLETED => 'Selesai',
             self::STATUS_REJECTED => 'Selesai Ditolak',
             self::STATUS_CANCELLED => 'Batal',

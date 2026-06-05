@@ -11,7 +11,24 @@ Route::middleware([\App\Http\Middleware\ContentSecurityPolicy::class])->group(fu
 });
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    $activePiketSchedules = collect();
+    
+    try {
+        $currentWeek = \App\Models\PiketSchedule::getCurrentWeek();
+        
+        if ($currentWeek) {
+            $activePiketSchedules->push([
+                'week_start_date' => $currentWeek->week_start_date->format('d/m/Y'),
+                'week_end_date' => $currentWeek->week_end_date->format('d/m/Y'),
+                'technicians' => $currentWeek->scheduledUserNames(),
+            ]);
+        }
+    } catch (\Exception $e) {
+        // Fallback jika ada error
+        $activePiketSchedules = collect();
+    }
+    
+    return view('dashboard', compact('activePiketSchedules'));
 })->middleware(['auth', 'verified'])->name('dashboard');
 
     Route::middleware('auth')->group(function () {

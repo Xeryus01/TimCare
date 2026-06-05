@@ -64,8 +64,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
             <div class="text-center mt-4">
                 <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold mb-6 sm:mb-8 leading-tight">
-                    Sistem Helpdesk IT<br>
-                    <span class="text-brand-200">Terintegrasi</span>
+                    Tim<span class="text-brand-200">Care</span>
                 </h1>
                 <p class="text-lg sm:text-xl md:text-2xl lg:text-3xl mb-8 sm:mb-12 text-gray-100 max-w-4xl mx-auto px-2 leading-relaxed">
                     Kelola tiket permasalahan IT, ajukan ruang Zoom, dan pantau layanan IT dengan mudah dan efisien.
@@ -96,12 +95,7 @@
                 <!-- Jadwal Piket Clean -->
                 <?php
                     $schedule = \App\Models\PiketSchedule::getCurrentWeek();
-                    $colorMap = [
-                        'Fadil Rahman' => ['dot' => 'bg-blue-400', 'accent' => 'from-blue-400 to-blue-500'],
-                        'Marko Santoso' => ['dot' => 'bg-emerald-400', 'accent' => 'from-emerald-400 to-emerald-500'],
-                        'Eji Wijaya' => ['dot' => 'bg-purple-400', 'accent' => 'from-purple-400 to-purple-500'],
-                        'Mesra Putri' => ['dot' => 'bg-rose-400', 'accent' => 'from-rose-400 to-rose-500'],
-                    ];
+                    $colorMap = \App\Models\PiketSchedule::getTechnicianColorMap();
                     $piketData = [
                         ['lokasi' => 'Petugas 1', 'nama' => $schedule->technician_1],
                         ['lokasi' => 'Petugas 2', 'nama' => $schedule->technician_2],
@@ -112,26 +106,24 @@
                     <div class="text-center mb-4">
                         <p class="text-xs font-semibold text-gray-200 uppercase tracking-widest">Tim Piket Hari Ini</p>
                     </div>
-                    <div class="flex flex-wrap justify-center gap-2 sm:gap-3 sm:flex-nowrap">
-                        <div class="flex flex-col items-center gap-4 w-full max-w-xs mx-auto">
-                            @foreach($piketData as $item)
-                                <?php 
-                                    $colors = $colorMap[$item['nama']] ?? ['dot' => 'bg-indigo-400', 'accent' => 'from-indigo-400 to-indigo-500'];
-                                ?>
-                                <div class="group relative w-full">
-                                    <div class="absolute inset-0 bg-gradient-to-r {{ $colors['accent'] }} rounded-md blur opacity-20 group-hover:opacity-40 transition-all duration-300"></div>
-                                    <div class="relative bg-white/5 backdrop-blur-sm border border-white/20 rounded-md px-3 py-3 sm:px-4 sm:py-4 hover:border-white/40 hover:bg-white/10 transition-all duration-300 w-full flex items-center justify-center">
-                                        <div class="flex flex-col items-center gap-1.5 w-full">
-                                            <div class="h-1.5 w-1.5 {{ $colors['dot'] }} rounded-full"></div>
-                                            <p class="text-[10px] sm:text-xs text-gray-300 font-medium uppercase tracking-wider whitespace-nowrap">{{ $item['lokasi'] }}</p>
-                                            <p class="text-xs sm:text-sm font-bold text-white text-center w-full truncate" style="max-width: 8.5rem; word-break: break-word; line-height: 1.1;" title="{{ $item['nama'] }}">
-                                                {{ $item['nama'] }}
-                                            </p>
-                                        </div>
+                    <div class="flex gap-2 sm:gap-3 justify-center">
+                        @foreach($piketData as $item)
+                            <?php 
+                                $colors = $colorMap[$item['nama']] ?? ['dot' => 'bg-indigo-400', 'accent' => 'from-indigo-400 to-indigo-500'];
+                            ?>
+                            <div class="group relative flex-1 max-w-xs">
+                                <div class="absolute inset-0 bg-gradient-to-r {{ $colors['accent'] }} rounded-md blur opacity-20 group-hover:opacity-40 transition-all duration-300"></div>
+                                <div class="relative bg-white/5 backdrop-blur-sm border border-white/20 rounded-md px-3 py-3 sm:px-4 sm:py-4 hover:border-white/40 hover:bg-white/10 transition-all duration-300 flex flex-col items-center gap-2">
+                                    <div class="h-2 w-2 {{ $colors['dot'] }} rounded-full"></div>
+                                    <div class="text-center w-full min-w-0">
+                                        <p class="text-[10px] sm:text-xs text-gray-300 font-medium uppercase tracking-wider">{{ $item['lokasi'] }}</p>
+                                        <p class="text-xs sm:text-sm font-bold text-white truncate" title="{{ $item['nama'] }}">
+                                            {{ $item['nama'] }}
+                                        </p>
                                     </div>
                                 </div>
-                            @endforeach
-                        </div>
+                            </div>
+                        @endforeach
                     </div>
                     @auth
                         @if(auth()->user()->hasRole('Admin'))

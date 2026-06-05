@@ -8,7 +8,7 @@
             </div>
             <div class="flex flex-wrap gap-2">
                 <a href="{{ url()->to(route('reservations.index')) }}" class="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-white/5">Kembali</a>
-                @if(auth()->user()->hasAnyRole(['Admin', 'Teknisi']) || auth()->id() === $reservation->requester_id)
+                @if(auth()->user()->hasRole('Admin') || (! in_array($reservation->status, [\App\Models\Reservation::STATUS_CANCELLED]) && (auth()->user()->hasAnyRole(['Teknisi']) || auth()->id() === $reservation->requester_id)))
                     <a href="{{ url()->to(route('reservations.edit', $reservation)) }}" class="rounded-lg bg-yellow-600 px-4 py-2 text-sm font-medium text-white hover:bg-yellow-700">Ubah</a>
                 @endif
                 @if(auth()->id() === $reservation->requester_id && ! in_array($reservation->status, [\App\Models\Reservation::STATUS_CANCELLED, \App\Models\Reservation::STATUS_COMPLETED, \App\Models\Reservation::STATUS_REJECTED]))

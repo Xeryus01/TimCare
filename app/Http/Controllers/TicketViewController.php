@@ -97,10 +97,7 @@ class TicketViewController extends Controller
     {
         $ticket->load('requester', 'assignee', 'asset', 'comments.user', 'comments.attachments', 'attachments.uploader');
 
-        $technicians = \App\Models\PiketSchedule::scheduledTechniciansForDate(now());
-        if ($ticket->assignee && !$technicians->contains('id', $ticket->assignee->id)) {
-            $technicians->push($ticket->assignee);
-        }
+        $technicians = \App\Models\User::role('Teknisi')->get();
 
         return view('tickets.show', compact('ticket', 'technicians'));
     }
@@ -113,11 +110,12 @@ class TicketViewController extends Controller
             abort(403);
         }
 
-        $assets = Asset::all();
-        $technicians = \App\Models\PiketSchedule::getCurrentWeek()->scheduledUsers();
-        if ($ticket->assignee && !$technicians->contains('id', $ticket->assignee->id)) {
-            $technicians->push($ticket->assignee);
+        if ($ticket->status === Ticket::STATUS_CANCELLED && ! $user->hasRole('Admin')) {
+            abort(403, 'Tiket yang dibatalkan tidak dapat diedit kembali kecuali oleh Admin.');
         }
+
+        $assets = Asset::all();
+        $technicians = \App\Models\User::role('Teknisi')->get();
         return view('tickets.edit', compact('ticket', 'assets', 'technicians'));
     }
 
@@ -129,8 +127,14 @@ class TicketViewController extends Controller
             abort(403);
         }
 
+        if ($ticket->status === Ticket::STATUS_CANCELLED && ! $user->hasRole('Admin')) {
+            abort(403, 'Tiket yang dibatalkan hanya dapat diedit oleh Admin.');
+        }
+
+        $data = $request->validated();
+
         // Only Admin can assign tickets
-        if (isset($request->assignee_id) && ! $user->hasRole('Admin')) {
+        if (isset($data['assignee_id']) && ! $user->hasRole('Admin')) {
             abort(403, 'Hanya Admin yang dapat menugaskan petugas.');
         }
 
@@ -143,11 +147,14 @@ class TicketViewController extends Controller
         }
 
         $oldStatus = $ticket->status;
-        $data = $request->validated();
 
         // Automatic status changes for tickets
-        if (isset($data['assignee_id']) && $data['assignee_id'] !== null && $ticket->status === Ticket::STATUS_OPEN) {
-            $data['status'] = Ticket::STATUS_ASSIGNED_DETECT;
+        // Jika petugas diassign dan status belum ASSIGNED_DETECT, ubah otomatis
+        if (isset($data['assignee_id']) && $data['assignee_id'] !== null) {
+            $completedStatuses = [Ticket::STATUS_SOLVED, Ticket::STATUS_SOLVED_WITH_NOTES, Ticket::STATUS_REJECTED, Ticket::STATUS_CANCELLED];
+            if (!in_array($ticket->status, $completedStatuses, true) && $ticket->status !== Ticket::STATUS_ASSIGNED_DETECT) {
+                $data['status'] = Ticket::STATUS_ASSIGNED_DETECT;
+            }
         }
 
         if (isset($data['status']) && $data['status'] === Ticket::STATUS_CANCELLED) {

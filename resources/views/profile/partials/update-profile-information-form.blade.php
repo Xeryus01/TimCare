@@ -27,8 +27,19 @@
             @if ($errors->has('email'))
                 <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $errors->first('email') }}</p>
             @endif
+        </div>
 
-            @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! $user->hasVerifiedEmail())
+        <div>
+            <label for="phone_number" class="block text-sm font-medium text-gray-900 dark:text-white mb-2">
+                Nomor HP
+            </label>
+            <input id="phone_number" name="phone_number" type="text" value="{{ old('phone_number', $user->phone_number) }}" autocomplete="tel" class="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-gray-900 placeholder-gray-500 outline-none transition focus:border-brand-600 focus:ring-2 focus:ring-brand-100 dark:border-gray-600 dark:bg-dark-800 dark:text-white dark:placeholder-gray-400 dark:focus:border-brand-600 dark:focus:ring-brand-900/20" />
+            @if ($errors->has('phone_number'))
+                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $errors->first('phone_number') }}</p>
+            @endif
+        </div>
+
+        @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! $user->hasVerifiedEmail())
                 <div class="mt-4 rounded-lg bg-yellow-50 p-4 dark:bg-yellow-500/10">
                     <p class="text-sm text-yellow-800 dark:text-yellow-400">
                         {{ __('Your email address is unverified.') }}

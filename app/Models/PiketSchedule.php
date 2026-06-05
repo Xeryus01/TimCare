@@ -109,4 +109,37 @@ class PiketSchedule extends Model
             ->pluck('name')
             ->toArray();
     }
+
+    // Generate dynamic color palette for technicians
+    public static function generateColorPalette()
+    {
+        $colors = [
+            ['dot' => 'bg-blue-400', 'accent' => 'from-blue-400 to-blue-500'],
+            ['dot' => 'bg-emerald-400', 'accent' => 'from-emerald-400 to-emerald-500'],
+            ['dot' => 'bg-purple-400', 'accent' => 'from-purple-400 to-purple-500'],
+            ['dot' => 'bg-rose-400', 'accent' => 'from-rose-400 to-rose-500'],
+            ['dot' => 'bg-amber-400', 'accent' => 'from-amber-400 to-amber-500'],
+            ['dot' => 'bg-cyan-400', 'accent' => 'from-cyan-400 to-cyan-500'],
+            ['dot' => 'bg-pink-400', 'accent' => 'from-pink-400 to-pink-500'],
+            ['dot' => 'bg-lime-400', 'accent' => 'from-lime-400 to-lime-500'],
+        ];
+        
+        return $colors;
+    }
+
+    // Get color map for technicians with consistent color assignment
+    public static function getTechnicianColorMap()
+    {
+        $technicians = self::getTechnicians();
+        $colors = self::generateColorPalette();
+        $colorMap = [];
+
+        foreach ($technicians as $index => $technician) {
+            // Use modulo to cycle through colors if more technicians than colors
+            $colorIndex = $index % count($colors);
+            $colorMap[$technician] = $colors[$colorIndex];
+        }
+
+        return $colorMap;
+    }
 }

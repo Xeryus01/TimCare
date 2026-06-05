@@ -83,8 +83,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
             <div class="text-center mt-4">
                 <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold mb-6 sm:mb-8 leading-tight">
-                    Sistem Helpdesk IT<br>
-                    <span class="text-brand-200">Terintegrasi</span>
+                    Tim<span class="text-brand-200">Care</span>
                 </h1>
                 <p class="text-lg sm:text-xl md:text-2xl lg:text-3xl mb-8 sm:mb-12 text-gray-100 max-w-4xl mx-auto px-2 leading-relaxed">
                     Kelola tiket permasalahan IT, ajukan ruang Zoom, dan pantau layanan IT dengan mudah dan efisien.
@@ -115,12 +114,7 @@
                 <!-- Jadwal Piket Clean -->
                 <?php
                     $schedule = \App\Models\PiketSchedule::getCurrentWeek();
-                    $colorMap = [
-                        'Fadil Rahman' => ['dot' => 'bg-blue-400', 'accent' => 'from-blue-400 to-blue-500'],
-                        'Marko Santoso' => ['dot' => 'bg-emerald-400', 'accent' => 'from-emerald-400 to-emerald-500'],
-                        'Eji Wijaya' => ['dot' => 'bg-purple-400', 'accent' => 'from-purple-400 to-purple-500'],
-                        'Mesra Putri' => ['dot' => 'bg-rose-400', 'accent' => 'from-rose-400 to-rose-500'],
-                    ];
+                    $colorMap = \App\Models\PiketSchedule::getTechnicianColorMap();
                     $piketData = [
                         ['lokasi' => 'Petugas 1', 'nama' => $schedule->technician_1],
                         ['lokasi' => 'Petugas 2', 'nama' => $schedule->technician_2],
@@ -131,24 +125,24 @@
                     <div class="text-center mb-4">
                         <p class="text-xs font-semibold text-gray-200 uppercase tracking-widest">Tim Piket Hari Ini</p>
                     </div>
-                    <div class="flex flex-wrap justify-center gap-2 sm:gap-3 sm:flex-nowrap">
+                    <div class="flex gap-2 sm:gap-3 justify-center">
                         <?php $__currentLoopData = $piketData; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <?php 
                                 $colors = $colorMap[$item['nama']] ?? ['dot' => 'bg-indigo-400', 'accent' => 'from-indigo-400 to-indigo-500'];
                             ?>
-                            <div class="group relative">
+                            <div class="group relative flex-1 max-w-xs">
                                 <div class="absolute inset-0 bg-gradient-to-r <?php echo e($colors['accent']); ?> rounded-md blur opacity-20 group-hover:opacity-40 transition-all duration-300"></div>
-                                <div class="relative bg-white/5 backdrop-blur-sm border border-white/20 rounded-md px-3 py-3 sm:px-4 sm:py-4 hover:border-white/40 hover:bg-white/10 transition-all duration-300 w-20 h-24 sm:w-28 sm:h-28 flex items-center justify-center">
-                                    <div class="flex flex-col items-center gap-1.5">
-                                        <div class="h-1.5 w-1.5 <?php echo e($colors['dot']); ?> rounded-full"></div>
-                                        <p class="text-[10px] sm:text-xs text-gray-300 font-medium uppercase tracking-wider whitespace-nowrap"><?php echo e($item['lokasi']); ?></p>
-                                        <p class="text-xs sm:text-sm font-bold text-white whitespace-nowrap"><?php echo e($item['nama']); ?></p>
+                                <div class="relative bg-white/5 backdrop-blur-sm border border-white/20 rounded-md px-3 py-3 sm:px-4 sm:py-4 hover:border-white/40 hover:bg-white/10 transition-all duration-300 flex flex-col items-center gap-2">
+                                    <div class="h-2 w-2 <?php echo e($colors['dot']); ?> rounded-full"></div>
+                                    <div class="text-center w-full min-w-0">
+                                        <p class="text-[10px] sm:text-xs text-gray-300 font-medium uppercase tracking-wider"><?php echo e($item['lokasi']); ?></p>
+                                        <p class="text-xs sm:text-sm font-bold text-white truncate" title="<?php echo e($item['nama']); ?>">
+                                            <?php echo e($item['nama']); ?>
+
+                                        </p>
                                     </div>
                                 </div>
                             </div>
-                            <?php if(!$loop->last): ?>
-                                <div class="hidden sm:block w-px h-14 bg-white/20"></div>
-                            <?php endif; ?>
                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </div>
                     <?php if(auth()->guard()->check()): ?>

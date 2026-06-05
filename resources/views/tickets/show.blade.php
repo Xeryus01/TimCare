@@ -8,7 +8,7 @@
             </div>
             <div class="flex flex-wrap gap-2">
                 <a href="{{ url()->to(route('tickets.index')) }}" class="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-white/5">Kembali</a>
-                @if(auth()->user()->hasAnyRole(['Admin', 'Teknisi']) || auth()->id() === $ticket->requester_id)
+                @if(auth()->user()->hasRole('Admin') || (! in_array($ticket->status, [\App\Models\Ticket::STATUS_CANCELLED]) && (auth()->user()->hasAnyRole(['Teknisi']) || auth()->id() === $ticket->requester_id)))
                     <a href="{{ url()->to(route('tickets.edit', $ticket)) }}" class="rounded-lg bg-yellow-600 px-4 py-2 text-sm font-medium text-white hover:bg-yellow-700">Ubah</a>
                 @endif
                 @if(auth()->id() === $ticket->requester_id && ! in_array($ticket->status, [\App\Models\Ticket::STATUS_CANCELLED, \App\Models\Ticket::STATUS_SOLVED, \App\Models\Ticket::STATUS_SOLVED_WITH_NOTES, \App\Models\Ticket::STATUS_REJECTED]))
@@ -44,53 +44,7 @@
                     </div>
                 </div>
 
-                <div class="rounded-xl border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-dark-800">
-                    <div class="mb-4">
-                        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Lampiran Tiket</h2>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">Foto dan file PDF bisa ditampilkan langsung agar penanganan lebih cepat.</p>
-                    </div>
-
-                    @if($ticket->attachments->isEmpty())
-                        <p class="text-sm text-gray-500 dark:text-gray-400">Belum ada lampiran.</p>
-                    @else
-                        <div class="space-y-4">
-                            @foreach($ticket->attachments as $att)
-                                @php
-                                    $attachmentUrl = route('tickets.attachments.show', [$ticket, $att]);
-                                    $isImage = filled($att->mime_type) && str_starts_with($att->mime_type, 'image/');
-                                    $isPdf = $att->mime_type === 'application/pdf' || \Illuminate\Support\Str::endsWith(\Illuminate\Support\Str::lower($att->file_name), '.pdf');
-                                @endphp
-                                <div class="rounded-xl border border-gray-200 p-4 dark:border-gray-700">
-                                    <div class="mb-3 flex items-center justify-between gap-3">
-                                        <div>
-                                            <a href="{{ $attachmentUrl }}" target="_blank" class="text-sm font-semibold text-brand-600 hover:underline">{{ $att->file_name }}</a>
-                                            <p class="text-xs text-gray-500 dark:text-gray-400">{{ optional($att->uploader)->name ?? 'Pengguna' }} • {{ $att->created_at->diffForHumans() }}</p>
-                                        </div>
-                                        <a href="{{ $attachmentUrl }}" target="_blank" class="rounded-lg border border-gray-300 px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-white/5">Buka</a>
-                                    </div>
-
-                                    @if($isImage)
-                                        <p class="mb-2 text-xs font-semibold uppercase tracking-wide text-brand-700">Preview Gambar</p>
-                                        <img src="{{ $attachmentUrl }}" alt="{{ $att->file_name }}" class="max-h-72 w-full rounded-lg border border-gray-200 object-contain dark:border-gray-700">
-                                    @elseif($isPdf)
-                                        <p class="mb-2 text-xs font-semibold uppercase tracking-wide text-red-700">Preview PDF</p>
-                                        <iframe src="{{ $attachmentUrl }}" title="{{ $att->file_name }}" class="h-72 w-full rounded-lg border border-gray-200 dark:border-gray-700"></iframe>
-                                    @else
-                                        <p class="text-sm text-gray-500 dark:text-gray-400">File ini belum mendukung preview langsung. Silakan klik tombol <span class="font-medium">Buka</span>.</p>
-                                    @endif
-                                </div>
-                            @endforeach
-                        </div>
-                    @endif
-
-                    @if(auth()->user()->hasAnyRole(['Admin','Teknisi']) || auth()->id() === $ticket->requester_id)
-                        <form action="{{ route('tickets.attachments.store', $ticket) }}" method="POST" enctype="multipart/form-data" class="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">
-                            @csrf
-                            <input type="file" name="file" required accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.csv,.txt" class="block w-full text-sm text-gray-700 dark:text-gray-300">
-                            <button type="submit" class="rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white">Unggah</button>
-                        </form>
-                    @endif
-                </div>
+                {{-- Lampiran Tiket dipindah ke percakapan; section ini dihapus --}}
 
                 <div class="rounded-xl border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-dark-800">
                     <div class="mb-4 flex items-center justify-between gap-3">
@@ -102,6 +56,46 @@
                     </div>
 
                     <div class="space-y-3">
+                        @php $initialAttachments = $ticket->attachments->where('comment_id', null); @endphp
+                        @if($initialAttachments->isNotEmpty())
+                            <div class="flex justify-start">
+                                <div class="w-full max-w-2xl rounded-2xl border p-4 border-brand-100 bg-brand-50/60 dark:border-brand-500/30 dark:bg-brand-500/10">
+                                    <div class="mb-2 flex items-start justify-between gap-3">
+                                        <div class="flex flex-wrap items-center gap-2">
+                                            <p class="font-semibold text-gray-900 dark:text-white">{{ optional($ticket->requester)->name ?? 'Pemohon' }}</p>
+                                            <span class="rounded-full px-2.5 py-1 text-[11px] font-medium bg-white text-brand-700 dark:bg-brand-500/20 dark:text-brand-200">Pemohon</span>
+                                        </div>
+                                        <p class="text-xs text-gray-500 dark:text-gray-400">{{ $ticket->created_at->format('d/m/Y H:i') }}</p>
+                                    </div>
+
+                                    <p class="mb-3 text-sm text-gray-700 dark:text-gray-300">Lampiran awal tiket:</p>
+
+                                    <div class="space-y-3">
+                                        @foreach($initialAttachments as $att)
+                                            @php
+                                                $attachmentUrl = route('tickets.attachments.show', [$ticket, $att]);
+                                                $isImage = filled($att->mime_type) && str_starts_with($att->mime_type, 'image/');
+                                                $isPdf = $att->mime_type === 'application/pdf' || \Illuminate\Support\Str::endsWith(\Illuminate\Support\Str::lower($att->file_name), '.pdf');
+                                            @endphp
+                                            <div class="rounded-xl border border-dashed border-gray-300 bg-white/80 p-3 dark:border-gray-600 dark:bg-dark-900/30">
+                                                <div class="mb-2 flex items-center justify-between gap-2">
+                                                    <a href="{{ $attachmentUrl }}" target="_blank" class="text-sm font-medium text-brand-600 hover:underline">{{ $att->file_name }}</a>
+                                                    <a href="{{ $attachmentUrl }}" target="_blank" class="text-xs text-gray-500 hover:underline dark:text-gray-400">Lihat file</a>
+                                                </div>
+
+                                                @if($isImage)
+                                                    <p class="mb-2 text-xs font-semibold uppercase tracking-wide text-brand-700">Preview Gambar</p>
+                                                    <img src="{{ $attachmentUrl }}" alt="{{ $att->file_name }}" class="max-h-64 w-full rounded-lg border border-gray-200 object-contain dark:border-gray-700">
+                                                @elseif($isPdf)
+                                                    <p class="mb-2 text-xs font-semibold uppercase tracking-wide text-red-700">Preview PDF</p>
+                                                    <iframe src="{{ $attachmentUrl }}" title="{{ $att->file_name }}" class="h-64 w-full rounded-lg border border-gray-200 dark:border-gray-700"></iframe>
+                                                @endif
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
                         @forelse($ticket->comments as $comment)
                             @php
                                 $isRequesterMessage = $comment->user_id === $ticket->requester_id;
@@ -209,14 +203,6 @@
                         <form method="POST" action="{{ route('tickets.update', $ticket) }}" class="mt-4 space-y-4">
                             @csrf
                             @method('PATCH')
-                            <div>
-                                <label for="status_sidebar" class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Status</label>
-                                <select id="status_sidebar" name="status" class="w-full rounded-lg border border-gray-300 px-3 py-2 dark:border-gray-600 dark:bg-dark-800 dark:text-white">
-                                    @foreach(\App\Models\Ticket::statusLabels() as $value => $label)
-                                        <option value="{{ $value }}" {{ $ticket->status === $value ? 'selected' : '' }}>{{ $label }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
                             @if(auth()->user()->hasRole('Admin'))
                                 <div>
                                     <label for="assignee_id" class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Petugas</label>

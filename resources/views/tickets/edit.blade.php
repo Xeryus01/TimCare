@@ -4,8 +4,8 @@
     <div class="p-5 sm:p-7.5 lg:p-9">
         <!-- Page Header -->
         <div class="mb-6">
-            <h1 class="text-2xl font-bold text-gray-900 dark:text-white sm:text-3xl">Edit Ticket {{ $ticket->code }}</h1>
-            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Update ticket information</p>
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-white sm:text-3xl">Edit Tiket {{ $ticket->code }}</h1>
+            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Perbarui informasi tiket dalam bahasa Indonesia.</p>
         </div>
 
         <!-- Form Card -->
@@ -18,7 +18,7 @@
                             <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
                         </svg>
                         <div>
-                            <h3 class="font-medium text-red-800 dark:text-red-400">Please correct the following errors:</h3>
+                            <h3 class="font-medium text-red-800 dark:text-red-400">Silakan perbaiki kesalahan berikut:</h3>
                             <ul class="mt-2 list-inside space-y-1 text-sm text-red-700 dark:text-red-400">
                                 @foreach($errors->all() as $error)
                                     <li>{{ $error }}</li>
@@ -59,7 +59,7 @@
                 <!-- Title -->
                 <div>
                     <label for="title" class="block text-sm font-medium text-gray-900 dark:text-white mb-2">
-                        Title
+                        Judul Tiket
                     </label>
                     <input id="title" type="text" name="title" value="{{ old('title', $ticket->title) }}" required class="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-gray-900 placeholder-gray-500 outline-none transition focus:border-brand-600 focus:ring-2 focus:ring-brand-100 disabled:cursor-default disabled:bg-gray-50 dark:border-gray-600 dark:bg-dark-800 dark:text-white dark:placeholder-gray-400 dark:focus:border-brand-600 dark:focus:ring-brand-900/20 @error('title') border-red-500 @enderror" />
                     @error('title')
@@ -70,7 +70,7 @@
                 <!-- Description -->
                 <div>
                     <label for="description" class="block text-sm font-medium text-gray-900 dark:text-white mb-2">
-                        Description
+                        Deskripsi
                     </label>
                     <textarea id="description" name="description" rows="4" required class="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-gray-900 placeholder-gray-500 outline-none transition focus:border-brand-600 focus:ring-2 focus:ring-brand-100 disabled:cursor-default disabled:bg-gray-50 dark:border-gray-600 dark:bg-dark-800 dark:text-white dark:placeholder-gray-400 dark:focus:border-brand-600 dark:focus:ring-brand-900/20 @error('description') border-red-500 @enderror">{{ old('description', $ticket->description) }}</textarea>
                     @error('description')
@@ -83,6 +83,7 @@
                         Lampiran <span class="text-gray-400">(opsional)</span>
                     </label>
                     <input id="attachment" type="file" name="attachment" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.csv,.txt" class="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-gray-900 dark:border-gray-600 dark:bg-dark-800 dark:text-white @error('attachment') border-red-500 @enderror" />
+                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Ukuran lampiran maksimal 1MB. Hanya gambar dan PDF disarankan.</p>
                     @error('attachment')
                         <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                     @enderror
@@ -91,10 +92,10 @@
                 <!-- Asset Field -->
                 <div>
                     <label for="asset_id" class="block text-sm font-medium text-gray-900 dark:text-white mb-2">
-                        Related Asset (optional)
+                        Aset Terkait <span class="text-gray-400">(opsional)</span>
                     </label>
                     <select id="asset_id" name="asset_id" class="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-gray-900 outline-none transition focus:border-brand-600 focus:ring-2 focus:ring-brand-100 dark:border-gray-600 dark:bg-dark-800 dark:text-white dark:focus:border-brand-600 dark:focus:ring-brand-900/20 @error('asset_id') border-red-500 @enderror">
-                        <option value="">-- Choose an asset --</option>
+                        <option value="">-- Pilih aset --</option>
                         @foreach($assets as $asset)
                             <option value="{{ $asset->id }}" {{ $ticket->asset_id == $asset->id ? 'selected' : '' }}>{{ $asset->name }} ({{ $asset->asset_code }})</option>
                         @endforeach
@@ -103,55 +104,21 @@
                         <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                     @enderror
                 </div>
-                <!-- Status & Assignment Section -->
+                <!-- Status Section -->
                 @if(auth()->user()->hasAnyRole(['Admin', 'Teknisi']))
-                    <!-- Admin: Assignment + Status -->
-                    @if(auth()->user()->hasRole('Admin'))
-                        <div class="grid gap-6 sm:grid-cols-2">
-                            <div>
-                                <label for="assignee_id" class="block text-sm font-medium text-gray-900 dark:text-white mb-2">
-                                    Tugaskan Ke
-                                </label>
-                                <select id="assignee_id" name="assignee_id" class="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-gray-900 outline-none transition focus:border-brand-600 focus:ring-2 focus:ring-brand-100 dark:border-gray-600 dark:bg-dark-800 dark:text-white dark:focus:border-brand-600 dark:focus:ring-brand-900/20 @error('assignee_id') border-red-500 @enderror">
-                                    <option value="">-- Belum Ditugaskan --</option>
-                                    @foreach($technicians as $user)
-                                        <option value="{{ $user->id }}" {{ $ticket->assignee_id == $user->id ? 'selected' : '' }}>{{ $user->name }}</option>
-                                    @endforeach
-                                </select>
-                                @error('assignee_id')
-                                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
-                                @enderror
-                            </div>
-                            <div>
-                                <label for="status" class="block text-sm font-medium text-gray-900 dark:text-white mb-2">
-                                    Status
-                                </label>
-                                <select id="status" name="status" class="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-gray-900 outline-none transition focus:border-brand-600 focus:ring-2 focus:ring-brand-100 dark:border-gray-600 dark:bg-dark-800 dark:text-white dark:focus:border-brand-600 dark:focus:ring-brand-900/20 @error('status') border-red-500 @enderror">
-                                    @foreach(\App\Models\Ticket::statuses() as $st)
-                                        <option value="{{ $st }}" {{ $ticket->status === $st ? 'selected' : '' }}>{{ $st }}</option>
-                                    @endforeach
-                                </select>
-                                @error('status')
-                                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
-                                @enderror
-                            </div>
-                        </div>
-                    @else
-                        <!-- Teknisi: Status Only (No Assignment) -->
-                        <div>
-                            <label for="status" class="block text-sm font-medium text-gray-900 dark:text-white mb-2">
-                                Status Penanganan
-                            </label>
-                            <select id="status" name="status" class="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-gray-900 outline-none transition focus:border-brand-600 focus:ring-2 focus:ring-brand-100 dark:border-gray-600 dark:bg-dark-800 dark:text-white dark:focus:border-brand-600 dark:focus:ring-brand-900/20 @error('status') border-red-500 @enderror">
-                                @foreach(\App\Models\Ticket::statuses() as $st)
-                                    <option value="{{ $st }}" {{ $ticket->status === $st ? 'selected' : '' }}>{{ $st }}</option>
-                                @endforeach
-                            </select>
-                            @error('status')
-                                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
-                            @enderror
-                        </div>
-                    @endif
+                    <div>
+                        <label for="status" class="block text-sm font-medium text-gray-900 dark:text-white mb-2">
+                            Status Penanganan
+                        </label>
+                        <select id="status" name="status" class="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-gray-900 outline-none transition focus:border-brand-600 focus:ring-2 focus:ring-brand-100 dark:border-gray-600 dark:bg-dark-800 dark:text-white dark:focus:border-brand-600 dark:focus:ring-brand-900/20 @error('status') border-red-500 @enderror">
+                            @foreach(\App\Models\Ticket::statusLabels() as $value => $label)
+                                <option value="{{ $value }}" {{ $ticket->status === $value ? 'selected' : '' }}>{{ $label }}</option>
+                            @endforeach
+                        </select>
+                        @error('status')
+                            <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                        @enderror
+                    </div>
                 @else
                     <!-- Regular User: Cancel Option Only -->
                     @if($ticket->status !== \App\Models\Ticket::STATUS_CANCELLED && $ticket->status !== \App\Models\Ticket::STATUS_SOLVED && $ticket->status !== \App\Models\Ticket::STATUS_SOLVED_WITH_NOTES)
@@ -173,10 +140,10 @@
                 <!-- Form Actions -->
                 <div class="flex gap-3 pt-6">
                     <a href="{{ url()->to(route('tickets.index')) }}" class="flex-1 rounded-lg border border-gray-300 px-4 py-2.5 text-center font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-white/5">
-                        Cancel
+                        Batal
                     </a>
                     <button type="submit" class="flex-1 rounded-lg bg-brand-600 px-4 py-2.5 text-center font-medium text-white hover:bg-brand-700">
-                        Save Changes
+                        Simpan Perubahan
                     </button>
                 </div>
             </form>

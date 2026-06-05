@@ -81,7 +81,7 @@ class DashboardController extends Controller
         $zoomCounts = [
             'Dibuka' => (clone $zoomQuery)->where('status', Reservation::STATUS_PENDING)->count(),
             'Diproses Teknisi' => (clone $zoomQuery)->where('status', Reservation::STATUS_APPROVED)->count(),
-            'Menunggu Monitoring' => (clone $zoomQuery)->where('status', Reservation::STATUS_WAITING_MONITORING)->count(),
+            'Zoom Siap' => (clone $zoomQuery)->where('status', Reservation::STATUS_WAITING_MONITORING)->count(),
             'Selesai' => (clone $zoomQuery)->where('status', Reservation::STATUS_COMPLETED)->count(),
             'Selesai Ditolak' => (clone $zoomQuery)->where('status', Reservation::STATUS_REJECTED)->count(),
             'Batal' => (clone $zoomQuery)->where('status', Reservation::STATUS_CANCELLED)->count(),

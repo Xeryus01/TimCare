@@ -10,13 +10,13 @@ class Ticket extends Model
 {
     use HasFactory;
     // status constants for improved consistency
-    public const STATUS_OPEN = 'OPEN';
-    public const STATUS_ASSIGNED_DETECT = 'ASSIGNED_DETECT';
-    public const STATUS_WAITING_PARTS = 'WAITING_PARTS';
-    public const STATUS_SOLVED_WITH_NOTES = 'SOLVED_WITH_NOTES';
-    public const STATUS_SOLVED = 'SOLVED';
-    public const STATUS_REJECTED = 'REJECTED';
-    public const STATUS_CANCELLED = 'CANCELLED';
+    public const STATUS_OPEN = 'Dibuka';
+    public const STATUS_ASSIGNED_DETECT = 'Diproses Teknisi';
+    public const STATUS_WAITING_PARTS = 'Menunggu Ketersediaan Barang';
+    public const STATUS_SOLVED_WITH_NOTES = 'Selesai dengan Catatan';
+    public const STATUS_SOLVED = 'Selesai';
+    public const STATUS_REJECTED = 'Ditolak';
+    public const STATUS_CANCELLED = 'Dibatalkan';
 
     /**
      * All valid ticket statuses, used for validation and dropdowns.

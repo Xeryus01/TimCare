@@ -1,5 +1,14 @@
-<x-app-layout>
-@php
+<?php if (isset($component)) { $__componentOriginal9ac128a9029c0e4701924bd2d73d7f54 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal9ac128a9029c0e4701924bd2d73d7f54 = $attributes; } ?>
+<?php $component = App\View\Components\AppLayout::resolve([] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('app-layout'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\App\View\Components\AppLayout::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+<?php
     $user = auth()->user();
     $isAdminOrTechnician = $user->hasRole(['Admin', 'Teknisi']);
 
@@ -199,37 +208,37 @@
             ];
         })->toArray();
     }
-@endphp
+?>
 
 <div class="min-h-screen">
     <div class="p-4 sm:p-5 lg:p-7.5 xl:p-9">
         <div class="mb-6 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
             <div class="min-w-0">
                 <h1 class="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white truncate">Ringkasan Layanan</h1>
-                <p class="mt-1 text-xs sm:text-sm text-gray-500 dark:text-gray-400 truncate">Halo, {{ auth()->user()->name }}. Pantau tiket, pengajuan Zoom, dan performa.</p>
+                <p class="mt-1 text-xs sm:text-sm text-gray-500 dark:text-gray-400 truncate">Halo, <?php echo e(auth()->user()->name); ?>. Pantau tiket, pengajuan Zoom, dan performa.</p>
             </div>
             <div class="flex flex-wrap gap-2">
-                <a href="{{ url()->to(route('tickets.create')) }}" class="rounded-lg bg-brand-600 px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-white hover:bg-brand-700 transition-colors whitespace-nowrap">Ajukan Tiket</a>
-                <a href="{{ url()->to(route('reservations.create')) }}" class="rounded-lg border border-brand-600 px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-brand-600 hover:bg-brand-50 dark:hover:bg-brand-500/10 transition-colors whitespace-nowrap">Ajukan Zoom</a>
+                <a href="<?php echo e(url()->to(route('tickets.create'))); ?>" class="rounded-lg bg-brand-600 px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-white hover:bg-brand-700 transition-colors whitespace-nowrap">Ajukan Tiket</a>
+                <a href="<?php echo e(url()->to(route('reservations.create'))); ?>" class="rounded-lg border border-brand-600 px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-brand-600 hover:bg-brand-50 dark:hover:bg-brand-500/10 transition-colors whitespace-nowrap">Ajukan Zoom</a>
             </div>
         </div>
 
         <div class="mb-6 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
             <div class="rounded-xl border border-gray-200 bg-white p-3 sm:p-5 dark:border-gray-700 dark:bg-dark-800">
                 <p class="text-xs sm:text-sm text-gray-500 dark:text-gray-400 truncate">Total Tiket Masalah</p>
-                <h3 class="mt-2 text-2xl sm:text-3xl font-bold text-red-600 dark:text-red-400">{{ $totalTickets }}</h3>
+                <h3 class="mt-2 text-2xl sm:text-3xl font-bold text-red-600 dark:text-red-400"><?php echo e($totalTickets); ?></h3>
             </div>
             <div class="rounded-xl border border-gray-200 bg-white p-3 sm:p-5 dark:border-gray-700 dark:bg-dark-800">
                 <p class="text-xs sm:text-sm text-gray-500 dark:text-gray-400 truncate">Total Tiket Zoom</p>
-                <h3 class="mt-2 text-2xl sm:text-3xl font-bold text-blue-600 dark:text-blue-400">{{ $totalZooms }}</h3>
+                <h3 class="mt-2 text-2xl sm:text-3xl font-bold text-blue-600 dark:text-blue-400"><?php echo e($totalZooms); ?></h3>
             </div>
             <div class="rounded-xl border border-gray-200 bg-white p-3 sm:p-5 dark:border-gray-700 dark:bg-dark-800">
                 <p class="text-xs sm:text-sm text-gray-500 dark:text-gray-400 truncate">Layanan Selesai</p>
-                <h3 class="mt-2 text-2xl sm:text-3xl font-bold text-green-600 dark:text-green-400">{{ $layananSelesai }}</h3>
+                <h3 class="mt-2 text-2xl sm:text-3xl font-bold text-green-600 dark:text-green-400"><?php echo e($layananSelesai); ?></h3>
             </div>
             <div class="rounded-xl border border-gray-200 bg-white p-3 sm:p-5 dark:border-gray-700 dark:bg-dark-800">
                 <p class="text-xs sm:text-sm text-gray-500 dark:text-gray-400 truncate">Capaian (%)</p>
-                <h3 class="mt-2 text-2xl sm:text-3xl font-bold text-purple-600 dark:text-purple-400">{{ $capaianPersentase }}%</h3>
+                <h3 class="mt-2 text-2xl sm:text-3xl font-bold text-purple-600 dark:text-purple-400"><?php echo e($capaianPersentase); ?>%</h3>
             </div>
         </div>
 
@@ -240,25 +249,25 @@
                     <p class="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-1">Tampilkan jadwal tim piket minggu ini.</p>
                 </div>
             </div>
-            @if ($activePiketSchedules->isNotEmpty())
+            <?php if($activePiketSchedules->isNotEmpty()): ?>
                 <div class="space-y-3">
-                    @foreach ($activePiketSchedules as $schedule)
+                    <?php $__currentLoopData = $activePiketSchedules; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $schedule): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                         <div class="rounded-xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-dark-800">
                             <div class="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
-                                <p class="text-sm font-semibold text-gray-900 dark:text-white">Minggu {{ $schedule['week_start_date'] }} - {{ $schedule['week_end_date'] }}</p>
+                                <p class="text-sm font-semibold text-gray-900 dark:text-white">Minggu <?php echo e($schedule['week_start_date']); ?> - <?php echo e($schedule['week_end_date']); ?></p>
                                 <span class="rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-medium text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300">Aktif</span>
                             </div>
                             <div class="mt-3 flex flex-wrap gap-2 text-sm">
-                                @foreach ($schedule['technicians'] as $technician)
-                                    <span class="inline-flex items-center rounded-2xl border border-gray-200 bg-gray-50 px-4 py-2 text-sm font-semibold text-gray-900 dark:border-gray-700 dark:bg-white/10 dark:text-white">{{ $technician }}</span>
-                                @endforeach
+                                <?php $__currentLoopData = $schedule['technicians']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $technician): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <span class="inline-flex items-center rounded-2xl border border-gray-200 bg-gray-50 px-4 py-2 text-sm font-semibold text-gray-900 dark:border-gray-700 dark:bg-white/10 dark:text-white"><?php echo e($technician); ?></span>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </div>
                         </div>
-                    @endforeach
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </div>
-            @else
+            <?php else: ?>
                 <p class="text-sm text-gray-500 dark:text-gray-400">Belum ada jadwal piket aktif untuk minggu ini.</p>
-            @endif
+            <?php endif; ?>
         </div>
 
         <!-- Kalender Zoom -->
@@ -281,15 +290,15 @@
         <div class="mb-6 grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-3">
             <div class="rounded-xl border border-gray-200 bg-white p-3 sm:p-5 dark:border-gray-700 dark:bg-dark-800">
                 <p class="text-xs sm:text-sm text-gray-500 dark:text-gray-400 truncate">Layanan Belum Dilayani</p>
-                <h3 class="mt-2 text-2xl sm:text-3xl font-bold text-orange-600 dark:text-orange-400">{{ $layananBelumDilayani }}</h3>
+                <h3 class="mt-2 text-2xl sm:text-3xl font-bold text-orange-600 dark:text-orange-400"><?php echo e($layananBelumDilayani); ?></h3>
             </div>
             <div class="rounded-xl border border-gray-200 bg-white p-3 sm:p-5 dark:border-gray-700 dark:bg-dark-800">
                 <p class="text-xs sm:text-sm text-gray-500 dark:text-gray-400 truncate">Zoom Belum Dilayani</p>
-                <h3 class="mt-2 text-2xl sm:text-3xl font-bold text-cyan-600 dark:text-cyan-400">{{ $zoomBelumDilayani }}</h3>
+                <h3 class="mt-2 text-2xl sm:text-3xl font-bold text-cyan-600 dark:text-cyan-400"><?php echo e($zoomBelumDilayani); ?></h3>
             </div>
             <div class="rounded-xl border border-gray-200 bg-white p-3 sm:p-5 dark:border-gray-700 dark:bg-dark-800">
                 <p class="text-xs sm:text-sm text-gray-500 dark:text-gray-400 truncate">Total Semua Layanan</p>
-                <h3 class="mt-2 text-2xl sm:text-3xl font-bold text-indigo-600 dark:text-indigo-400">{{ $totalLayanan }}</h3>
+                <h3 class="mt-2 text-2xl sm:text-3xl font-bold text-indigo-600 dark:text-indigo-400"><?php echo e($totalLayanan); ?></h3>
             </div>
         </div> -->
 
@@ -300,13 +309,14 @@
                     <div class="flex items-center gap-2">
                         <select id="monthFilter" class="text-xs sm:text-sm border border-gray-300 rounded px-2 py-1 dark:border-gray-600 dark:bg-dark-700 dark:text-white">
                             <option value="all">Semua</option>
-                            @for ($i = 1; $i <= 12; $i++)
-                                <option value="{{ date('Y') }}-{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}" {{ $i == date('n') ? 'selected' : '' }}>
-                                    {{ \Carbon\Carbon::create(date('Y'), $i, 1)->locale('id')->format('F Y') }}
+                            <?php for($i = 1; $i <= 12; $i++): ?>
+                                <option value="<?php echo e(date('Y')); ?>-<?php echo e(str_pad($i, 2, '0', STR_PAD_LEFT)); ?>" <?php echo e($i == date('n') ? 'selected' : ''); ?>>
+                                    <?php echo e(\Carbon\Carbon::create(date('Y'), $i, 1)->locale('id')->format('F Y')); ?>
+
                                 </option>
-                            @endfor
+                            <?php endfor; ?>
                         </select>
-                        <a href="{{ url()->to(route('exports.tickets')) }}" class="text-xs sm:text-sm font-medium text-brand-600 hover:text-brand-700 whitespace-nowrap">Ekspor CSV</a>
+                        <a href="<?php echo e(url()->to(route('exports.tickets'))); ?>" class="text-xs sm:text-sm font-medium text-brand-600 hover:text-brand-700 whitespace-nowrap">Ekspor CSV</a>
                     </div>
                 </div>
                 <div class="relative h-72">
@@ -317,7 +327,7 @@
             <div class="rounded-xl border border-gray-200 bg-white p-4 sm:p-5 dark:border-gray-700 dark:bg-dark-800 overflow-hidden">
                 <div class="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                     <h2 class="text-base sm:text-lg font-semibold text-gray-900 dark:text-white truncate">Grafik Pengajuan Zoom</h2>
-                    <a href="{{ url()->to(route('exports.reservations')) }}" class="text-xs sm:text-sm font-medium text-brand-600 hover:text-brand-700 whitespace-nowrap">Ekspor CSV</a>
+                    <a href="<?php echo e(url()->to(route('exports.reservations'))); ?>" class="text-xs sm:text-sm font-medium text-brand-600 hover:text-brand-700 whitespace-nowrap">Ekspor CSV</a>
                 </div>
                 <div class="relative h-72">
                     <canvas id="zoomChart" class="w-full h-full"></canvas>
@@ -331,17 +341,17 @@
                     <h3 class="text-base sm:text-lg font-semibold text-gray-900 dark:text-white truncate">Tiket Terbaru</h3>
                 </div>
                 <div class="divide-y divide-gray-200 max-h-96 overflow-y-auto dark:divide-gray-700">
-                    @forelse ($recentTickets as $ticket)
+                    <?php $__empty_1 = true; $__currentLoopData = $recentTickets; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $ticket): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 px-4 sm:px-5 py-3 sm:py-4">
                             <div class="min-w-0 flex-1">
-                                <p class="text-xs sm:text-sm font-semibold text-gray-900 dark:text-white truncate">{{ $ticket->title }}</p>
-                                <p class="text-xs text-gray-500 dark:text-gray-400 truncate">{{ $ticket->code }} • {{ $ticket->category_label }}</p>
+                                <p class="text-xs sm:text-sm font-semibold text-gray-900 dark:text-white truncate"><?php echo e($ticket->title); ?></p>
+                                <p class="text-xs text-gray-500 dark:text-gray-400 truncate"><?php echo e($ticket->code); ?> • <?php echo e($ticket->category_label); ?></p>
                             </div>
-                            <span class="rounded-full bg-gray-100 px-2 sm:px-2.5 py-1 text-xs font-medium text-gray-700 dark:bg-white/5 dark:text-gray-300 whitespace-nowrap">{{ $ticket->status_label }}</span>
+                            <span class="rounded-full bg-gray-100 px-2 sm:px-2.5 py-1 text-xs font-medium text-gray-700 dark:bg-white/5 dark:text-gray-300 whitespace-nowrap"><?php echo e($ticket->status_label); ?></span>
                         </div>
-                    @empty
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                         <div class="px-4 sm:px-5 py-6 sm:py-8 text-center text-xs sm:text-sm text-gray-500 dark:text-gray-400">Belum ada tiket.</div>
-                    @endforelse
+                    <?php endif; ?>
                 </div>
             </div>
 
@@ -350,17 +360,17 @@
                     <h3 class="text-base sm:text-lg font-semibold text-gray-900 dark:text-white truncate">Pengajuan Zoom Terbaru</h3>
                 </div>
                 <div class="divide-y divide-gray-200 max-h-96 overflow-y-auto dark:divide-gray-700">
-                    @forelse ($recentReservations as $reservation)
+                    <?php $__empty_1 = true; $__currentLoopData = $recentReservations; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $reservation): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 px-4 sm:px-5 py-3 sm:py-4">
                             <div class="min-w-0 flex-1">
-                                <p class="text-xs sm:text-sm font-semibold text-gray-900 dark:text-white truncate">{{ $reservation->room_name }}</p>
-                                <p class="text-xs text-gray-500 dark:text-gray-400 truncate">{{ optional($reservation->start_time)->format('d/m/Y H:i') }} • {{ \Illuminate\Support\Str::limit($reservation->purpose, 40) }}</p>
+                                <p class="text-xs sm:text-sm font-semibold text-gray-900 dark:text-white truncate"><?php echo e($reservation->room_name); ?></p>
+                                <p class="text-xs text-gray-500 dark:text-gray-400 truncate"><?php echo e(optional($reservation->start_time)->format('d/m/Y H:i')); ?> • <?php echo e(\Illuminate\Support\Str::limit($reservation->purpose, 40)); ?></p>
                             </div>
-                            <span class="rounded-full bg-gray-100 px-2 sm:px-2.5 py-1 text-xs font-medium text-gray-700 dark:bg-white/5 dark:text-gray-300 whitespace-nowrap">{{ $reservation->status_label }}</span>
+                            <span class="rounded-full bg-gray-100 px-2 sm:px-2.5 py-1 text-xs font-medium text-gray-700 dark:bg-white/5 dark:text-gray-300 whitespace-nowrap"><?php echo e($reservation->status_label); ?></span>
                         </div>
-                    @empty
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                         <div class="px-4 sm:px-5 py-6 sm:py-8 text-center text-xs sm:text-sm text-gray-500 dark:text-gray-400">Belum ada pengajuan Zoom.</div>
-                    @endforelse
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -420,7 +430,7 @@
 
             const calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
-                events: @json($zoomEventsArray),
+                events: <?php echo json_encode($zoomEventsArray, 15, 512) ?>,
                 height: 320,
                 contentHeight: 320,
                 eventDisplay: 'block',
@@ -552,14 +562,14 @@
         };
 
         // Initial load
-        initCharts(@json($ticketCounts), @json($zoomCounts));
+        initCharts(<?php echo json_encode($ticketCounts, 15, 512) ?>, <?php echo json_encode($zoomCounts, 15, 512) ?>);
 
         // Month filter
         const monthFilter = document.getElementById('monthFilter');
         if (monthFilter) {
             monthFilter.addEventListener('change', function() {
                 const month = this.value;
-                const chartUrl = '{{ url('/api/dashboard/charts') }}';
+                const chartUrl = '<?php echo e(url('/api/dashboard/charts')); ?>';
                 fetch(`${chartUrl}?month=${encodeURIComponent(month)}`, {
                     headers: {
                         'X-Requested-With': 'XMLHttpRequest',
@@ -575,4 +585,14 @@
         }
     });
 </script>
-</x-app-layout>
+ <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal9ac128a9029c0e4701924bd2d73d7f54)): ?>
+<?php $attributes = $__attributesOriginal9ac128a9029c0e4701924bd2d73d7f54; ?>
+<?php unset($__attributesOriginal9ac128a9029c0e4701924bd2d73d7f54); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal9ac128a9029c0e4701924bd2d73d7f54)): ?>
+<?php $component = $__componentOriginal9ac128a9029c0e4701924bd2d73d7f54; ?>
+<?php unset($__componentOriginal9ac128a9029c0e4701924bd2d73d7f54); ?>
+<?php endif; ?>
+<?php /**PATH C:\Users\BPS 1900\Documents\timcare\resources\views/dashboard.blade.php ENDPATH**/ ?>

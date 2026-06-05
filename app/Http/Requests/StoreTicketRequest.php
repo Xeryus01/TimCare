@@ -14,12 +14,20 @@ class StoreTicketRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'category' => 'required|in:DATA_PROCESSING,EMAIL_SSO,HARDWARE_SUPPORT,SOFTWARE_SUPPORT,NETWORK_SUPPORT,SECURITY_INCIDENT',
+            'category' => 'required|in:DATA_PROCESSING,EMAIL_SSO,HARDWARE_SUPPORT,SOFTWARE_SUPPORT,NETWORK_SUPPORT,SECURITY_INCIDENT,OTHER',
             'title' => 'required|string|max:200',
             'description' => 'required|string',
             'priority' => 'nullable|in:LOW,MEDIUM,HIGH,CRITICAL',
             'asset_id' => 'nullable|exists:assets,id',
-            'attachment' => 'nullable|file|max:10240',
+            'attachment' => 'nullable|file|max:1024',
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'attachment.file' => 'Lampiran harus berupa file.',
+            'attachment.max' => 'Ukuran lampiran maksimal 1MB.',
         ];
     }
 }

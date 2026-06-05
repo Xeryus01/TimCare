@@ -76,7 +76,7 @@
         <div class="text-center">
             <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">atau masuk menggunakan</p>
             <a href="<?php echo e(url()->to(route('sso.redirect'))); ?>" class="inline-flex items-center justify-center rounded-lg border border-gray-300 px-6 py-2 text-sm font-medium hover:bg-gray-50">
-                <img src="/logo/logo.png" alt="SSO" class="h-4 w-4 mr-2"> Masuk dengan SSO BPS
+                <img src="<?php echo e(asset('logo/bps.png')); ?>" alt="SSO" class="h-4 w-4 mr-2"> Masuk dengan SSO BPS
             </a>
         </div>
 

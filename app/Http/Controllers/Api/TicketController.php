@@ -102,6 +102,15 @@ class TicketController extends Controller
 
         $ticket->status = $validated['status'];
         $ticket->assignee_id = $validated['assignee_id'] ?? $ticket->assignee_id;
+        
+        // Automatic status change when assigning petugas
+        if (isset($validated['assignee_id']) && $validated['assignee_id'] !== null) {
+            $completedStatuses = [Ticket::STATUS_SOLVED, Ticket::STATUS_SOLVED_WITH_NOTES, Ticket::STATUS_REJECTED, Ticket::STATUS_CANCELLED];
+            if (!in_array($ticket->status, $completedStatuses, true) && $ticket->status !== Ticket::STATUS_ASSIGNED_DETECT) {
+                $ticket->status = Ticket::STATUS_ASSIGNED_DETECT;
+            }
+        }
+        
         if (in_array($ticket->status, [Ticket::STATUS_SOLVED, Ticket::STATUS_SOLVED_WITH_NOTES], true)) {
             $ticket->resolved_at = now();
         }

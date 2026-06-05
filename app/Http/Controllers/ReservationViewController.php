@@ -93,10 +93,7 @@ class ReservationViewController extends Controller
 
         $technicians = collect();
         if ($request->user() && $request->user()->hasRole('Admin')) {
-            $technicians = \App\Models\PiketSchedule::scheduledTechniciansForDate($reservation->start_time ?? now());
-            if ($reservation->approver && !$technicians->contains('id', $reservation->approver->id)) {
-                $technicians->push($reservation->approver);
-            }
+            $technicians = \App\Models\User::role('Teknisi')->get();
         }
 
         return view('reservations.show', compact('reservation', 'technicians'));
@@ -110,6 +107,10 @@ class ReservationViewController extends Controller
             abort(403);
         }
 
+        if ($reservation->status === Reservation::STATUS_CANCELLED && ! $user->hasRole('Admin')) {
+            abort(403, 'Pengajuan Zoom yang dibatalkan tidak dapat diedit kembali kecuali oleh Admin.');
+        }
+
         return view('reservations.edit', compact('reservation'));
     }
 
@@ -121,26 +122,38 @@ class ReservationViewController extends Controller
             abort(403);
         }
 
-        // Only Admin can assign petugas, but both Admin and Teknisi can approve reservations
-        if (! $user->hasPermissionTo('approve reservations') && $request->filled('status')) {
-            abort(403, 'Anda tidak memiliki izin untuk menyetujui pengajuan Zoom.');
+        if ($reservation->status === Reservation::STATUS_CANCELLED && ! $user->hasRole('Admin')) {
+            abort(403, 'Pengajuan Zoom yang dibatalkan hanya dapat diedit oleh Admin.');
         }
 
-        if ($request->filled('approver_id') && ! $user->hasRole('Admin')) {
-            abort(403, 'Hanya Admin yang dapat menugaskan petugas.');
-        }
-
-        // Allow users to cancel their own reservations
-        if (isset($data['status']) && $data['status'] === Reservation::STATUS_CANCELLED && $reservation->requester_id === $user->id) {
-            // User is cancelling their own reservation - allow it
-        } elseif (! $user->hasPermissionTo('approve reservations')) {
-            // Regular users cannot change status except to cancel
-            unset($data['status'], $data['zoom_link'], $data['zoom_record_link'], $data['notes'], $data['approver_id']);
-        }
-
-        $oldStatus = $reservation->status;
         $data = $request->validated();
+        $oldStatus = $reservation->status;
         $isApprover = $user->hasPermissionTo('approve reservations');
+
+        // Regular requester with an existing Zoom link may only update nota dinas or cancel
+        if (! $user->hasAnyRole(['Admin', 'Teknisi']) && $reservation->zoom_link) {
+            $cancelAllowed = $request->filled('status') && $request->input('status') === Reservation::STATUS_CANCELLED;
+            $data = $cancelAllowed ? ['status' => Reservation::STATUS_CANCELLED] : [];
+        } else {
+            // Only Admin can assign petugas, but both Admin and Teknisi can approve reservations
+            if ($request->filled('approver_id') && ! $user->hasRole('Admin')) {
+                abort(403, 'Hanya Admin yang dapat menugaskan petugas.');
+            }
+
+            if ($request->filled('status') && ! $isApprover) {
+                if (! ($request->input('status') === Reservation::STATUS_CANCELLED && $reservation->requester_id === $user->id)) {
+                    abort(403, 'Anda tidak memiliki izin untuk mengubah status pengajuan Zoom.');
+                }
+            }
+
+            if (! $isApprover) {
+                if (! (isset($data['status']) && $data['status'] === Reservation::STATUS_CANCELLED && $reservation->requester_id === $user->id)) {
+                    unset($data['status']);
+                }
+
+                unset($data['zoom_link'], $data['zoom_record_link'], $data['notes'], $data['approver_id']);
+            }
+        }
 
         if ($user->hasRole('Admin')) {
             if ($request->has('approver_id')) {
@@ -150,62 +163,50 @@ class ReservationViewController extends Controller
             }
         } elseif ($isApprover) {
             $data['approver_id'] = $request->user()->id;
-        } else {
-            unset($data['approver_id']);
         }
 
-        // Add the converted datetime fields if they were provided
-        if ($request->filled('start_time_local')) {
-            $startTime = $request->input('start_time_local');
-            if (strlen($startTime) == 16) {
-                $startTime .= ':00';
+        if (! (! $user->hasAnyRole(['Admin', 'Teknisi']) && $reservation->zoom_link)) {
+            if ($request->filled('start_time_local')) {
+                $startTime = $request->input('start_time_local');
+                if (strlen($startTime) == 16) {
+                    $startTime .= ':00';
+                }
+                $data['start_time'] = $startTime;
             }
-            $data['start_time'] = $startTime;
-        }
 
-        if ($request->filled('end_time_local')) {
-            $endTime = $request->input('end_time_local');
-            if (strlen($endTime) == 16) {
-                $endTime .= ':00';
+            if ($request->filled('end_time_local')) {
+                $endTime = $request->input('end_time_local');
+                if (strlen($endTime) == 16) {
+                    $endTime .= ':00';
+                }
+                $data['end_time'] = $endTime;
             }
-            $data['end_time'] = $endTime;
+
+            $data['operator_needed'] = $request->boolean('operator_needed');
+            $data['breakroom_needed'] = $request->boolean('breakroom_needed');
+            $data['participants_count'] = $request->input('participants_count', $reservation->participants_count ?? 1);
         }
 
-        $data['operator_needed'] = $request->boolean('operator_needed');
-        $data['breakroom_needed'] = $request->boolean('breakroom_needed');
-        $data['participants_count'] = $request->input('participants_count', $reservation->participants_count ?? 1);
-
-        // Automatic status changes for reservations
         if ($isApprover) {
-            // When zoom_link is added by technician
             if ($request->filled('zoom_link') && empty($reservation->zoom_link)) {
                 $data['status'] = Reservation::STATUS_APPROVED;
             }
-            // When zoom_record_link is added
+
             if ($request->filled('zoom_record_link') && empty($reservation->zoom_record_link)) {
                 $data['status'] = Reservation::STATUS_COMPLETED;
             }
         }
 
-        // When approver_id is set by admin (technician assigned)
         if ($user->hasRole('Admin') && $request->filled('approver_id') && empty($reservation->approver_id)) {
             $data['status'] = Reservation::STATUS_APPROVED;
         }
 
-        // When user cancels
         if (isset($data['status']) && $data['status'] === Reservation::STATUS_CANCELLED) {
             $data['status'] = Reservation::STATUS_CANCELLED;
         }
 
-        if ($isApprover) {
-            $data['approver_id'] = $request->user()->id;
-        } else {
-            unset($data['status'], $data['zoom_link'], $data['zoom_record_link'], $data['notes'], $data['approver_id']);
-        }
-
         // Handle nota dinas upload if provided
         if ($request->hasFile('nota_dinas')) {
-            // Delete old file if exists
             if ($reservation->nota_dinas_path && Storage::disk('public')->exists($reservation->nota_dinas_path)) {
                 Storage::disk('public')->delete($reservation->nota_dinas_path);
             }

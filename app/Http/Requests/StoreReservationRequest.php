@@ -31,7 +31,7 @@ class StoreReservationRequest extends FormRequest
             'breakroom_needed' => 'nullable|boolean',
             'start_time_local' => $startRule,
             'end_time_local' => 'required|regex:/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2})?$/',
-            'nota_dinas' => 'required|file|mimes:pdf|max:5120', // 5MB max
+            'nota_dinas' => 'required|file|mimes:pdf|max:1024', // 1MB max
         ];
     }
 
@@ -75,7 +75,7 @@ class StoreReservationRequest extends FormRequest
             'nota_dinas.required' => 'Nota dinas dalam format PDF harus diunggah',
             'nota_dinas.file' => 'Nota dinas harus berupa file',
             'nota_dinas.mimes' => 'Nota dinas harus berformat PDF',
-            'nota_dinas.max' => 'Ukuran nota dinas maksimal 5MB',
+            'nota_dinas.max' => 'Ukuran nota dinas maksimal 1MB',
         ];
     }
 

@@ -80,6 +80,7 @@
                                         @elseif($ticket->status === \App\Models\Ticket::STATUS_WAITING_PARTS) bg-purple-100 text-purple-700 dark:bg-purple-500/15 dark:text-purple-400
                                         @elseif($ticket->status === \App\Models\Ticket::STATUS_SOLVED_WITH_NOTES) bg-indigo-100 text-indigo-700 dark:bg-indigo-500/15 dark:text-indigo-400
                                         @elseif($ticket->status === \App\Models\Ticket::STATUS_SOLVED) bg-green-100 text-green-700 dark:bg-green-500/15 dark:text-green-400
+                                        @elseif($ticket->status === \App\Models\Ticket::STATUS_REJECTED) bg-orange-100 text-orange-700 dark:bg-orange-500/15 dark:text-orange-400
                                         @elseif($ticket->status === \App\Models\Ticket::STATUS_CANCELLED) bg-gray-100 text-gray-700 dark:bg-gray-500/15 dark:text-gray-400
                                         @else bg-gray-100 text-gray-700 dark:bg-gray-500/15 dark:text-gray-400
                                         @endif">
