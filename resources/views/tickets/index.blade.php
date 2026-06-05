@@ -66,7 +66,7 @@
                         @forelse($tickets as $ticket)
                             <tr class="hover:bg-gray-50 dark:hover:bg-white/5">
                                 <td class="px-5 py-4 sm:px-6">
-                                    <span class="text-sm font-semibold text-brand-600 dark:text-brand-400">{{ $ticket->code }}</span>
+                                    <span class="text-sm font-semibold text-gray-900 dark:text-white">{{ $ticket->code }}</span>
                                 </td>
                                 <td class="px-5 py-4 sm:px-6">
                                     <p class="text-sm font-semibold text-gray-900 dark:text-white">{{ $ticket->title }}</p>

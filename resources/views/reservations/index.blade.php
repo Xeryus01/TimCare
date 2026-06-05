@@ -74,7 +74,7 @@
                     <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
                         @forelse($reservations as $r)
                             <tr class="hover:bg-gray-50 dark:hover:bg-white/5">
-                                <td class="px-5 py-4 sm:px-6 text-sm font-semibold text-brand-600 dark:text-brand-400">{{ $r->code }}</td>
+                                <td class="px-5 py-4 sm:px-6 text-sm font-semibold text-gray-900 dark:text-white">{{ $r->code }}</td>
                                 <td class="px-5 py-4 sm:px-6">
                                     <p class="text-sm font-semibold text-gray-900 dark:text-white">{{ $r->room_name }}</p>
                                     <p class="text-xs text-gray-500 dark:text-gray-400">{{ \Illuminate\Support\Str::limit($r->purpose, 45) }}</p>

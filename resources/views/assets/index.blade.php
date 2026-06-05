@@ -153,7 +153,7 @@
                         @forelse($assets as $asset)
                             <tr class="hover:bg-gray-50 dark:hover:bg-white/5">
                                 <td class="px-5 py-4 sm:px-6">
-                                    <span class="text-sm font-semibold text-brand-600 dark:text-brand-400">{{ $asset->asset_code }}</span>
+                                    <span class="text-sm font-semibold text-gray-900 dark:text-white">{{ $asset->asset_code }}</span>
                                 </td>
                                 <td class="px-5 py-4 sm:px-6">
                                     <span class="text-sm text-gray-900 dark:text-white">{{ $asset->name }}</span>
