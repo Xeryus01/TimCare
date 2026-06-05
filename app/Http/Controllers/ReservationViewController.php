@@ -107,6 +107,7 @@ class ReservationViewController extends Controller
 
         // Send notification
         $this->notificationService->notifyReservationCreated($request->user(), $reservation);
+        $this->notificationService->notifyAdminsReservationCreated($reservation);
 
         return redirect()->route('reservations.index')->with('success', 'Pengajuan Zoom berhasil dibuat.');
     }
@@ -154,6 +155,8 @@ class ReservationViewController extends Controller
 
         $data = $request->validated();
         $oldStatus = $reservation->status;
+        $oldApproverId = $reservation->approver_id;
+        $oldZoomLink = $reservation->zoom_link;
         $isApprover = $user->hasPermissionTo('approve reservations');
 
         // Regular requester with an existing Zoom link may only update nota dinas or cancel
@@ -249,8 +252,25 @@ class ReservationViewController extends Controller
 
         $reservation->update($data);
 
-        if ($oldStatus !== $reservation->status && $reservation->status === Reservation::STATUS_APPROVED) {
-            $this->notificationService->notifyReservationApproved($reservation->requester, $reservation);
+        if ($oldApproverId !== $reservation->approver_id && $reservation->approver_id) {
+            $approver = User::find($reservation->approver_id);
+            if ($approver) {
+                $this->notificationService->notifyReservationAssigned($approver, $reservation);
+            }
+        }
+
+        if ($oldZoomLink !== $reservation->zoom_link && ! empty($reservation->zoom_link)) {
+            $this->notificationService->notifyReservationZoomLinkAvailable($reservation->requester, $reservation);
+        }
+
+        if ($oldStatus !== $reservation->status) {
+            if ($reservation->status === Reservation::STATUS_APPROVED) {
+                $this->notificationService->notifyReservationApproved($reservation->requester, $reservation);
+            }
+            if ($reservation->status === Reservation::STATUS_COMPLETED) {
+                $this->notificationService->notifyReservationCompleted($reservation->requester, $reservation);
+                $this->notificationService->notifyAdminsReservationCompleted($reservation);
+            }
         }
 
         return redirect()->route('reservations.show', $reservation)->with('success', 'Pengajuan Zoom berhasil diperbarui.');

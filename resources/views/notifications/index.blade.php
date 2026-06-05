@@ -7,7 +7,7 @@
                     <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Lihat semua notifikasi dan tindakan yang diperlukan pada layanan IT.</p>
                 </div>
                 @if (auth()->user()->notifications()->where('is_read', false)->exists())
-                    <button type="button" onclick="fetch('{{ url('/api/notifications/mark-all-as-read') }}', {method: 'PATCH'}).then(r => location.reload())" class="inline-flex items-center justify-center rounded-lg bg-brand-600 px-4 py-2 text-center font-medium text-white hover:bg-brand-700">
+                    <button type="button" onclick="fetch('{{ url('/api/notifications/mark-visible-as-read') }}', {method: 'PATCH', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ids: @json($notifications->pluck('id'))})}).then(r => location.reload())" class="inline-flex items-center justify-center rounded-lg bg-brand-600 px-4 py-2 text-center font-medium text-white hover:bg-brand-700">
                         Tandai Semua Dibaca
                     </button>
                 @endif

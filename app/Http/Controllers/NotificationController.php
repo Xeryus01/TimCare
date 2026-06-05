@@ -104,6 +104,34 @@ class NotificationController extends Controller
     }
 
     /**
+     * Mark only the currently visible notifications as read.
+     * 
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function markVisibleAsRead(Request $request)
+    {
+        $ids = array_filter((array) $request->input('ids', []), fn($id) => is_numeric($id));
+
+        if (empty($ids)) {
+            return response()->json([
+                'success' => true,
+                'message' => 'No visible notifications to update',
+            ]);
+        }
+
+        auth()->user()->notifications()
+            ->whereIn('id', $ids)
+            ->where('is_read', false)
+            ->update(['is_read' => true]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Visible notifications marked as read',
+        ]);
+    }
+
+    /**
      * Delete a notification
      * 
      * @param Notification $notification

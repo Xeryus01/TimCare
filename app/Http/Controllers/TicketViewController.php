@@ -6,6 +6,7 @@ use App\Models\Ticket;
 use App\Models\Asset;
 use App\Models\Attachment;
 use App\Models\TicketComment;
+use App\Models\User;
 use App\Services\NotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -115,6 +116,7 @@ class TicketViewController extends Controller
 
         // Send notification
         $this->notificationService->notifyTicketCreated($request->user(), $ticket);
+        $this->notificationService->notifyAdminsTicketCreated($ticket);
 
         return redirect()->route('tickets.show', $ticket)->with('success', 'Ticket created');
     }
@@ -162,6 +164,7 @@ class TicketViewController extends Controller
         }
 
         $data = $request->validated();
+        $oldAssigneeId = $ticket->assignee_id;
 
         // Only Admin can assign tickets
         if (isset($data['assignee_id']) && ! $user->hasRole('Admin')) {
@@ -203,6 +206,31 @@ class TicketViewController extends Controller
         }
         $ticket->save();
 
+        // Notify on assignment changes
+        if (array_key_exists('assignee_id', $data) && $data['assignee_id'] !== null && $oldAssigneeId !== $data['assignee_id']) {
+            $assignedUser = User::find($data['assignee_id']);
+            if ($assignedUser) {
+                $this->notificationService->notifyTicketAssigned($assignedUser, $ticket);
+                $this->notificationService->notifyTicketAssignedToRequester($ticket->requester, $ticket);
+            }
+        }
+
+        // Send notification if status changed
+        if ($oldStatus !== $ticket->status) {
+            if (in_array($ticket->status, [Ticket::STATUS_SOLVED, Ticket::STATUS_SOLVED_WITH_NOTES], true)) {
+                $this->notificationService->notifyTicketResolved($ticket->requester, $ticket);
+                if ($ticket->assignee && $ticket->assignee->id !== $ticket->requester_id) {
+                    $this->notificationService->notifyTicketResolved($ticket->assignee, $ticket);
+                }
+                $this->notificationService->notifyAdminsTicketResolved($ticket);
+            } else {
+                $this->notificationService->notifyTicketUpdated($ticket->requester, $ticket, $oldStatus);
+                if ($ticket->assignee && $ticket->assignee->id !== $ticket->requester_id) {
+                    $this->notificationService->notifyTicketUpdated($ticket->assignee, $ticket, $oldStatus);
+                }
+            }
+        }
+
         if ($request->hasFile('attachment')) {
             $file = $request->file('attachment');
             $path = $file->store('attachments', 'public');
@@ -214,15 +242,6 @@ class TicketViewController extends Controller
                 'mime_type' => $file->getClientMimeType(),
                 'size_bytes' => $file->getSize(),
             ]);
-        }
-
-        // Send notification if status changed
-        if ($oldStatus !== $ticket->status) {
-            if (in_array($ticket->status, [Ticket::STATUS_SOLVED, Ticket::STATUS_SOLVED_WITH_NOTES], true)) {
-                $this->notificationService->notifyTicketResolved($ticket->assignee ?? $ticket->requester, $ticket);
-            } else {
-                $this->notificationService->notifyTicketUpdated($ticket->assignee ?? $ticket->requester, $ticket, $oldStatus);
-            }
         }
 
         return redirect()->route('tickets.show', $ticket)->with('success','Ticket updated');
@@ -310,9 +329,16 @@ class TicketViewController extends Controller
             // Send notification if status changed
             if ($oldStatus !== $ticket->status) {
                 if (in_array($ticket->status, [Ticket::STATUS_SOLVED, Ticket::STATUS_SOLVED_WITH_NOTES], true)) {
-                    $this->notificationService->notifyTicketResolved($ticket->assignee ?? $ticket->requester, $ticket);
+                    $this->notificationService->notifyTicketResolved($ticket->requester, $ticket);
+                    if ($ticket->assignee && $ticket->assignee->id !== $ticket->requester_id) {
+                        $this->notificationService->notifyTicketResolved($ticket->assignee, $ticket);
+                    }
+                    $this->notificationService->notifyAdminsTicketResolved($ticket);
                 } else {
-                    $this->notificationService->notifyTicketUpdated($ticket->assignee ?? $ticket->requester, $ticket, $oldStatus);
+                    $this->notificationService->notifyTicketUpdated($ticket->requester, $ticket, $oldStatus);
+                    if ($ticket->assignee && $ticket->assignee->id !== $ticket->requester_id) {
+                        $this->notificationService->notifyTicketUpdated($ticket->assignee, $ticket, $oldStatus);
+                    }
                 }
             }
         }
@@ -329,29 +355,11 @@ class TicketViewController extends Controller
 
         // Send notification about new comment
         if ($ticket->requester && $ticket->requester->id !== $user->id) {
-            $this->notificationService->notify(
-                $ticket->requester,
-                'info',
-                '💬 Komentar Baru pada Tiket',
-                "Komentar baru pada tiket {$ticket->code}: {$comment->message}",
-                'ticket',
-                $ticket->id,
-                false,
-                false
-            );
+            $this->notificationService->notifyTicketCommented($ticket->requester, $ticket, $comment, false, false);
         }
 
         if ($ticket->assignee && $ticket->assignee->id !== $user->id) {
-            $this->notificationService->notify(
-                $ticket->assignee,
-                'info',
-                '💬 Komentar Baru pada Tiket',
-                "Komentar baru pada tiket {$ticket->code}: {$comment->message}",
-                'ticket',
-                $ticket->id,
-                false,
-                false
-            );
+            $this->notificationService->notifyTicketCommented($ticket->assignee, $ticket, $comment, false, false);
         }
 
         return redirect()->route('tickets.show', $ticket)->with('success','Pesan berhasil dikirim');

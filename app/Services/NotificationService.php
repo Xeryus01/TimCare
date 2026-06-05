@@ -168,6 +168,176 @@ class NotificationService
     }
 
     /**
+     * Notify all admins
+     */
+    public function notifyAdmins(string $type, string $title, string $message, ?string $actionType = null, ?int $actionId = null, bool $sendWhatsApp = true, bool $sendEmail = true): void
+    {
+        $admins = User::role('Admin')->get();
+
+        foreach ($admins as $admin) {
+            $this->notify($admin, $type, $title, $message, $actionType, $actionId, $sendWhatsApp, $sendEmail);
+        }
+    }
+
+    /**
+     * Notify technician assigned to a ticket
+     */
+    public function notifyTicketAssigned(User $assignee, $ticket, bool $sendWhatsApp = true, bool $sendEmail = true): Notification
+    {
+        return $this->notify(
+            $assignee,
+            'info',
+            '🛠️ Tiket Ditugaskan',
+            "Anda ditugaskan menangani tiket {$ticket->code}.",
+            'ticket',
+            $ticket->id,
+            $sendWhatsApp,
+            $sendEmail
+        );
+    }
+
+    /**
+     * Notify requester that a technician has been assigned
+     */
+    public function notifyTicketAssignedToRequester(User $requester, $ticket, bool $sendWhatsApp = true, bool $sendEmail = true): Notification
+    {
+        return $this->notify(
+            $requester,
+            'info',
+            '👤 Teknisi Ditugaskan',
+            "Tiket {$ticket->code} telah ditugaskan ke teknisi.",
+            'ticket',
+            $ticket->id,
+            $sendWhatsApp,
+            $sendEmail
+        );
+    }
+
+    /**
+     * Notify user about a new ticket comment
+     */
+    public function notifyTicketCommented(User $recipient, $ticket, $comment, bool $sendWhatsApp = true, bool $sendEmail = true): Notification
+    {
+        return $this->notify(
+            $recipient,
+            'info',
+            '💬 Komentar Baru pada Tiket',
+            "Komentar baru pada tiket {$ticket->code}: {$comment->message}",
+            'ticket',
+            $ticket->id,
+            $sendWhatsApp,
+            $sendEmail
+        );
+    }
+
+    /**
+     * Notify admins about a newly created ticket
+     */
+    public function notifyAdminsTicketCreated($ticket): void
+    {
+        $this->notifyAdmins(
+            'success',
+            '📌 Permintaan Baru Masuk',
+            "Tiket baru {$ticket->code} telah diajukan oleh {$ticket->requester->name}.",
+            'ticket',
+            $ticket->id
+        );
+    }
+
+    /**
+     * Notify admins about a ticket resolution
+     */
+    public function notifyAdminsTicketResolved($ticket): void
+    {
+        $this->notifyAdmins(
+            'success',
+            '✅ Permintaan Selesai',
+            "Tiket {$ticket->code} telah diselesaikan.",
+            'ticket',
+            $ticket->id
+        );
+    }
+
+    /**
+     * Notify admins about a reservation request
+     */
+    public function notifyAdminsReservationCreated($reservation): void
+    {
+        $this->notifyAdmins(
+            'success',
+            '📌 Pengajuan Zoom Baru',
+            "Pengajuan Zoom {$reservation->code} oleh {$reservation->requester->name} telah dibuat.",
+            'reservation',
+            $reservation->id
+        );
+    }
+
+    /**
+     * Notify admins about a reservation completion
+     */
+    public function notifyAdminsReservationCompleted($reservation): void
+    {
+        $this->notifyAdmins(
+            'success',
+            '✅ Pengajuan Zoom Selesai',
+            "Pengajuan Zoom {$reservation->code} telah selesai.",
+            'reservation',
+            $reservation->id
+        );
+    }
+
+    /**
+     * Notify technician assigned to a reservation
+     */
+    public function notifyReservationAssigned(User $approver, $reservation, bool $sendWhatsApp = true, bool $sendEmail = true): Notification
+    {
+        return $this->notify(
+            $approver,
+            'info',
+            '🛠️ Tugas Zoom Meeting Ditugaskan',
+            "Anda ditugaskan sebagai teknisi untuk pengajuan Zoom {$reservation->code}.",
+            'reservation',
+            $reservation->id,
+            $sendWhatsApp,
+            $sendEmail
+        );
+    }
+
+    /**
+     * Notify requester when Zoom link becomes available
+     */
+    public function notifyReservationZoomLinkAvailable(User $requester, $reservation, bool $sendWhatsApp = true, bool $sendEmail = true): Notification
+    {
+        return $this->notify(
+            $requester,
+            'success',
+            '🔗 Link Zoom Tersedia',
+            "Link Zoom untuk pengajuan {$reservation->code} telah tersedia: {$reservation->zoom_link}",
+            'reservation',
+            $reservation->id,
+            $sendWhatsApp,
+            $sendEmail
+        );
+    }
+
+    /**
+     * Notify requester when reservation is completed
+     */
+    public function notifyReservationCompleted(User $user, $reservation, bool $sendWhatsApp = true, bool $sendEmail = true): Notification
+    {
+        return $this->notify(
+            $user,
+            'success',
+            '✅ Pengajuan Zoom Selesai',
+            "Pengajuan Zoom {$reservation->code} telah selesai.",
+            'reservation',
+            $reservation->id,
+            $sendWhatsApp,
+            $sendEmail
+        );
+    }
+
+    /**
      * Create reservation notification
      */
     public function notifyReservationCreated(User $user, $reservation, bool $sendWhatsApp = true, bool $sendEmail = true): Notification

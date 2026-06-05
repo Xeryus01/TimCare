@@ -75,6 +75,7 @@ Route::get('/dashboard', function () {
         Route::get('/notifications/unread-count', [\App\Http\Controllers\NotificationController::class, 'unreadCount'])->name('api.notifications.unreadCount');
         Route::get('/notifications/{notification}', [\App\Http\Controllers\NotificationController::class, 'show'])->name('api.notifications.show');
         Route::patch('/notifications/{notification}/mark-as-read', [\App\Http\Controllers\NotificationController::class, 'markAsRead'])->name('api.notifications.markAsRead');
+        Route::patch('/notifications/mark-visible-as-read', [\App\Http\Controllers\NotificationController::class, 'markVisibleAsRead'])->name('api.notifications.markVisibleAsRead');
         Route::patch('/notifications/mark-all-as-read', [\App\Http\Controllers\NotificationController::class, 'markAllAsRead'])->name('api.notifications.markAllAsRead');
         Route::delete('/notifications/{notification}', [\App\Http\Controllers\NotificationController::class, 'destroy'])->name('api.notifications.destroy');
     });
