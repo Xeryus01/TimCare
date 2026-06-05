@@ -110,8 +110,10 @@ class TicketViewController extends Controller
             abort(403);
         }
 
-        if ($ticket->status === Ticket::STATUS_CANCELLED && ! $user->hasRole('Admin')) {
-            abort(403, 'Tiket yang dibatalkan tidak dapat diedit kembali kecuali oleh Admin.');
+        $completedStatuses = [Ticket::STATUS_SOLVED, Ticket::STATUS_SOLVED_WITH_NOTES];
+        if (in_array($ticket->status, array_merge([Ticket::STATUS_CANCELLED], $completedStatuses), true)
+            && ! $user->hasAnyRole(['Admin', 'Teknisi'])) {
+            abort(403, 'Tiket yang sudah selesai atau dibatalkan tidak dapat diedit kembali kecuali oleh Admin atau Teknisi.');
         }
 
         $assets = Asset::all();
@@ -127,8 +129,10 @@ class TicketViewController extends Controller
             abort(403);
         }
 
-        if ($ticket->status === Ticket::STATUS_CANCELLED && ! $user->hasRole('Admin')) {
-            abort(403, 'Tiket yang dibatalkan hanya dapat diedit oleh Admin.');
+        $completedStatuses = [Ticket::STATUS_SOLVED, Ticket::STATUS_SOLVED_WITH_NOTES];
+        if (in_array($ticket->status, array_merge([Ticket::STATUS_CANCELLED], $completedStatuses), true)
+            && ! $user->hasAnyRole(['Admin', 'Teknisi'])) {
+            abort(403, 'Tiket yang sudah selesai atau dibatalkan hanya dapat diedit oleh Admin atau Teknisi.');
         }
 
         $data = $request->validated();

@@ -17,7 +17,11 @@
             </div>
             <div class="flex flex-wrap gap-2">
                 <a href="<?php echo e(url()->to(route('tickets.index'))); ?>" class="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-white/5">Kembali</a>
-                <?php if(auth()->user()->hasRole('Admin') || (! in_array($ticket->status, [\App\Models\Ticket::STATUS_CANCELLED]) && (auth()->user()->hasAnyRole(['Teknisi']) || auth()->id() === $ticket->requester_id))): ?>
+                <?php if(
+                    auth()->user()->hasRole('Admin') ||
+                    (auth()->user()->hasAnyRole(['Teknisi']) && ! in_array($ticket->status, [\App\Models\Ticket::STATUS_CANCELLED], true)) ||
+                    (auth()->id() === $ticket->requester_id && ! in_array($ticket->status, [\App\Models\Ticket::STATUS_CANCELLED, \App\Models\Ticket::STATUS_SOLVED, \App\Models\Ticket::STATUS_SOLVED_WITH_NOTES], true))
+                ): ?>
                     <a href="<?php echo e(url()->to(route('tickets.edit', $ticket))); ?>" class="rounded-lg bg-yellow-600 px-4 py-2 text-sm font-medium text-white hover:bg-yellow-700">Ubah</a>
                 <?php endif; ?>
                 <?php if(auth()->id() === $ticket->requester_id && ! in_array($ticket->status, [\App\Models\Ticket::STATUS_CANCELLED, \App\Models\Ticket::STATUS_SOLVED, \App\Models\Ticket::STATUS_SOLVED_WITH_NOTES, \App\Models\Ticket::STATUS_REJECTED])): ?>

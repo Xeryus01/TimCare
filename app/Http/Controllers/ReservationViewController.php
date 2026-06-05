@@ -107,8 +107,9 @@ class ReservationViewController extends Controller
             abort(403);
         }
 
-        if ($reservation->status === Reservation::STATUS_CANCELLED && ! $user->hasRole('Admin')) {
-            abort(403, 'Pengajuan Zoom yang dibatalkan tidak dapat diedit kembali kecuali oleh Admin.');
+        if (in_array($reservation->status, [Reservation::STATUS_CANCELLED, Reservation::STATUS_COMPLETED], true)
+            && ! $user->hasAnyRole(['Admin', 'Teknisi'])) {
+            abort(403, 'Pengajuan Zoom yang sudah selesai atau dibatalkan tidak dapat diedit kembali kecuali oleh Admin atau Teknisi.');
         }
 
         return view('reservations.edit', compact('reservation'));
@@ -122,8 +123,9 @@ class ReservationViewController extends Controller
             abort(403);
         }
 
-        if ($reservation->status === Reservation::STATUS_CANCELLED && ! $user->hasRole('Admin')) {
-            abort(403, 'Pengajuan Zoom yang dibatalkan hanya dapat diedit oleh Admin.');
+        if (in_array($reservation->status, [Reservation::STATUS_CANCELLED, Reservation::STATUS_COMPLETED], true)
+            && ! $user->hasAnyRole(['Admin', 'Teknisi'])) {
+            abort(403, 'Pengajuan Zoom yang sudah selesai atau dibatalkan hanya dapat diedit oleh Admin atau Teknisi.');
         }
 
         $data = $request->validated();
