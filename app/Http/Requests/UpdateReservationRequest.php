@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Models\PiketSchedule;
 use App\Models\Reservation;
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateReservationRequest extends FormRequest
@@ -32,7 +33,7 @@ class UpdateReservationRequest extends FormRequest
             'breakroom_needed' => 'nullable|boolean',
             'start_time_local' => 'nullable|regex:/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2})?$/',
             'end_time_local' => 'nullable|regex:/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2})?$/',
-            'status' => 'nullable|string|in:' . implode(',', Reservation::statuses()),
+            'status' => ['nullable', 'string', Rule::in(array_merge([''], Reservation::statuses()))],
             'zoom_link' => 'nullable|url|max:255',
             'zoom_record_link' => 'nullable|url|max:255',
             'notes' => 'nullable|string|max:2000',

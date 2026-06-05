@@ -218,6 +218,11 @@ class ReservationViewController extends Controller
             $data['nota_dinas_path'] = $path;
         }
 
+        // Prevent setting status to empty/null which can violate NOT NULL DB constraint
+        if (array_key_exists('status', $data) && ($data['status'] === '' || $data['status'] === null)) {
+            unset($data['status']);
+        }
+
         $reservation->update($data);
 
         if ($oldStatus !== $reservation->status && $reservation->status === Reservation::STATUS_APPROVED) {
