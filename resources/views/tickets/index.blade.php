@@ -49,16 +49,62 @@
             <button type="submit" class="rounded-lg bg-brand-600 px-4 py-2 text-white">Terapkan</button>
         </form>
 
+        @php
+            $sort = request('sort');
+            $direction = request('direction', 'asc') === 'desc' ? 'desc' : 'asc';
+            $baseQuery = request()->except('page');
+        @endphp
+
         <div class="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-gray-700 dark:bg-dark-800">
             <div class="overflow-x-auto">
                 <table class="w-full">
                     <thead class="border-b border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-white/5">
                         <tr>
-                            <th class="px-5 py-3.5 text-left text-xs font-semibold uppercase text-gray-500 dark:text-gray-400 sm:px-6">Kode</th>
-                            <th class="px-5 py-3.5 text-left text-xs font-semibold uppercase text-gray-500 dark:text-gray-400 sm:px-6">Keluhan</th>
-                            <th class="px-5 py-3.5 text-left text-xs font-semibold uppercase text-gray-500 dark:text-gray-400 sm:px-6">Pemohon</th>
-                            <th class="px-5 py-3.5 text-left text-xs font-semibold uppercase text-gray-500 dark:text-gray-400 sm:px-6">Status</th>
-                            <th class="px-5 py-3.5 text-left text-xs font-semibold uppercase text-gray-500 dark:text-gray-400 sm:px-6">Petugas</th>
+                            <th class="px-5 py-3.5 text-left text-xs font-semibold uppercase text-gray-500 dark:text-gray-400 sm:px-6">
+                                @php $nextDir = ($sort === 'code' && $direction === 'asc') ? 'desc' : 'asc'; @endphp
+                                <a href="{{ url()->current() . '?' . http_build_query(array_merge($baseQuery, ['sort' => 'code', 'direction' => $nextDir])) }}" class="inline-flex items-center gap-1">
+                                    Kode
+                                    @if($sort === 'code')
+                                        <span>{{ $direction === 'asc' ? '▲' : '▼' }}</span>
+                                    @endif
+                                </a>
+                            </th>
+                            <th class="px-5 py-3.5 text-left text-xs font-semibold uppercase text-gray-500 dark:text-gray-400 sm:px-6">
+                                @php $nextDir = ($sort === 'title' && $direction === 'asc') ? 'desc' : 'asc'; @endphp
+                                <a href="{{ url()->current() . '?' . http_build_query(array_merge($baseQuery, ['sort' => 'title', 'direction' => $nextDir])) }}" class="inline-flex items-center gap-1">
+                                    Keluhan
+                                    @if($sort === 'title')
+                                        <span>{{ $direction === 'asc' ? '▲' : '▼' }}</span>
+                                    @endif
+                                </a>
+                            </th>
+                            <th class="px-5 py-3.5 text-left text-xs font-semibold uppercase text-gray-500 dark:text-gray-400 sm:px-6">
+                                @php $nextDir = ($sort === 'requester' && $direction === 'asc') ? 'desc' : 'asc'; @endphp
+                                <a href="{{ url()->current() . '?' . http_build_query(array_merge($baseQuery, ['sort' => 'requester', 'direction' => $nextDir])) }}" class="inline-flex items-center gap-1">
+                                    Pemohon
+                                    @if($sort === 'requester')
+                                        <span>{{ $direction === 'asc' ? '▲' : '▼' }}</span>
+                                    @endif
+                                </a>
+                            </th>
+                            <th class="px-5 py-3.5 text-left text-xs font-semibold uppercase text-gray-500 dark:text-gray-400 sm:px-6">
+                                @php $nextDir = ($sort === 'status' && $direction === 'asc') ? 'desc' : 'asc'; @endphp
+                                <a href="{{ url()->current() . '?' . http_build_query(array_merge($baseQuery, ['sort' => 'status', 'direction' => $nextDir])) }}" class="inline-flex items-center gap-1">
+                                    Status
+                                    @if($sort === 'status')
+                                        <span>{{ $direction === 'asc' ? '▲' : '▼' }}</span>
+                                    @endif
+                                </a>
+                            </th>
+                            <th class="px-5 py-3.5 text-left text-xs font-semibold uppercase text-gray-500 dark:text-gray-400 sm:px-6">
+                                @php $nextDir = ($sort === 'assignee' && $direction === 'asc') ? 'desc' : 'asc'; @endphp
+                                <a href="{{ url()->current() . '?' . http_build_query(array_merge($baseQuery, ['sort' => 'assignee', 'direction' => $nextDir])) }}" class="inline-flex items-center gap-1">
+                                    Petugas
+                                    @if($sort === 'assignee')
+                                        <span>{{ $direction === 'asc' ? '▲' : '▼' }}</span>
+                                    @endif
+                                </a>
+                            </th>
                             <th class="px-5 py-3.5 text-right text-xs font-semibold uppercase text-gray-500 dark:text-gray-400 sm:px-6">Aksi</th>
                         </tr>
                     </thead>

@@ -27,13 +27,13 @@ class TicketViewController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
-        $q = Ticket::query()->with(['requester', 'assignee', 'asset'])->latest();
+        $q = Ticket::query()->select('tickets.*')->with(['requester', 'assignee', 'asset']);
 
         if (! $user->hasAnyRole(['Admin', 'Teknisi'])) {
             $q->where('requester_id', $user->id);
         }
 
-        // allow filtering by status, priority or assignee for all users
+        // allow filtering by status or assignee for all users
         if ($request->filled('status')) {
             $q->where('status', $request->status);
         }
@@ -41,11 +41,37 @@ class TicketViewController extends Controller
             $q->where('assignee_id', $request->assignee_id);
         }
 
+        $sort = $request->input('sort');
+        $direction = $request->input('direction', 'asc') === 'desc' ? 'desc' : 'asc';
+
+        $sortableColumns = [
+            'code' => 'tickets.code',
+            'title' => 'tickets.title',
+            'status' => 'tickets.status',
+            'requester' => 'requesters.name',
+            'assignee' => 'assignees.name',
+            'created_at' => 'tickets.created_at',
+        ];
+
+        if (array_key_exists($sort, $sortableColumns)) {
+            if (in_array($sort, ['requester', 'assignee'], true)) {
+                if ($sort === 'requester') {
+                    $q->leftJoin('users as requesters', 'tickets.requester_id', '=', 'requesters.id');
+                }
+                if ($sort === 'assignee') {
+                    $q->leftJoin('users as assignees', 'tickets.assignee_id', '=', 'assignees.id');
+                }
+            }
+            $q->orderBy($sortableColumns[$sort], $direction);
+        } else {
+            $q->latest('tickets.created_at');
+        }
+
         $perPage = $request->input('per_page', 10);
         $perPage = in_array($perPage, [10, 20, 50]) ? (int)$perPage : 10;
         
         $tickets = $q->paginate($perPage)->appends(request()->query());
-        return view('tickets.index', compact('tickets'));
+        return view('tickets.index', compact('tickets', 'sort', 'direction'));
     }
 
     public function create(Request $request)

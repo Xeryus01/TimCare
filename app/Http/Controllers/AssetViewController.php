@@ -30,11 +30,34 @@ class AssetViewController extends Controller
 
     public function index(Request $request)
     {
+        $sort = $request->input('sort');
+        $direction = $request->input('direction', 'asc') === 'desc' ? 'desc' : 'asc';
+
+        $sortableColumns = [
+            'asset_code' => 'asset_code',
+            'name' => 'name',
+            'type' => 'type',
+            'brand' => 'brand',
+            'model' => 'model',
+            'serial_number' => 'serial_number',
+            'status' => 'status',
+            'condition' => 'condition',
+            'location' => 'location',
+            'holder' => 'holder',
+        ];
+
+        $q = Asset::query();
+        if (array_key_exists($sort, $sortableColumns)) {
+            $q->orderBy($sortableColumns[$sort], $direction);
+        } else {
+            $q->latest();
+        }
+
         $perPage = $request->input('per_page', 10);
         $perPage = in_array($perPage, [10, 20, 50]) ? (int)$perPage : 10;
         
-        $assets = Asset::paginate($perPage)->appends(request()->query());
-        return view('assets.index', compact('assets'));
+        $assets = $q->paginate($perPage)->appends(request()->query());
+        return view('assets.index', compact('assets', 'sort', 'direction'));
     }
 
     public function create()

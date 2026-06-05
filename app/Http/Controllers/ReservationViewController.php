@@ -22,7 +22,7 @@ class ReservationViewController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
-        $q = Reservation::query()->with(['requester', 'approver']);
+        $q = Reservation::query()->select('reservations.*')->with(['requester', 'approver']);
 
         if (! $user->hasAnyRole(['Admin', 'Teknisi'])) {
             $q->where('requester_id', $user->id);
@@ -32,11 +32,35 @@ class ReservationViewController extends Controller
             $q->where('status', $request->input('status'));
         }
 
+        $sort = $request->input('sort');
+        $direction = $request->input('direction', 'asc') === 'desc' ? 'desc' : 'asc';
+
+        $sortableColumns = [
+            'code' => 'reservations.code',
+            'room_name' => 'reservations.room_name',
+            'start_time' => 'reservations.start_time',
+            'status' => 'reservations.status',
+            'requester' => 'requesters.name',
+            'approver' => 'approvers.name',
+        ];
+
+        if (array_key_exists($sort, $sortableColumns)) {
+            if ($sort === 'requester') {
+                $q->leftJoin('users as requesters', 'reservations.requester_id', '=', 'requesters.id');
+            }
+            if ($sort === 'approver') {
+                $q->leftJoin('users as approvers', 'reservations.approver_id', '=', 'approvers.id');
+            }
+            $q->orderBy($sortableColumns[$sort], $direction);
+        } else {
+            $q->latest('reservations.created_at');
+        }
+
         $perPage = $request->input('per_page', 10);
         $perPage = in_array($perPage, [10, 20, 50]) ? (int)$perPage : 10;
         
-        $reservations = $q->latest()->paginate($perPage)->appends(request()->query());
-        return view('reservations.index', compact('reservations'));
+        $reservations = $q->paginate($perPage)->appends(request()->query());
+        return view('reservations.index', compact('reservations', 'sort', 'direction'));
     }
 
     public function create()

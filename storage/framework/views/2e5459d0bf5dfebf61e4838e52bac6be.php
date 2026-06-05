@@ -65,25 +65,79 @@
             <button type="submit" class="rounded-lg bg-brand-600 px-4 py-2 text-white">Terapkan</button>
         </form>
 
+        <?php
+            $sort = request('sort');
+            $direction = request('direction', 'asc') === 'desc' ? 'desc' : 'asc';
+            $baseQuery = request()->except('page');
+        ?>
+
         <div class="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-gray-700 dark:bg-dark-800">
             <div class="overflow-x-auto">
                 <table class="w-full">
                     <thead class="border-b border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-white/5">
                         <tr>
-                            <th class="px-5 py-3.5 text-left text-xs font-semibold uppercase text-gray-500 dark:text-gray-400 sm:px-6">Kode</th>
-                            <th class="px-5 py-3.5 text-left text-xs font-semibold uppercase text-gray-500 dark:text-gray-400 sm:px-6">Kegiatan / Ruang</th>
-                            <th class="px-5 py-3.5 text-left text-xs font-semibold uppercase text-gray-500 dark:text-gray-400 sm:px-6">Jadwal</th>
-                            <th class="px-5 py-3.5 text-left text-xs font-semibold uppercase text-gray-500 dark:text-gray-400 sm:px-6">Pemohon</th>
-                            <th class="px-5 py-3.5 text-left text-xs font-semibold uppercase text-gray-500 dark:text-gray-400 sm:px-6">Status</th>
+                            <th class="px-5 py-3.5 text-left text-xs font-semibold uppercase text-gray-500 dark:text-gray-400 sm:px-6">
+                                <?php $nextDir = ($sort === 'code' && $direction === 'asc') ? 'desc' : 'asc'; ?>
+                                <a href="<?php echo e(url()->current() . '?' . http_build_query(array_merge($baseQuery, ['sort' => 'code', 'direction' => $nextDir]))); ?>" class="inline-flex items-center gap-1">
+                                    Kode
+                                    <?php if($sort === 'code'): ?>
+                                        <span><?php echo e($direction === 'asc' ? '▲' : '▼'); ?></span>
+                                    <?php endif; ?>
+                                </a>
+                            </th>
+                            <th class="px-5 py-3.5 text-left text-xs font-semibold uppercase text-gray-500 dark:text-gray-400 sm:px-6">
+                                <?php $nextDir = ($sort === 'room_name' && $direction === 'asc') ? 'desc' : 'asc'; ?>
+                                <a href="<?php echo e(url()->current() . '?' . http_build_query(array_merge($baseQuery, ['sort' => 'room_name', 'direction' => $nextDir]))); ?>" class="inline-flex items-center gap-1">
+                                    Kegiatan / Ruang
+                                    <?php if($sort === 'room_name'): ?>
+                                        <span><?php echo e($direction === 'asc' ? '▲' : '▼'); ?></span>
+                                    <?php endif; ?>
+                                </a>
+                            </th>
+                            <th class="px-5 py-3.5 text-left text-xs font-semibold uppercase text-gray-500 dark:text-gray-400 sm:px-6">
+                                <?php $nextDir = ($sort === 'start_time' && $direction === 'asc') ? 'desc' : 'asc'; ?>
+                                <a href="<?php echo e(url()->current() . '?' . http_build_query(array_merge($baseQuery, ['sort' => 'start_time', 'direction' => $nextDir]))); ?>" class="inline-flex items-center gap-1">
+                                    Jadwal
+                                    <?php if($sort === 'start_time'): ?>
+                                        <span><?php echo e($direction === 'asc' ? '▲' : '▼'); ?></span>
+                                    <?php endif; ?>
+                                </a>
+                            </th>
+                            <th class="px-5 py-3.5 text-left text-xs font-semibold uppercase text-gray-500 dark:text-gray-400 sm:px-6">
+                                <?php $nextDir = ($sort === 'requester' && $direction === 'asc') ? 'desc' : 'asc'; ?>
+                                <a href="<?php echo e(url()->current() . '?' . http_build_query(array_merge($baseQuery, ['sort' => 'requester', 'direction' => $nextDir]))); ?>" class="inline-flex items-center gap-1">
+                                    Pemohon
+                                    <?php if($sort === 'requester'): ?>
+                                        <span><?php echo e($direction === 'asc' ? '▲' : '▼'); ?></span>
+                                    <?php endif; ?>
+                                </a>
+                            </th>
+                            <th class="px-5 py-3.5 text-left text-xs font-semibold uppercase text-gray-500 dark:text-gray-400 sm:px-6">
+                                <?php $nextDir = ($sort === 'status' && $direction === 'asc') ? 'desc' : 'asc'; ?>
+                                <a href="<?php echo e(url()->current() . '?' . http_build_query(array_merge($baseQuery, ['sort' => 'status', 'direction' => $nextDir]))); ?>" class="inline-flex items-center gap-1">
+                                    Status
+                                    <?php if($sort === 'status'): ?>
+                                        <span><?php echo e($direction === 'asc' ? '▲' : '▼'); ?></span>
+                                    <?php endif; ?>
+                                </a>
+                            </th>
                             <th class="px-5 py-3.5 text-left text-xs font-semibold uppercase text-gray-500 dark:text-gray-400 sm:px-6">Link Zoom</th>
-                            <th class="px-5 py-3.5 text-left text-xs font-semibold uppercase text-gray-500 dark:text-gray-400 sm:px-6">Petugas</th>
+                            <th class="px-5 py-3.5 text-left text-xs font-semibold uppercase text-gray-500 dark:text-gray-400 sm:px-6">
+                                <?php $nextDir = ($sort === 'approver' && $direction === 'asc') ? 'desc' : 'asc'; ?>
+                                <a href="<?php echo e(url()->current() . '?' . http_build_query(array_merge($baseQuery, ['sort' => 'approver', 'direction' => $nextDir]))); ?>" class="inline-flex items-center gap-1">
+                                    Petugas
+                                    <?php if($sort === 'approver'): ?>
+                                        <span><?php echo e($direction === 'asc' ? '▲' : '▼'); ?></span>
+                                    <?php endif; ?>
+                                </a>
+                            </th>
                             <th class="px-5 py-3.5 text-right text-xs font-semibold uppercase text-gray-500 dark:text-gray-400 sm:px-6">Aksi</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
                         <?php $__empty_1 = true; $__currentLoopData = $reservations; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $r): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                             <tr class="hover:bg-gray-50 dark:hover:bg-white/5">
-                                <td class="px-5 py-4 sm:px-6 text-sm font-semibold text-brand-600 dark:text-brand-400"><?php echo e($r->code); ?></td>
+                                <td class="px-5 py-4 sm:px-6 text-sm font-semibold text-gray-900 dark:text-white"><?php echo e($r->code); ?></td>
                                 <td class="px-5 py-4 sm:px-6">
                                     <p class="text-sm font-semibold text-gray-900 dark:text-white"><?php echo e($r->room_name); ?></p>
                                     <p class="text-xs text-gray-500 dark:text-gray-400"><?php echo e(\Illuminate\Support\Str::limit($r->purpose, 45)); ?></p>
