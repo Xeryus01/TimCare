@@ -166,6 +166,11 @@ class TicketViewController extends Controller
             $data['status'] = Ticket::STATUS_CANCELLED;
         }
 
+        // Prevent accidentally setting status to null/empty which breaks NOT NULL DB constraint
+        if (array_key_exists('status', $data) && ($data['status'] === '' || $data['status'] === null)) {
+            unset($data['status']);
+        }
+
         $ticket->fill($data);
         if (isset($data['status']) && in_array($data['status'], [Ticket::STATUS_SOLVED, Ticket::STATUS_SOLVED_WITH_NOTES], true)) {
             $ticket->resolved_at = now();
