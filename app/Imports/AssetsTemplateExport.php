@@ -12,18 +12,19 @@ class AssetsTemplateExport implements FromCollection, WithHeadings
     {
         return new Collection([
             [
-                'asset_code' => 'ASSET-0001',
-                'name' => 'Laptop Dell Vostro 3510',
-                'type' => 'Laptop',
-                'brand' => 'Dell',
-                'model' => 'Vostro 3510',
-                'serial_number' => 'SN123456',
-                'specs' => '{"prosesor":"i5","ram":"16GB","penyimpanan":"512GB SSD"}',
-                'location' => 'Ruang Server',
-                'holder' => 'TI',
-                'status' => 'ACTIVE',
-                'condition' => 'GOOD',
-                'purchased_at' => now()->format('Y-m-d'),
+                'NO BMN' => '3100102002-7256',
+                'Nama' => 'Dell Latitude 7320',
+                'Asset Tag' => '054013000636888000KD3100102002-7256',
+                'Tanggal Perolehan' => now()->format('Y-m-d'),
+                'Nilai Perolehan' => 30500000,
+                'Lokasi Aset' => 'BPS Provinsi Kep. Bangka Belitung',
+                'Kode Satker' => '1900',
+                'Nama Pegawai' => 'Eka Riezalita Pattinama, S.IP',
+                'NIP Pegawai' => '197905132009022006',
+                'Jenis Barang / Kategori' => 'Lap Top',
+                'Merek' => 'Dell',
+                'Kondisi' => 'Baik',
+                'Status' => 'Teralokasi',
             ],
         ]);
     }
@@ -31,18 +32,19 @@ class AssetsTemplateExport implements FromCollection, WithHeadings
     public function headings(): array
     {
         return [
-            'kode_aset',
-            'nama',
-            'tipe',
-            'merek',
-            'model',
-            'nomor_seri',
-            'spesifikasi',
-            'lokasi',
-            'pemegang',
-            'status',
-            'kondisi',
-            'tanggal_dibeli',
+            'NO BMN',
+            'Nama',
+            'Asset Tag',
+            'Tanggal Perolehan',
+            'Nilai Perolehan',
+            'Lokasi Aset',
+            'Kode Satker',
+            'Nama Pegawai',
+            'NIP Pegawai',
+            'Jenis Barang / Kategori',
+            'Merek',
+            'Kondisi',
+            'Status',
         ];
     }
 }

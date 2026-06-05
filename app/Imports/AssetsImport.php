@@ -11,18 +11,21 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 class AssetsImport implements ToCollection, WithHeadingRow
 {
     protected array $headerMap = [
-        'asset_code' => ['asset_code', 'kode_aset', 'kode aset', 'kode asset'],
+        'asset_code' => ['no_bmn', 'no bmn', 'asset_code', 'kode_aset', 'kode aset', 'kode asset'],
         'name' => ['name', 'nama'],
-        'type' => ['type', 'tipe'],
+        'type' => ['type', 'tipe', 'jenis barang / kategori', 'jenis_barang / kategori', 'jenis barang/kategori', 'jenis_barang/kategori'],
         'brand' => ['brand', 'merek'],
         'model' => ['model'],
-        'serial_number' => ['serial_number', 'nomor_seri', 'nomor seri'],
+        'serial_number' => ['asset_tag', 'asset tag', 'serial_number', 'nomor_seri', 'nomor seri'],
         'specs' => ['specs', 'spesifikasi', 'spesifikasi tambahan'],
-        'location' => ['location', 'lokasi'],
-        'holder' => ['holder', 'pemegang'],
+        'nilai_perolehan' => ['nilai_perolehan', 'nilai perolehan', 'harga perolehan'],
+        'kode_satker' => ['kode_satker', 'kode satker'],
+        'nip_pegawai' => ['nip_pegawai', 'nip pegawai', 'nip'],
+        'location' => ['location', 'lokasi', 'lokasi aset', 'lokasi_aset'],
+        'holder' => ['holder', 'pemegang', 'nama pegawai', 'nama_pegawai'],
         'status' => ['status'],
         'condition' => ['condition', 'kondisi'],
-        'purchased_at' => ['purchased_at', 'tanggal_dibeli', 'tanggal dibeli', 'purchase_date'],
+        'purchased_at' => ['purchased_at', 'tanggal_dibeli', 'tanggal dibeli', 'tanggal perolehan', 'tanggal_perolehan', 'purchase_date'],
     ];
 
     public function collection(Collection $rows)
@@ -35,8 +38,13 @@ class AssetsImport implements ToCollection, WithHeadingRow
                 continue;
             }
 
-            $status = strtoupper($this->getValue($row, 'status', 'ACTIVE'));
+            $status = $this->normalizeStatus($this->getValue($row, 'status', Asset::STATUS_ALLOCATED));
             $condition = $this->getValue($row, 'condition', 'GOOD');
+
+            $holder = trim($this->getValue($row, 'holder', ''));
+            if ($holder === '' || Str::upper($holder) === 'BELUM DIALOKASIKAN') {
+                $holder = null;
+            }
 
             $data = [
                 'name' => trim($this->getValue($row, 'name', '')),
@@ -46,10 +54,13 @@ class AssetsImport implements ToCollection, WithHeadingRow
                 'serial_number' => trim($this->getValue($row, 'serial_number', '')),
                 'specs' => $this->normalizeSpecs($this->getValue($row, 'specs', '')),
                 'location' => trim($this->getValue($row, 'location', '')),
-                'holder' => trim($this->getValue($row, 'holder', '')),
-                'status' => in_array($status, ['ACTIVE', 'MAINTENANCE', 'BROKEN', 'RETIRED', 'SOLD', 'INACTIVE'], true) ? $status : 'ACTIVE',
+                'holder' => $holder,
+                'status' => $status,
                 'condition' => Asset::normalizeCondition($condition),
                 'purchased_at' => $this->normalizeDate($this->getValue($row, 'purchased_at', null)),
+                'nilai_perolehan' => $this->normalizeAmount($this->getValue($row, 'nilai_perolehan', null)),
+                'kode_satker' => trim($this->getValue($row, 'kode_satker', '')) ?: null,
+                'nip_pegawai' => trim($this->getValue($row, 'nip_pegawai', '')) ?: null,
             ];
 
             $unknownValues = $this->extractUnknownColumns($row);
@@ -69,13 +80,7 @@ class AssetsImport implements ToCollection, WithHeadingRow
         $normalized = [];
 
         foreach ($row as $key => $value) {
-            $cleanKey = Str::of((string) $key)
-                ->trim()
-                ->lower()
-                ->replaceMatches('/[\s\t\r\n]+/', '_')
-                ->__toString();
-
-            $normalized[$cleanKey] = $value;
+            $normalized[$this->normalizeHeaderKey((string) $key)] = $value;
         }
 
         return $normalized;
@@ -84,11 +89,7 @@ class AssetsImport implements ToCollection, WithHeadingRow
     protected function getValue(array $row, string $field, $default = null): string
     {
         foreach ($this->headerMap[$field] as $key) {
-            $normalizedKey = Str::of($key)
-                ->trim()
-                ->lower()
-                ->replaceMatches('/[\s\t\r\n]+/', '_')
-                ->__toString();
+            $normalizedKey = $this->normalizeHeaderKey($key);
 
             if (array_key_exists($normalizedKey, $row) && trim((string) $row[$normalizedKey]) !== '') {
                 return trim((string) $row[$normalizedKey]);
@@ -96,6 +97,30 @@ class AssetsImport implements ToCollection, WithHeadingRow
         }
 
         return $default === null ? '' : (string) $default;
+    }
+
+    protected function normalizeHeaderKey(string $key): string
+    {
+        return Str::of($key)
+            ->trim()
+            ->lower()
+            ->replaceMatches('/[^a-z0-9]+/', '_')
+            ->replaceMatches('/_+/', '_')
+            ->trim('_')
+            ->__toString();
+    }
+
+    protected function normalizeStatus(?string $status): string
+    {
+        $value = strtoupper(trim((string) $status));
+
+        return match ($value) {
+            'ACTIVE', 'AKTIF', 'TERALOKASI', 'TERALOKASIKAN', 'DIALOKASI', 'DIALOKASIKAN' => Asset::STATUS_ALLOCATED,
+            'PENDING', 'MENUNGGU', 'SIAP DIALOKASIKAN', 'SIAP_DIALOKASIKAN', 'SIAP DIALOKASI' => Asset::STATUS_READY_TO_ALLOCATE,
+            'INACTIVE', 'NONAKTIF', 'TIDAKAKTIF', 'TIDAK DAPAT DIALOKASIKAN', 'TIDAK_DAPAT_DIALOKASIKAN', 'TIDAK DAPAT DIAKOLASIKAN', 'TIDAK DAPAT DIALOKASIKAN' => Asset::STATUS_NOT_ALLOCATABLE,
+            'MAINTENANCE', 'BROKEN', 'RETIRED', 'DECOMMISSIONED' => Asset::STATUS_NOT_ALLOCATABLE,
+            default => Asset::STATUS_ALLOCATED,
+        };
     }
 
     protected function extractUnknownColumns(array $row): array
@@ -166,6 +191,32 @@ class AssetsImport implements ToCollection, WithHeadingRow
         }
 
         return empty($specs) ? null : json_encode($specs);
+    }
+
+    protected function normalizeAmount($value): ?string
+    {
+        $value = trim((string) $value);
+        if ($value === '') {
+            return null;
+        }
+
+        $clean = preg_replace('/[^0-9,.-]/', '', $value);
+        if ($clean === '') {
+            return null;
+        }
+
+        if (strpos($clean, ',') !== false && strpos($clean, '.') !== false) {
+            if (strrpos($clean, '.') > strrpos($clean, ',')) {
+                $clean = str_replace(',', '', $clean);
+            } else {
+                $clean = str_replace('.', '', $clean);
+                $clean = str_replace(',', '.', $clean);
+            }
+        } elseif (strpos($clean, ',') !== false) {
+            $clean = str_replace(',', '.', $clean);
+        }
+
+        return $clean;
     }
 
     protected function normalizeDate($value): ?string

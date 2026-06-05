@@ -140,7 +140,7 @@ unset($__errorArgs, $__bag); ?>
                             <th class="px-5 py-3.5 text-left sm:px-6">
                                 <?php $nextDir = ($sort === 'asset_code' && $direction === 'asc') ? 'desc' : 'asc'; ?>
                                 <a href="<?php echo e(url()->current() . '?' . http_build_query(array_merge($baseQuery, ['sort' => 'asset_code', 'direction' => $nextDir]))); ?>" class="inline-flex items-center gap-1 text-xs font-semibold uppercase text-gray-500 dark:text-gray-400">
-                                    Kode
+                                    NO BMN
                                     <?php if($sort === 'asset_code'): ?> <span><?php echo e($direction === 'asc' ? '▲' : '▼'); ?></span> <?php endif; ?>
                                 </a>
                             </th>
@@ -152,9 +152,51 @@ unset($__errorArgs, $__bag); ?>
                                 </a>
                             </th>
                             <th class="px-5 py-3.5 text-left sm:px-6">
+                                <?php $nextDir = ($sort === 'serial_number' && $direction === 'asc') ? 'desc' : 'asc'; ?>
+                                <a href="<?php echo e(url()->current() . '?' . http_build_query(array_merge($baseQuery, ['sort' => 'serial_number', 'direction' => $nextDir]))); ?>" class="inline-flex items-center gap-1 text-xs font-semibold uppercase text-gray-500 dark:text-gray-400">
+                                    Asset Tag
+                                    <?php if($sort === 'serial_number'): ?> <span><?php echo e($direction === 'asc' ? '▲' : '▼'); ?></span> <?php endif; ?>
+                                </a>
+                            </th>
+                            <th class="px-5 py-3.5 text-left sm:px-6">
+                                <?php $nextDir = ($sort === 'purchased_at' && $direction === 'asc') ? 'desc' : 'asc'; ?>
+                                <a href="<?php echo e(url()->current() . '?' . http_build_query(array_merge($baseQuery, ['sort' => 'purchased_at', 'direction' => $nextDir]))); ?>" class="inline-flex items-center gap-1 text-xs font-semibold uppercase text-gray-500 dark:text-gray-400">
+                                    Tanggal Perolehan
+                                    <?php if($sort === 'purchased_at'): ?> <span><?php echo e($direction === 'asc' ? '▲' : '▼'); ?></span> <?php endif; ?>
+                                </a>
+                            </th>
+                            <th class="px-5 py-3.5 text-left sm:px-6">
+                                <?php $nextDir = ($sort === 'nilai_perolehan' && $direction === 'asc') ? 'desc' : 'asc'; ?>
+                                <a href="<?php echo e(url()->current() . '?' . http_build_query(array_merge($baseQuery, ['sort' => 'nilai_perolehan', 'direction' => $nextDir]))); ?>" class="inline-flex items-center gap-1 text-xs font-semibold uppercase text-gray-500 dark:text-gray-400">
+                                    Nilai Perolehan
+                                    <?php if($sort === 'nilai_perolehan'): ?> <span><?php echo e($direction === 'asc' ? '▲' : '▼'); ?></span> <?php endif; ?>
+                                </a>
+                            </th>
+                            <th class="px-5 py-3.5 text-left sm:px-6">
+                                <?php $nextDir = ($sort === 'location' && $direction === 'asc') ? 'desc' : 'asc'; ?>
+                                <a href="<?php echo e(url()->current() . '?' . http_build_query(array_merge($baseQuery, ['sort' => 'location', 'direction' => $nextDir]))); ?>" class="inline-flex items-center gap-1 text-xs font-semibold uppercase text-gray-500 dark:text-gray-400">
+                                    Lokasi Aset
+                                    <?php if($sort === 'location'): ?> <span><?php echo e($direction === 'asc' ? '▲' : '▼'); ?></span> <?php endif; ?>
+                                </a>
+                            </th>
+                            <th class="px-5 py-3.5 text-left sm:px-6">
+                                <?php $nextDir = ($sort === 'kode_satker' && $direction === 'asc') ? 'desc' : 'asc'; ?>
+                                <a href="<?php echo e(url()->current() . '?' . http_build_query(array_merge($baseQuery, ['sort' => 'kode_satker', 'direction' => $nextDir]))); ?>" class="inline-flex items-center gap-1 text-xs font-semibold uppercase text-gray-500 dark:text-gray-400">
+                                    Kode Satker
+                                    <?php if($sort === 'kode_satker'): ?> <span><?php echo e($direction === 'asc' ? '▲' : '▼'); ?></span> <?php endif; ?>
+                                </a>
+                            </th>
+                            <th class="px-5 py-3.5 text-left sm:px-6">
+                                <?php $nextDir = ($sort === 'holder' && $direction === 'asc') ? 'desc' : 'asc'; ?>
+                                <a href="<?php echo e(url()->current() . '?' . http_build_query(array_merge($baseQuery, ['sort' => 'holder', 'direction' => $nextDir]))); ?>" class="inline-flex items-center gap-1 text-xs font-semibold uppercase text-gray-500 dark:text-gray-400">
+                                    Nama Pegawai
+                                    <?php if($sort === 'holder'): ?> <span><?php echo e($direction === 'asc' ? '▲' : '▼'); ?></span> <?php endif; ?>
+                                </a>
+                            </th>
+                            <th class="px-5 py-3.5 text-left sm:px-6">
                                 <?php $nextDir = ($sort === 'type' && $direction === 'asc') ? 'desc' : 'asc'; ?>
                                 <a href="<?php echo e(url()->current() . '?' . http_build_query(array_merge($baseQuery, ['sort' => 'type', 'direction' => $nextDir]))); ?>" class="inline-flex items-center gap-1 text-xs font-semibold uppercase text-gray-500 dark:text-gray-400">
-                                    Tipe
+                                    Jenis Barang / Kategori
                                     <?php if($sort === 'type'): ?> <span><?php echo e($direction === 'asc' ? '▲' : '▼'); ?></span> <?php endif; ?>
                                 </a>
                             </th>
@@ -166,27 +208,6 @@ unset($__errorArgs, $__bag); ?>
                                 </a>
                             </th>
                             <th class="px-5 py-3.5 text-left sm:px-6">
-                                <?php $nextDir = ($sort === 'model' && $direction === 'asc') ? 'desc' : 'asc'; ?>
-                                <a href="<?php echo e(url()->current() . '?' . http_build_query(array_merge($baseQuery, ['sort' => 'model', 'direction' => $nextDir]))); ?>" class="inline-flex items-center gap-1 text-xs font-semibold uppercase text-gray-500 dark:text-gray-400">
-                                    Model
-                                    <?php if($sort === 'model'): ?> <span><?php echo e($direction === 'asc' ? '▲' : '▼'); ?></span> <?php endif; ?>
-                                </a>
-                            </th>
-                            <th class="px-5 py-3.5 text-left sm:px-6">
-                                <?php $nextDir = ($sort === 'serial_number' && $direction === 'asc') ? 'desc' : 'asc'; ?>
-                                <a href="<?php echo e(url()->current() . '?' . http_build_query(array_merge($baseQuery, ['sort' => 'serial_number', 'direction' => $nextDir]))); ?>" class="inline-flex items-center gap-1 text-xs font-semibold uppercase text-gray-500 dark:text-gray-400">
-                                    Nomor Seri
-                                    <?php if($sort === 'serial_number'): ?> <span><?php echo e($direction === 'asc' ? '▲' : '▼'); ?></span> <?php endif; ?>
-                                </a>
-                            </th>
-                            <th class="px-5 py-3.5 text-left sm:px-6">
-                                <?php $nextDir = ($sort === 'status' && $direction === 'asc') ? 'desc' : 'asc'; ?>
-                                <a href="<?php echo e(url()->current() . '?' . http_build_query(array_merge($baseQuery, ['sort' => 'status', 'direction' => $nextDir]))); ?>" class="inline-flex items-center gap-1 text-xs font-semibold uppercase text-gray-500 dark:text-gray-400">
-                                    Status
-                                    <?php if($sort === 'status'): ?> <span><?php echo e($direction === 'asc' ? '▲' : '▼'); ?></span> <?php endif; ?>
-                                </a>
-                            </th>
-                            <th class="px-5 py-3.5 text-left sm:px-6">
                                 <?php $nextDir = ($sort === 'condition' && $direction === 'asc') ? 'desc' : 'asc'; ?>
                                 <a href="<?php echo e(url()->current() . '?' . http_build_query(array_merge($baseQuery, ['sort' => 'condition', 'direction' => $nextDir]))); ?>" class="inline-flex items-center gap-1 text-xs font-semibold uppercase text-gray-500 dark:text-gray-400">
                                     Kondisi
@@ -194,17 +215,10 @@ unset($__errorArgs, $__bag); ?>
                                 </a>
                             </th>
                             <th class="px-5 py-3.5 text-left sm:px-6">
-                                <?php $nextDir = ($sort === 'location' && $direction === 'asc') ? 'desc' : 'asc'; ?>
-                                <a href="<?php echo e(url()->current() . '?' . http_build_query(array_merge($baseQuery, ['sort' => 'location', 'direction' => $nextDir]))); ?>" class="inline-flex items-center gap-1 text-xs font-semibold uppercase text-gray-500 dark:text-gray-400">
-                                    Lokasi
-                                    <?php if($sort === 'location'): ?> <span><?php echo e($direction === 'asc' ? '▲' : '▼'); ?></span> <?php endif; ?>
-                                </a>
-                            </th>
-                            <th class="px-5 py-3.5 text-left sm:px-6">
-                                <?php $nextDir = ($sort === 'holder' && $direction === 'asc') ? 'desc' : 'asc'; ?>
-                                <a href="<?php echo e(url()->current() . '?' . http_build_query(array_merge($baseQuery, ['sort' => 'holder', 'direction' => $nextDir]))); ?>" class="inline-flex items-center gap-1 text-xs font-semibold uppercase text-gray-500 dark:text-gray-400">
-                                    Pemegang
-                                    <?php if($sort === 'holder'): ?> <span><?php echo e($direction === 'asc' ? '▲' : '▼'); ?></span> <?php endif; ?>
+                                <?php $nextDir = ($sort === 'status' && $direction === 'asc') ? 'desc' : 'asc'; ?>
+                                <a href="<?php echo e(url()->current() . '?' . http_build_query(array_merge($baseQuery, ['sort' => 'status', 'direction' => $nextDir]))); ?>" class="inline-flex items-center gap-1 text-xs font-semibold uppercase text-gray-500 dark:text-gray-400">
+                                    Status
+                                    <?php if($sort === 'status'): ?> <span><?php echo e($direction === 'asc' ? '▲' : '▼'); ?></span> <?php endif; ?>
                                 </a>
                             </th>
                             <th class="px-5 py-3.5 text-right sm:px-6">
@@ -223,27 +237,28 @@ unset($__errorArgs, $__bag); ?>
                                     <span class="text-sm text-gray-900 dark:text-white"><?php echo e($asset->name); ?></span>
                                 </td>
                                 <td class="px-5 py-4 sm:px-6">
-                                    <span class="text-sm text-gray-600 dark:text-gray-400"><?php echo e($asset->type); ?></span>
-                                </td>
-                                <td class="px-5 py-4 sm:px-6">
-                                    <span class="text-sm text-gray-600 dark:text-gray-400"><?php echo e($asset->brand ?? '-'); ?></span>
-                                </td>
-                                <td class="px-5 py-4 sm:px-6">
-                                    <span class="text-sm text-gray-600 dark:text-gray-400"><?php echo e($asset->model ?? '-'); ?></span>
-                                </td>
-                                <td class="px-5 py-4 sm:px-6">
                                     <span class="text-sm text-gray-600 dark:text-gray-400"><?php echo e($asset->serial_number ?? '-'); ?></span>
                                 </td>
                                 <td class="px-5 py-4 sm:px-6">
-                                    <span class="inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium
-                                        <?php if($asset->status === 'ACTIVE'): ?> bg-green-100 text-green-700 dark:bg-green-500/15 dark:text-green-400
-                                        <?php elseif($asset->status === 'MAINTENANCE'): ?> bg-yellow-100 text-yellow-700 dark:bg-yellow-500/15 dark:text-yellow-400
-                                        <?php elseif(in_array($asset->status, ['SOLD', 'RETIRED', 'INACTIVE'], true)): ?> bg-gray-100 text-gray-700 dark:bg-gray-500/15 dark:text-gray-400
-                                        <?php else: ?> bg-red-100 text-red-700 dark:bg-red-500/15 dark:text-red-400
-                                        <?php endif; ?>">
-                                        <?php echo e($asset->status_label); ?>
-
-                                    </span>
+                                    <span class="text-sm text-gray-600 dark:text-gray-400"><?php echo e($asset->purchased_at ? $asset->purchased_at->format('d/m/Y') : '-'); ?></span>
+                                </td>
+                                <td class="px-5 py-4 sm:px-6">
+                                    <span class="text-sm text-gray-600 dark:text-gray-400"><?php echo e($asset->nilai_perolehan ? 'Rp ' . number_format($asset->nilai_perolehan, 2, ',', '.') : '-'); ?></span>
+                                </td>
+                                <td class="px-5 py-4 sm:px-6">
+                                    <span class="text-sm text-gray-600 dark:text-gray-400"><?php echo e($asset->location ?? '-'); ?></span>
+                                </td>
+                                <td class="px-5 py-4 sm:px-6">
+                                    <span class="text-sm text-gray-600 dark:text-gray-400"><?php echo e($asset->kode_satker ?? '-'); ?></span>
+                                </td>
+                                <td class="px-5 py-4 sm:px-6">
+                                    <span class="text-sm text-gray-600 dark:text-gray-400"><?php echo e($asset->holder ?? '-'); ?></span>
+                                </td>
+                                <td class="px-5 py-4 sm:px-6">
+                                    <span class="text-sm text-gray-600 dark:text-gray-400"><?php echo e($asset->type ?? '-'); ?></span>
+                                </td>
+                                <td class="px-5 py-4 sm:px-6">
+                                    <span class="text-sm text-gray-600 dark:text-gray-400"><?php echo e($asset->brand ?? '-'); ?></span>
                                 </td>
                                 <td class="px-5 py-4 sm:px-6">
                                     <span class="inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium
@@ -257,10 +272,16 @@ unset($__errorArgs, $__bag); ?>
                                     </span>
                                 </td>
                                 <td class="px-5 py-4 sm:px-6">
-                                    <span class="text-sm text-gray-600 dark:text-gray-400"><?php echo e($asset->location ?? '-'); ?></span>
-                                </td>
-                                <td class="px-5 py-4 sm:px-6">
-                                    <span class="text-sm text-gray-600 dark:text-gray-400"><?php echo e($asset->holder ?? '-'); ?></span>
+                                    <span class="inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium
+                                        <?php if($asset->status === 'ACTIVE'): ?> bg-green-100 text-green-700 dark:bg-green-500/15 dark:text-green-400
+                                        <?php elseif($asset->status === 'INACTIVE'): ?> bg-gray-100 text-gray-700 dark:bg-gray-500/15 dark:text-gray-400
+                                        <?php elseif($asset->status === 'PENDING'): ?> bg-amber-100 text-amber-800 dark:bg-amber-500/15 dark:text-amber-400
+                                        <?php elseif($asset->status === 'DECOMMISSIONED'): ?> bg-red-100 text-red-800 dark:bg-red-500/15 dark:text-red-400
+                                        <?php else: ?> bg-gray-100 text-gray-700 dark:bg-gray-500/15 dark:text-gray-400
+                                        <?php endif; ?>">
+                                        <?php echo e($asset->status_label); ?>
+
+                                    </span>
                                 </td>
                                 <td class="px-5 py-4 text-right sm:px-6">
                                     <a href="<?php echo e(url()->to(route('assets.show', $asset))); ?>" class="text-sm font-medium text-brand-600 hover:text-brand-700 dark:text-brand-400">View</a>
@@ -268,7 +289,7 @@ unset($__errorArgs, $__bag); ?>
                             </tr>
                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                             <tr>
-                                <td colspan="11" class="px-5 py-8 text-center sm:px-6">
+                                <td colspan="13" class="px-5 py-8 text-center sm:px-6">
                                     <p class="text-sm text-gray-500 dark:text-gray-400">Belum ada aset</p>
                                 </td>
                             </tr>

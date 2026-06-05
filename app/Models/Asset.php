@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Asset extends Model
 {
+    public const STATUS_ALLOCATED = 'ACTIVE';
+    public const STATUS_NOT_ALLOCATABLE = 'INACTIVE';
+    public const STATUS_READY_TO_ALLOCATE = 'PENDING';
+
     public const CONDITION_GOOD = 'GOOD';
     public const CONDITION_LIGHT = 'LIGHT';
     public const CONDITION_HEAVY = 'HEAVY';
@@ -23,12 +27,24 @@ class Asset extends Model
         'status',
         'condition',
         'purchased_at',
+        'nilai_perolehan',
+        'kode_satker',
+        'nip_pegawai',
     ];
 
     protected $casts = [
         'specs' => 'array',
         'purchased_at' => 'date',
     ];
+
+    public static function statusOptions(): array
+    {
+        return [
+            self::STATUS_ALLOCATED => 'Teralokasi',
+            self::STATUS_READY_TO_ALLOCATE => 'Siap Dialokasikan',
+            self::STATUS_NOT_ALLOCATABLE => 'Tidak Dapat Dialokasikan',
+        ];
+    }
 
     public static function conditionOptions(): array
     {
@@ -58,10 +74,10 @@ class Asset extends Model
     public function getStatusLabelAttribute(): string
     {
         return match ($this->status) {
-            'ACTIVE' => 'Aktif',
-            'INACTIVE' => 'Tidak Aktif',
-            'PENDING' => 'Menunggu',
-            'DECOMMISSIONED' => 'Dikeluarkan',
+            self::STATUS_ALLOCATED => 'Teralokasi',
+            self::STATUS_READY_TO_ALLOCATE => 'Siap Dialokasikan',
+            self::STATUS_NOT_ALLOCATABLE => 'Tidak Dapat Dialokasikan',
+            'DECOMMISSIONED', 'MAINTENANCE', 'BROKEN', 'RETIRED' => 'Tidak Dapat Dialokasikan',
             default => ucfirst(strtolower($this->status)),
         };
     }

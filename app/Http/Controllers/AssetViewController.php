@@ -32,6 +32,10 @@ class AssetViewController extends Controller
     {
         $sort = $request->input('sort');
         $direction = $request->input('direction', 'asc') === 'desc' ? 'desc' : 'asc';
+        $search = $request->input('search');
+        $status = $request->input('status');
+        $condition = $request->input('condition');
+        $type = $request->input('type');
 
         $sortableColumns = [
             'asset_code' => 'asset_code',
@@ -40,13 +44,41 @@ class AssetViewController extends Controller
             'brand' => 'brand',
             'model' => 'model',
             'serial_number' => 'serial_number',
+            'purchased_at' => 'purchased_at',
+            'nilai_perolehan' => 'nilai_perolehan',
+            'location' => 'location',
+            'kode_satker' => 'kode_satker',
+            'holder' => 'holder',
             'status' => 'status',
             'condition' => 'condition',
-            'location' => 'location',
-            'holder' => 'holder',
         ];
 
         $q = Asset::query();
+
+        if ($search) {
+            $q->where(function ($query) use ($search) {
+                $query->where('asset_code', 'like', "%{$search}%")
+                    ->orWhere('name', 'like', "%{$search}%")
+                    ->orWhere('serial_number', 'like', "%{$search}%")
+                    ->orWhere('holder', 'like', "%{$search}%")
+                    ->orWhere('location', 'like', "%{$search}%")
+                    ->orWhere('type', 'like', "%{$search}%")
+                    ->orWhere('brand', 'like', "%{$search}%");
+            });
+        }
+
+        if ($status) {
+            $q->where('status', $status);
+        }
+
+        if ($condition) {
+            $q->where('condition', $condition);
+        }
+
+        if ($type) {
+            $q->where('type', 'like', "%{$type}%");
+        }
+
         if (array_key_exists($sort, $sortableColumns)) {
             $q->orderBy($sortableColumns[$sort], $direction);
         } else {

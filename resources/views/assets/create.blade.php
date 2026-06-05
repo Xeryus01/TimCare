@@ -35,7 +35,7 @@
                 <!-- Asset Code -->
                 <div>
                     <label for="asset_code" class="block text-sm font-medium text-gray-900 dark:text-white mb-2">
-                        Kode Aset
+                        NO BMN
                     </label>
                     <input id="asset_code" type="text" name="asset_code" value="{{ old('asset_code') }}" required placeholder="e.g., ASSET-001" class="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-gray-900 placeholder-gray-500 outline-none transition focus:border-brand-600 focus:ring-2 focus:ring-brand-100 disabled:cursor-default disabled:bg-gray-50 dark:border-gray-600 dark:bg-dark-800 dark:text-white dark:placeholder-gray-400 dark:focus:border-brand-600 dark:focus:ring-brand-900/20 @error('asset_code') border-red-500 @enderror" />
                     @error('asset_code')
@@ -46,7 +46,7 @@
                 <!-- Name -->
                 <div>
                     <label for="name" class="block text-sm font-medium text-gray-900 dark:text-white mb-2">
-                        Nama Aset
+                        Nama
                     </label>
                     <input id="name" type="text" name="name" value="{{ old('name') }}" required placeholder="e.g., Dell Desktop Computer" class="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-gray-900 placeholder-gray-500 outline-none transition focus:border-brand-600 focus:ring-2 focus:ring-brand-100 disabled:cursor-default disabled:bg-gray-50 dark:border-gray-600 dark:bg-dark-800 dark:text-white dark:placeholder-gray-400 dark:focus:border-brand-600 dark:focus:ring-brand-900/20 @error('name') border-red-500 @enderror" />
                     @error('name')
@@ -57,7 +57,7 @@
                 <!-- Type -->
                 <div>
                     <label for="type" class="block text-sm font-medium text-gray-900 dark:text-white mb-2">
-                        Tipe
+                        Jenis Barang / Kategori
                     </label>
                     <input id="type" type="text" name="type" value="{{ old('type') }}" required placeholder="e.g., Desktop, Laptop, Monitor" class="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-gray-900 placeholder-gray-500 outline-none transition focus:border-brand-600 focus:ring-2 focus:ring-brand-100 disabled:cursor-default disabled:bg-gray-50 dark:border-gray-600 dark:bg-dark-800 dark:text-white dark:placeholder-gray-400 dark:focus:border-brand-600 dark:focus:ring-brand-900/20 @error('type') border-red-500 @enderror" />
                     @error('type')
@@ -90,7 +90,7 @@
                 <!-- Serial Number -->
                 <div>
                     <label for="serial_number" class="block text-sm font-medium text-gray-900 dark:text-white mb-2">
-                        Nomor Seri
+                        Asset Tag
                     </label>
                     <input id="serial_number" type="text" name="serial_number" value="{{ old('serial_number') }}" placeholder="e.g., SN123456789" class="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-gray-900 placeholder-gray-500 outline-none transition focus:border-brand-600 focus:ring-2 focus:ring-brand-100 disabled:cursor-default disabled:bg-gray-50 dark:border-gray-600 dark:bg-dark-800 dark:text-white dark:placeholder-gray-400 dark:focus:border-brand-600 dark:focus:ring-brand-900/20 @error('serial_number') border-red-500 @enderror" />
                     @error('serial_number')
@@ -112,7 +112,7 @@
                 <!-- Location -->
                 <div>
                     <label for="location" class="block text-sm font-medium text-gray-900 dark:text-white mb-2">
-                        Lokasi
+                        Lokasi Aset
                     </label>
                     <input id="location" type="text" name="location" value="{{ old('location') }}" placeholder="e.g., Ruang Server, Lantai 2" class="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-gray-900 placeholder-gray-500 outline-none transition focus:border-brand-600 focus:ring-2 focus:ring-brand-100 disabled:cursor-default disabled:bg-gray-50 dark:border-gray-600 dark:bg-dark-800 dark:text-white dark:placeholder-gray-400 dark:focus:border-brand-600 dark:focus:ring-brand-900/20 @error('location') border-red-500 @enderror" />
                     @error('location')
@@ -123,7 +123,7 @@
                 <!-- Purchased At -->
                 <div>
                     <label for="purchased_at" class="block text-sm font-medium text-gray-900 dark:text-white mb-2">
-                        Tanggal Dibeli
+                        Tanggal Perolehan
                     </label>
                     <input id="purchased_at" type="date" name="purchased_at" value="{{ old('purchased_at') }}" class="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-gray-900 placeholder-gray-500 outline-none transition focus:border-brand-600 focus:ring-2 focus:ring-brand-100 disabled:cursor-default disabled:bg-gray-50 dark:border-gray-600 dark:bg-dark-800 dark:text-white dark:placeholder-gray-400 dark:focus:border-brand-600 dark:focus:ring-brand-900/20 @error('purchased_at') border-red-500 @enderror" />
                     @error('purchased_at')
@@ -134,10 +134,43 @@
                 <!-- Holder -->
                 <div>
                     <label for="holder" class="block text-sm font-medium text-gray-900 dark:text-white mb-2">
-                        Pemegang
+                        Nama Pegawai
                     </label>
                     <input id="holder" type="text" name="holder" value="{{ old('holder') }}" placeholder="e.g., John Doe / IT Department" class="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-gray-900 placeholder-gray-500 outline-none transition focus:border-brand-600 focus:ring-2 focus:ring-brand-100 dark:border-gray-600 dark:bg-dark-800 dark:text-white dark:placeholder-gray-400 dark:focus:border-brand-600 dark:focus:ring-brand-900/20 @error('holder') border-red-500 @enderror" />
                     @error('holder')
+                        <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <!-- Nilai Perolehan -->
+                <div>
+                    <label for="nilai_perolehan" class="block text-sm font-medium text-gray-900 dark:text-white mb-2">
+                        Nilai Perolehan
+                    </label>
+                    <input id="nilai_perolehan" type="number" step="0.01" name="nilai_perolehan" value="{{ old('nilai_perolehan') }}" placeholder="e.g., 30500000" class="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-gray-900 placeholder-gray-500 outline-none transition focus:border-brand-600 focus:ring-2 focus:ring-brand-100 dark:border-gray-600 dark:bg-dark-800 dark:text-white dark:placeholder-gray-400 dark:focus:border-brand-600 dark:focus:ring-brand-900/20 @error('nilai_perolehan') border-red-500 @enderror" />
+                    @error('nilai_perolehan')
+                        <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <!-- Kode Satker -->
+                <div>
+                    <label for="kode_satker" class="block text-sm font-medium text-gray-900 dark:text-white mb-2">
+                        Kode Satker
+                    </label>
+                    <input id="kode_satker" type="text" name="kode_satker" value="{{ old('kode_satker') }}" placeholder="e.g., 1900" class="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-gray-900 placeholder-gray-500 outline-none transition focus:border-brand-600 focus:ring-2 focus:ring-brand-100 dark:border-gray-600 dark:bg-dark-800 dark:text-white dark:placeholder-gray-400 dark:focus:border-brand-600 dark:focus:ring-brand-900/20 @error('kode_satker') border-red-500 @enderror" />
+                    @error('kode_satker')
+                        <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <!-- NIP Pegawai -->
+                <div>
+                    <label for="nip_pegawai" class="block text-sm font-medium text-gray-900 dark:text-white mb-2">
+                        NIP Pegawai
+                    </label>
+                    <input id="nip_pegawai" type="text" name="nip_pegawai" value="{{ old('nip_pegawai') }}" placeholder="e.g., 197905132009022006" class="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-gray-900 placeholder-gray-500 outline-none transition focus:border-brand-600 focus:ring-2 focus:ring-brand-100 dark:border-gray-600 dark:bg-dark-800 dark:text-white dark:placeholder-gray-400 dark:focus:border-brand-600 dark:focus:ring-brand-900/20 @error('nip_pegawai') border-red-500 @enderror" />
+                    @error('nip_pegawai')
                         <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                     @enderror
                 </div>
@@ -163,10 +196,9 @@
                         Status
                     </label>
                     <select id="status" name="status" class="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-gray-900 outline-none transition focus:border-brand-600 focus:ring-2 focus:ring-brand-100 dark:border-gray-600 dark:bg-dark-800 dark:text-white dark:focus:border-brand-600 dark:focus:ring-brand-900/20 @error('status') border-red-500 @enderror">
-                        <option value="ACTIVE">Aktif</option>
-                        <option value="MAINTENANCE">Perawatan</option>
-                        <option value="BROKEN">Rusak</option>
-                        <option value="RETIRED">Pensiun</option>
+                        @foreach(\App\Models\Asset::statusOptions() as $value => $label)
+                            <option value="{{ $value }}" {{ old('status') === $value ? 'selected' : '' }}>{{ $label }}</option>
+                        @endforeach
                     </select>
                     @error('status')
                         <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>

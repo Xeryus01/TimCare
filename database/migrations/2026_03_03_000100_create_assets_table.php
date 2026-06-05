@@ -22,6 +22,9 @@ return new class extends Migration
             $table->string('status', 30)->default('ACTIVE');
             $table->string('condition', 30)->default('GOOD');
             $table->date('purchased_at')->nullable();
+            $table->decimal('nilai_perolehan', 18, 2)->nullable();
+            $table->string('kode_satker', 50)->nullable();
+            $table->string('nip_pegawai', 30)->nullable();
             $table->timestamps();
         });
     }
