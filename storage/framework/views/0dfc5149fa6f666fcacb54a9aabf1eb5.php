@@ -1,4 +1,13 @@
-<x-app-layout>
+<?php if (isset($component)) { $__componentOriginal9ac128a9029c0e4701924bd2d73d7f54 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal9ac128a9029c0e4701924bd2d73d7f54 = $attributes; } ?>
+<?php $component = App\View\Components\AppLayout::resolve([] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('app-layout'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\App\View\Components\AppLayout::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
 <div class="min-h-screen">
     <div class="p-5 sm:p-7.5 lg:p-9">
         <div class="mb-6">
@@ -6,14 +15,14 @@
             <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Lihat jadwal piket tim IT untuk setiap minggu</p>
         </div>
 
-        @if (count($schedules) === 0)
+        <?php if(count($schedules) === 0): ?>
             <div class="mb-4 rounded-lg border border-yellow-400 bg-yellow-100 p-4 text-yellow-700 dark:border-yellow-500/30 dark:bg-yellow-500/15 dark:text-yellow-400">
                 <p class="font-semibold">Belum ada jadwal piket.</p>
                 <p class="text-sm mt-1">Jadwal piket belum dibuat oleh admin.</p>
             </div>
-        @endif
+        <?php endif; ?>
 
-        @php
+        <?php
             $currentSchedule = collect($schedules)->first(function ($schedule) {
                 $start = \Carbon\Carbon::parse($schedule->week_start_date);
                 $end = $schedule->week_end_date
@@ -52,7 +61,7 @@
                     ],
                 ];
             })->toArray();
-        @endphp
+        ?>
 
         <div class="grid gap-4 xl:grid-cols-[1.2fr_0.8fr] mb-6">
             <div class="rounded-3xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-dark-800">
@@ -60,35 +69,35 @@
                 <div class="mt-4 grid gap-3 sm:grid-cols-2">
                     <div class="rounded-3xl bg-gray-50 p-4 dark:bg-gray-900">
                         <p class="text-xs uppercase tracking-[0.25em] text-gray-500 dark:text-gray-400">Minggu Aktif</p>
-                        @if ($currentSchedule)
-                            @php
+                        <?php if($currentSchedule): ?>
+                            <?php
                                 $activeStart = \Carbon\Carbon::parse($currentSchedule->week_start_date);
                                 $activeEnd = $currentSchedule->week_end_date
                                     ? \Carbon\Carbon::parse($currentSchedule->week_end_date)
                                     : $activeStart->copy()->addDays(6);
-                            @endphp
-                            <p class="mt-2 text-lg font-semibold text-gray-900 dark:text-white">{{ $activeStart->format('d M') }} — {{ $activeEnd->format('d M Y') }}</p>
-                            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Petugas: {{ $currentSchedule->technician_1 }}, {{ $currentSchedule->technician_2 }}, {{ $currentSchedule->technician_3 }}</p>
-                        @else
+                            ?>
+                            <p class="mt-2 text-lg font-semibold text-gray-900 dark:text-white"><?php echo e($activeStart->format('d M')); ?> — <?php echo e($activeEnd->format('d M Y')); ?></p>
+                            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Petugas: <?php echo e($currentSchedule->technician_1); ?>, <?php echo e($currentSchedule->technician_2); ?>, <?php echo e($currentSchedule->technician_3); ?></p>
+                        <?php else: ?>
                             <p class="mt-2 text-lg font-semibold text-gray-900 dark:text-white">Tidak ada jadwal</p>
                             <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Silakan hubungi admin untuk jadwal piket.</p>
-                        @endif
+                        <?php endif; ?>
                     </div>
                     <div class="rounded-3xl bg-gray-50 p-4 dark:bg-gray-900">
                         <p class="text-xs uppercase tracking-[0.25em] text-gray-500 dark:text-gray-400">Jadwal Selanjutnya</p>
-                        @if ($nextSchedule)
-                            @php
+                        <?php if($nextSchedule): ?>
+                            <?php
                                 $nextStart = \Carbon\Carbon::parse($nextSchedule->week_start_date);
                                 $nextEnd = $nextSchedule->week_end_date
                                     ? \Carbon\Carbon::parse($nextSchedule->week_end_date)
                                     : $nextStart->copy()->addDays(6);
-                            @endphp
-                            <p class="mt-2 text-lg font-semibold text-gray-900 dark:text-white">{{ $nextStart->format('d M') }} — {{ $nextEnd->format('d M Y') }}</p>
-                            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Petugas: {{ $nextSchedule->technician_1 }}, {{ $nextSchedule->technician_2 }}</p>
-                        @else
+                            ?>
+                            <p class="mt-2 text-lg font-semibold text-gray-900 dark:text-white"><?php echo e($nextStart->format('d M')); ?> — <?php echo e($nextEnd->format('d M Y')); ?></p>
+                            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Petugas: <?php echo e($nextSchedule->technician_1); ?>, <?php echo e($nextSchedule->technician_2); ?></p>
+                        <?php else: ?>
                             <p class="mt-2 text-lg font-semibold text-gray-900 dark:text-white">Tidak ada jadwal berikutnya</p>
                             <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Semua jadwal sudah terisi.</p>
-                        @endif
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
@@ -126,7 +135,7 @@
                     <p class="text-sm uppercase tracking-[0.2em] text-gray-500 dark:text-gray-400">Kalender Piket</p>
                     <h2 class="mt-1 text-2xl font-semibold text-gray-900 dark:text-white">Jadwal Mingguan</h2>
                 </div>
-                <span class="inline-flex items-center rounded-full bg-brand-50 px-3 py-1 text-sm font-semibold text-brand-700">{{ count($schedules) }} jadwal</span>
+                <span class="inline-flex items-center rounded-full bg-brand-50 px-3 py-1 text-sm font-semibold text-brand-700"><?php echo e(count($schedules)); ?> jadwal</span>
             </div>
 
             <div class="h-[520px] w-full rounded-3xl border border-gray-100 bg-white shadow-sm dark:border-gray-800 dark:bg-dark-900" id="piketCalendar"></div>
@@ -166,7 +175,7 @@
                     height: '100%',
                     contentHeight: 'auto',
                     aspectRatio: 1.35,
-                    events: @json($calendarEvents),
+                    events: <?php echo json_encode($calendarEvents, 15, 512) ?>,
                     eventDisplay: 'block',
                     dayMaxEventRows: 2,
                     dayMaxEvents: true,
@@ -227,4 +236,13 @@
         </script>
     </div>
 </div>
-</x-app-layout>
+ <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal9ac128a9029c0e4701924bd2d73d7f54)): ?>
+<?php $attributes = $__attributesOriginal9ac128a9029c0e4701924bd2d73d7f54; ?>
+<?php unset($__attributesOriginal9ac128a9029c0e4701924bd2d73d7f54); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal9ac128a9029c0e4701924bd2d73d7f54)): ?>
+<?php $component = $__componentOriginal9ac128a9029c0e4701924bd2d73d7f54; ?>
+<?php unset($__componentOriginal9ac128a9029c0e4701924bd2d73d7f54); ?>
+<?php endif; ?><?php /**PATH C:\Users\BPS 1900\Documents\timcare\resources\views/piket/view.blade.php ENDPATH**/ ?>

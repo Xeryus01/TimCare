@@ -1,4 +1,13 @@
-<x-app-layout>
+<?php if (isset($component)) { $__componentOriginal9ac128a9029c0e4701924bd2d73d7f54 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal9ac128a9029c0e4701924bd2d73d7f54 = $attributes; } ?>
+<?php $component = App\View\Components\AppLayout::resolve([] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('app-layout'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\App\View\Components\AppLayout::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
 <div class="min-h-screen">
     <div class="p-5 sm:p-7.5 lg:p-9">
         <div class="mb-6">
@@ -6,20 +15,21 @@
             <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Kelola jadwal piket tim IT untuk setiap minggu</p>
         </div>
 
-        @if (session('success'))
+        <?php if(session('success')): ?>
             <div class="mb-4 rounded-lg border border-green-400 bg-green-100 p-4 text-green-700 dark:border-green-500/30 dark:bg-green-500/15 dark:text-green-400">
-                {{ session('success') }}
-            </div>
-        @endif
+                <?php echo e(session('success')); ?>
 
-        @if (count($schedules) === 0)
+            </div>
+        <?php endif; ?>
+
+        <?php if(count($schedules) === 0): ?>
             <div class="mb-4 rounded-lg border border-yellow-400 bg-yellow-100 p-4 text-yellow-700 dark:border-yellow-500/30 dark:bg-yellow-500/15 dark:text-yellow-400">
                 <p class="font-semibold">Belum ada jadwal piket.</p>
                 <p class="text-sm mt-1">Mulai dengan menambahkan jadwal piket baru menggunakan tombol "+ Tambah Jadwal".</p>
             </div>
-        @endif
+        <?php endif; ?>
 
-        @php
+        <?php
             $calendarEvents = collect($schedules)->map(function ($schedule) {
                 $start = \Carbon\Carbon::parse($schedule->week_start_date);
                 $end = $schedule->week_end_date
@@ -52,34 +62,34 @@
                     : $start->copy()->addDays(6);
                 return now()->between($start->startOfDay(), $end->endOfDay());
             });
-        @endphp
+        ?>
 
         <div class="grid gap-3 md:grid-cols-2 mb-5">
             <div class="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-dark-800">
                 <div class="flex items-center justify-between gap-3">
                     <div>
                         <p class="text-xs uppercase tracking-[0.25em] text-gray-500 dark:text-gray-400">Total Jadwal</p>
-                        <p class="mt-2 text-2xl font-semibold text-gray-900 dark:text-white">{{ $schedules->count() }}</p>
+                        <p class="mt-2 text-2xl font-semibold text-gray-900 dark:text-white"><?php echo e($schedules->count()); ?></p>
                     </div>
-                    <span class="inline-flex items-center rounded-full bg-brand-50 px-2.5 py-1 text-xs font-semibold text-brand-700">{{ $schedules->count() }}</span>
+                    <span class="inline-flex items-center rounded-full bg-brand-50 px-2.5 py-1 text-xs font-semibold text-brand-700"><?php echo e($schedules->count()); ?></span>
                 </div>
                 <p class="mt-3 text-xs text-gray-500 dark:text-gray-400">Jumlah jadwal piket tersimpan.</p>
             </div>
             <div class="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-dark-800">
                 <p class="text-xs uppercase tracking-[0.25em] text-gray-500 dark:text-gray-400">Minggu Aktif</p>
-                @if ($currentSchedule)
-                    @php
+                <?php if($currentSchedule): ?>
+                    <?php
                         $currentStart = \Carbon\Carbon::parse($currentSchedule->week_start_date);
                         $currentEnd = $currentSchedule->week_end_date
                             ? \Carbon\Carbon::parse($currentSchedule->week_end_date)
                             : $currentStart->copy()->addDays(6);
-                    @endphp
-                    <p class="mt-2 text-lg font-semibold text-gray-900 dark:text-white">{{ $currentStart->format('d M') }} — {{ $currentEnd->format('d M Y') }}</p>
-                    <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">{{ $currentSchedule->technician_1 }}, {{ $currentSchedule->technician_2 }}, {{ $currentSchedule->technician_3 }}</p>
-                @else
+                    ?>
+                    <p class="mt-2 text-lg font-semibold text-gray-900 dark:text-white"><?php echo e($currentStart->format('d M')); ?> — <?php echo e($currentEnd->format('d M Y')); ?></p>
+                    <p class="mt-1 text-sm text-gray-500 dark:text-gray-400"><?php echo e($currentSchedule->technician_1); ?>, <?php echo e($currentSchedule->technician_2); ?>, <?php echo e($currentSchedule->technician_3); ?></p>
+                <?php else: ?>
                     <p class="mt-2 text-lg font-semibold text-gray-900 dark:text-white">Tidak aktif</p>
                     <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Tambahkan jadwal minggu ini.</p>
-                @endif
+                <?php endif; ?>
             </div>
         </div>
 
@@ -92,9 +102,9 @@
                 <div class="flex flex-wrap items-center gap-3">
                     <span class="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-600 dark:bg-gray-800 dark:text-gray-300">
                         <span class="h-2.5 w-2.5 rounded-full bg-brand-500"></span>
-                        {{ $schedules->count() }} jadwal tersedia
+                        <?php echo e($schedules->count()); ?> jadwal tersedia
                     </span>
-                    <a href="{{ route('piket.create') }}" class="inline-flex items-center rounded-full bg-brand-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-700">+ Tambah Jadwal</a>
+                    <a href="<?php echo e(route('piket.create')); ?>" class="inline-flex items-center rounded-full bg-brand-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-700">+ Tambah Jadwal</a>
                 </div>
             </div>
 
@@ -107,7 +117,7 @@
                     <p class="text-sm uppercase tracking-[0.2em] text-gray-500 dark:text-gray-400">Daftar Jadwal Piket</p>
                     <h2 class="mt-1 text-2xl font-semibold text-gray-900 dark:text-white">Data Mingguan</h2>
                 </div>
-                <span class="inline-flex items-center rounded-full bg-brand-50 px-3 py-1 text-sm font-semibold text-brand-700">{{ $schedules->count() }} jadwal</span>
+                <span class="inline-flex items-center rounded-full bg-brand-50 px-3 py-1 text-sm font-semibold text-brand-700"><?php echo e($schedules->count()); ?> jadwal</span>
             </div>
 
             <div class="overflow-x-auto rounded-3xl border border-gray-100 bg-white shadow-sm dark:border-gray-800 dark:bg-dark-900">
@@ -123,47 +133,47 @@
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-100 bg-white dark:divide-gray-800 dark:bg-dark-900">
-                        @foreach ($schedules as $schedule)
-                            @php
+                        <?php $__currentLoopData = $schedules; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $schedule): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <?php
                                 $start = \Carbon\Carbon::parse($schedule->week_start_date);
                                 $end = $schedule->week_end_date
                                     ? \Carbon\Carbon::parse($schedule->week_end_date)
                                     : $start->copy()->addDays(6);
                                 $isCurrent = now()->between($start->startOfDay(), $end->endOfDay());
-                            @endphp
-                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-900 {{ $isCurrent ? 'bg-brand-50 dark:bg-brand-500/10' : '' }}">
+                            ?>
+                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-900 <?php echo e($isCurrent ? 'bg-brand-50 dark:bg-brand-500/10' : ''); ?>">
                                 <td class="px-4 py-4 align-top">
-                                    <div class="text-sm font-semibold text-gray-900 dark:text-white">{{ $start->format('d M') }} — {{ $end->format('d M') }}</div>
-                                    <div class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{ $start->format('d M Y') }} sampai {{ $end->format('d M Y') }}</div>
+                                    <div class="text-sm font-semibold text-gray-900 dark:text-white"><?php echo e($start->format('d M')); ?> — <?php echo e($end->format('d M')); ?></div>
+                                    <div class="mt-1 text-xs text-gray-500 dark:text-gray-400"><?php echo e($start->format('d M Y')); ?> sampai <?php echo e($end->format('d M Y')); ?></div>
                                 </td>
                                 <td class="px-4 py-4 align-top">
-                                    <div class="rounded-2xl bg-gray-50 px-3 py-2 text-sm font-medium text-gray-700 dark:bg-gray-900 dark:text-gray-200">{{ $schedule->technician_1 }}</div>
+                                    <div class="rounded-2xl bg-gray-50 px-3 py-2 text-sm font-medium text-gray-700 dark:bg-gray-900 dark:text-gray-200"><?php echo e($schedule->technician_1); ?></div>
                                 </td>
                                 <td class="px-4 py-4 align-top">
-                                    <div class="rounded-2xl bg-gray-50 px-3 py-2 text-sm font-medium text-gray-700 dark:bg-gray-900 dark:text-gray-200">{{ $schedule->technician_2 }}</div>
+                                    <div class="rounded-2xl bg-gray-50 px-3 py-2 text-sm font-medium text-gray-700 dark:bg-gray-900 dark:text-gray-200"><?php echo e($schedule->technician_2); ?></div>
                                 </td>
                                 <td class="px-4 py-4 align-top">
-                                    <div class="rounded-2xl bg-gray-50 px-3 py-2 text-sm font-medium text-gray-700 dark:bg-gray-900 dark:text-gray-200">{{ $schedule->technician_3 }}</div>
+                                    <div class="rounded-2xl bg-gray-50 px-3 py-2 text-sm font-medium text-gray-700 dark:bg-gray-900 dark:text-gray-200"><?php echo e($schedule->technician_3); ?></div>
                                 </td>
                                 <td class="px-4 py-4 align-top">
-                                    @if ($isCurrent)
+                                    <?php if($isCurrent): ?>
                                         <span class="inline-flex items-center rounded-full bg-brand-100 px-3 py-1 text-xs font-semibold text-brand-700">Minggu ini</span>
-                                    @else
+                                    <?php else: ?>
                                         <span class="text-sm text-gray-500 dark:text-gray-400">Terjadwal</span>
-                                    @endif
+                                    <?php endif; ?>
                                 </td>
                                 <td class="px-4 py-4 align-top">
                                     <div class="flex flex-wrap gap-2">
-                                        <a href="{{ route('piket.edit', $schedule->week_start_date) }}" class="inline-flex items-center rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-xs font-semibold text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-dark-800 dark:text-gray-200 dark:hover:bg-gray-900">Edit</a>
-                                        <form method="POST" action="{{ route('piket.destroy', $schedule->week_start_date) }}" onsubmit="return confirm('Hapus jadwal piket ini? Tindakan ini tidak dapat dibatalkan.')">
-                                            @csrf
-                                            @method('DELETE')
+                                        <a href="<?php echo e(route('piket.edit', $schedule->week_start_date)); ?>" class="inline-flex items-center rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-xs font-semibold text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-dark-800 dark:text-gray-200 dark:hover:bg-gray-900">Edit</a>
+                                        <form method="POST" action="<?php echo e(route('piket.destroy', $schedule->week_start_date)); ?>" onsubmit="return confirm('Hapus jadwal piket ini? Tindakan ini tidak dapat dibatalkan.')">
+                                            <?php echo csrf_field(); ?>
+                                            <?php echo method_field('DELETE'); ?>
                                             <button type="submit" class="inline-flex items-center rounded-lg bg-red-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-red-700">Hapus</button>
                                         </form>
                                     </div>
                                 </td>
                             </tr>
-                        @endforeach
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </tbody>
                 </table>
             </div>
@@ -203,7 +213,7 @@
                     height: '100%',
                     contentHeight: 'auto',
                     aspectRatio: 1.35,
-                    events: @json($calendarEvents),
+                    events: <?php echo json_encode($calendarEvents, 15, 512) ?>,
                     eventDisplay: 'block',
                     dayMaxEventRows: 2,
                     dayMaxEvents: true,
@@ -270,4 +280,14 @@
         </script>
     </div>
 </div>
-</x-app-layout>
+ <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal9ac128a9029c0e4701924bd2d73d7f54)): ?>
+<?php $attributes = $__attributesOriginal9ac128a9029c0e4701924bd2d73d7f54; ?>
+<?php unset($__attributesOriginal9ac128a9029c0e4701924bd2d73d7f54); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal9ac128a9029c0e4701924bd2d73d7f54)): ?>
+<?php $component = $__componentOriginal9ac128a9029c0e4701924bd2d73d7f54; ?>
+<?php unset($__componentOriginal9ac128a9029c0e4701924bd2d73d7f54); ?>
+<?php endif; ?>
+<?php /**PATH C:\Users\BPS 1900\Documents\timcare\resources\views/admin/piket/index.blade.php ENDPATH**/ ?>
