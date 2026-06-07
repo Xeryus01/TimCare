@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-error-layout>
     @php $previousUrl = url()->previous() ?: route('dashboard'); @endphp
 
     @include('components.error.card', [
@@ -7,4 +7,4 @@
         'message' => $exception->getMessage() ?: 'Halaman yang Anda cari tidak ditemukan. Periksa kembali alamat URL atau kembali ke dashboard.',
         'previousUrl' => $previousUrl,
     ])
-</x-app-layout>
+</x-error-layout>
