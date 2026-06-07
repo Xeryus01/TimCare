@@ -129,16 +129,7 @@
                                 </td>
                                 <td class="px-5 py-4 sm:px-6 text-sm text-gray-700 dark:text-gray-300"><?php echo e(optional($ticket->requester)->name ?? '-'); ?></td>
                                 <td class="px-5 py-4 sm:px-6">
-                                    <span class="inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium
-                                        <?php if($ticket->status === \App\Models\Ticket::STATUS_OPEN): ?> bg-red-100 text-red-700 dark:bg-red-500/15 dark:text-red-400
-                                        <?php elseif($ticket->status === \App\Models\Ticket::STATUS_ASSIGNED_DETECT): ?> bg-yellow-100 text-yellow-700 dark:bg-yellow-500/15 dark:text-yellow-400
-                                        <?php elseif($ticket->status === \App\Models\Ticket::STATUS_WAITING_PARTS): ?> bg-purple-100 text-purple-700 dark:bg-purple-500/15 dark:text-purple-400
-                                        <?php elseif($ticket->status === \App\Models\Ticket::STATUS_SOLVED_WITH_NOTES): ?> bg-indigo-100 text-indigo-700 dark:bg-indigo-500/15 dark:text-indigo-400
-                                        <?php elseif($ticket->status === \App\Models\Ticket::STATUS_SOLVED): ?> bg-green-100 text-green-700 dark:bg-green-500/15 dark:text-green-400
-                                        <?php elseif($ticket->status === \App\Models\Ticket::STATUS_REJECTED): ?> bg-orange-100 text-orange-700 dark:bg-orange-500/15 dark:text-orange-400
-                                        <?php elseif($ticket->status === \App\Models\Ticket::STATUS_CANCELLED): ?> bg-gray-100 text-gray-700 dark:bg-gray-500/15 dark:text-gray-400
-                                        <?php else: ?> bg-gray-100 text-gray-700 dark:bg-gray-500/15 dark:text-gray-400
-                                        <?php endif; ?>">
+                                    <span class="inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium <?php echo e($ticket->status_badge_classes); ?>">
                                         <?php echo e($ticket->status_label); ?>
 
                                     </span>

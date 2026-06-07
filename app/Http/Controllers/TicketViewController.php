@@ -36,7 +36,7 @@ class TicketViewController extends Controller
 
         // allow filtering by status or assignee for all users
         if ($request->filled('status')) {
-            $q->where('status', $request->status);
+            $q->whereIn('status', Ticket::resolveStatusFilter($request->status));
         }
         if ($request->filled('assignee_id')) {
             $q->where('assignee_id', $request->assignee_id);

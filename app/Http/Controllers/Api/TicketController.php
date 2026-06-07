@@ -26,7 +26,7 @@ class TicketController extends Controller
             ->latest();
 
         if ($request->filled('status')) {
-            $q->where('status', $request->status);
+            $q->whereIn('status', Ticket::resolveStatusFilter($request->status));
         }
         if ($request->filled('priority')) {
             $q->where('priority', $request->priority);

@@ -53,6 +53,40 @@ class Reservation extends Model
         ];
     }
 
+    public static function statusBadgeClasses(): array
+    {
+        return [
+            self::STATUS_PENDING => 'bg-blue-100 text-blue-700 dark:bg-blue-500/15 dark:text-blue-400',
+            self::STATUS_APPROVED => 'bg-orange-100 text-orange-700 dark:bg-orange-500/15 dark:text-orange-400',
+            self::STATUS_WAITING_MONITORING => 'bg-purple-100 text-purple-700 dark:bg-purple-500/15 dark:text-purple-400',
+            self::STATUS_COMPLETED => 'bg-green-100 text-green-700 dark:bg-green-500/15 dark:text-green-400',
+            self::STATUS_REJECTED => 'bg-red-100 text-red-700 dark:bg-red-500/15 dark:text-red-400',
+            self::STATUS_CANCELLED => 'bg-red-100 text-red-700 dark:bg-red-500/15 dark:text-red-400',
+        ];
+    }
+
+    public static function statusBadgeClassNames(): array
+    {
+        return [
+            self::STATUS_PENDING => 'open',
+            self::STATUS_APPROVED => 'assigned',
+            self::STATUS_WAITING_MONITORING => 'waiting',
+            self::STATUS_COMPLETED => 'done',
+            self::STATUS_REJECTED => 'cancelled',
+            self::STATUS_CANCELLED => 'cancelled',
+        ];
+    }
+
+    public function getStatusBadgeClassesAttribute(): string
+    {
+        return self::statusBadgeClasses()[$this->status] ?? 'bg-gray-100 text-gray-700 dark:bg-gray-500/15 dark:text-gray-400';
+    }
+
+    public function getStatusBadgeClassAttribute(): string
+    {
+        return self::statusBadgeClassNames()[$this->status] ?? 'cancelled';
+    }
+
     public static function statuses(): array
     {
         return [

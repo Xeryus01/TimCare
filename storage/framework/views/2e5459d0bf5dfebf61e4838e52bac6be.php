@@ -148,15 +148,7 @@
                                 </td>
                                 <td class="px-5 py-4 sm:px-6 text-sm text-gray-700 dark:text-gray-300"><?php echo e(optional($r->requester)->name ?? '-'); ?></td>
                                 <td class="px-5 py-4 sm:px-6">
-                                    <span class="inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium
-                                        <?php if($r->status === \App\Models\Reservation::STATUS_PENDING): ?> bg-yellow-100 text-yellow-700 dark:bg-yellow-500/15 dark:text-yellow-400
-                                        <?php elseif($r->status === \App\Models\Reservation::STATUS_APPROVED): ?> bg-green-100 text-green-700 dark:bg-green-500/15 dark:text-green-400
-                                        <?php elseif($r->status === \App\Models\Reservation::STATUS_WAITING_MONITORING): ?> bg-purple-100 text-purple-700 dark:bg-purple-500/15 dark:text-purple-400
-                                        <?php elseif($r->status === \App\Models\Reservation::STATUS_REJECTED): ?> bg-red-100 text-red-700 dark:bg-red-500/15 dark:text-red-400
-                                        <?php elseif($r->status === \App\Models\Reservation::STATUS_COMPLETED): ?> bg-blue-100 text-blue-700 dark:bg-blue-500/15 dark:text-blue-400
-                                        <?php elseif($r->status === \App\Models\Reservation::STATUS_CANCELLED): ?> bg-gray-100 text-gray-700 dark:bg-gray-500/15 dark:text-gray-400
-                                        <?php else: ?> bg-gray-100 text-gray-700 dark:bg-gray-500/15 dark:text-gray-400
-                                        <?php endif; ?>">
+                                    <span class="inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium <?php echo e($r->status_badge_classes); ?>">
                                         <?php echo e($r->status_label); ?>
 
                                     </span>

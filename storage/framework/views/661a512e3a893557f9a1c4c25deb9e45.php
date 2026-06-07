@@ -245,36 +245,31 @@ unset($__errorArgs, $__bag); ?>
             </div>
 
             <div class="space-y-6">
-                <?php if(auth()->user()->hasRole('Admin')): ?>
                 <div class="rounded-xl border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-dark-800">
                     <h3 class="mb-3 text-sm font-bold uppercase text-gray-500 dark:text-gray-400">Status Penanganan</h3>
-                    <span class="inline-flex rounded-full px-3 py-1 text-sm font-medium
-                        <?php if($ticket->status === \App\Models\Ticket::STATUS_OPEN): ?> bg-red-100 text-red-700 dark:bg-red-500/15 dark:text-red-400
-                        <?php elseif($ticket->status === \App\Models\Ticket::STATUS_ASSIGNED_DETECT): ?> bg-yellow-100 text-yellow-700 dark:bg-yellow-500/15 dark:text-yellow-400
-                        <?php elseif($ticket->status === \App\Models\Ticket::STATUS_SOLVED_WITH_NOTES): ?> bg-indigo-100 text-indigo-700 dark:bg-indigo-500/15 dark:text-indigo-400
-                        <?php elseif($ticket->status === \App\Models\Ticket::STATUS_SOLVED): ?> bg-green-100 text-green-700 dark:bg-green-500/15 dark:text-green-400
-                        <?php else: ?> bg-gray-100 text-gray-700 dark:bg-gray-500/15 dark:text-gray-400
-                        <?php endif; ?>">
-                        <?php echo e($ticket->status_label); ?>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">Tahap penanganan saat ini.</p>
 
-                    </span>
+                    <div class="mt-4">
+                        <span class="inline-flex rounded-lg px-3 py-1 text-sm font-semibold <?php echo e($ticket->status_badge_classes); ?>"><?php echo e($ticket->status_label); ?></span>
+                    </div>
 
-                    <form method="POST" action="<?php echo e(route('tickets.update', $ticket)); ?>" class="mt-4 space-y-4">
-                        <?php echo csrf_field(); ?>
-                        <?php echo method_field('PATCH'); ?>
-                        <div>
-                            <label for="assignee_id" class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Petugas</label>
-                            <select id="assignee_id" name="assignee_id" class="w-full rounded-lg border border-gray-300 px-3 py-2 dark:border-gray-600 dark:bg-dark-800 dark:text-white">
-                                <option value="">Belum ditentukan</option>
-                                <?php $__currentLoopData = $technicians; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $user): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                    <option value="<?php echo e($user->id); ?>" <?php echo e($ticket->assignee_id == $user->id ? 'selected' : ''); ?>><?php echo e($user->name); ?></option>
-                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                            </select>
-                        </div>
-                        <button type="submit" class="w-full rounded-lg bg-brand-600 px-4 py-2 text-white">Perbarui Penanganan</button>
-                    </form>
+                    <?php if(auth()->user()->hasRole('Admin')): ?>
+                        <form method="POST" action="<?php echo e(route('tickets.update', $ticket)); ?>" class="mt-4 space-y-4">
+                            <?php echo csrf_field(); ?>
+                            <?php echo method_field('PATCH'); ?>
+                            <div>
+                                <label for="assignee_id" class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Petugas</label>
+                                <select id="assignee_id" name="assignee_id" class="w-full rounded-lg border border-gray-300 px-3 py-2 dark:border-gray-600 dark:bg-dark-800 dark:text-white">
+                                    <option value="">Belum ditentukan</option>
+                                    <?php $__currentLoopData = $technicians; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $user): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                        <option value="<?php echo e($user->id); ?>" <?php echo e($ticket->assignee_id == $user->id ? 'selected' : ''); ?>><?php echo e($user->name); ?></option>
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                </select>
+                            </div>
+                            <button type="submit" class="w-full rounded-lg bg-brand-600 px-4 py-2 text-white">Perbarui Penanganan</button>
+                        </form>
+                    <?php endif; ?>
                 </div>
-                <?php endif; ?>
 
                 <div class="rounded-xl border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-dark-800">
                     <h3 class="mb-3 text-sm font-bold uppercase text-gray-500 dark:text-gray-400">Timeline</h3>
