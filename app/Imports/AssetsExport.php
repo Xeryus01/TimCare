@@ -24,43 +24,13 @@ class AssetsExport implements FromCollection, WithHeadings
         $query = Asset::with(['holderHistory.changedByUser', 'maintenances.performedByUser', 'logs.actor']);
 
         if ($this->startDate && $this->endDate) {
-            $query->whereBetween('purchased_at', [$this->startDate, $this->endDate]);
+            $query->where(function ($query) {
+                $query->whereNull('purchased_at')
+                    ->orWhere('purchased_at', '<=', $this->endDate);
+            });
         }
 
         return $query->get()->map(function ($asset) {
-            $holderHistory = $asset->holderHistory->map(function ($history) {
-                return [
-                    'changed_at' => $history->changed_at ? $history->changed_at->format('Y-m-d H:i:s') : null,
-                    'previous_holder' => $history->previous_holder,
-                    'new_holder' => $history->new_holder,
-                    'changed_by' => optional($history->changedByUser)->name,
-                    'notes' => $history->notes,
-                ];
-            });
-
-            $maintenanceHistory = $asset->maintenances->map(function ($maintenance) {
-                return [
-                    'maintenance_date' => $maintenance->maintenance_date ? $maintenance->maintenance_date->format('Y-m-d H:i:s') : null,
-                    'type' => $maintenance->type,
-                    'description' => $maintenance->description,
-                    'findings' => $maintenance->findings,
-                    'actions_taken' => $maintenance->actions_taken,
-                    'performed_by' => optional($maintenance->performedByUser)->name,
-                    'condition_before' => $maintenance->condition_before,
-                    'condition_after' => $maintenance->condition_after,
-                    'next_maintenance_date' => $maintenance->next_maintenance_date ? $maintenance->next_maintenance_date->format('Y-m-d H:i:s') : null,
-                ];
-            });
-
-            $changeHistory = $asset->logs->map(function ($log) {
-                return [
-                    'action' => $log->action,
-                    'actor' => optional($log->actor)->name,
-                    'meta' => $log->meta,
-                    'created_at' => $log->created_at ? $log->created_at->format('Y-m-d H:i:s') : null,
-                ];
-            });
-
             return [
                 'asset_code' => $asset->asset_code,
                 'name' => $asset->name,
@@ -69,14 +39,54 @@ class AssetsExport implements FromCollection, WithHeadings
                 'nilai_perolehan' => $asset->nilai_perolehan,
                 'location' => $asset->location,
                 'kode_satker' => $asset->kode_satker,
-                'holder' => $asset->holder,
+                'holder' => $this->resolveHolder($asset),
                 'nip_pegawai' => $asset->nip_pegawai,
                 'type' => $asset->type,
                 'brand' => $asset->brand,
-                'condition' => $asset->condition_label,
+                'condition' => $this->resolveCondition($asset),
                 'status' => $asset->status_label,
             ];
         });
+    }
+
+    protected function resolveHolder(Asset $asset): ?string
+    {
+        if (! $this->endDate) {
+            return $asset->holder;
+        }
+
+        $history = $asset->holderHistory
+            ->filter(function ($history) {
+                return $history->changed_at && $history->changed_at->lte($this->endDate);
+            })
+            ->sortByDesc('changed_at')
+            ->first();
+
+        if ($history && $history->new_holder) {
+            return $history->new_holder;
+        }
+
+        return $asset->holder;
+    }
+
+    protected function resolveCondition(Asset $asset): string
+    {
+        if (! $this->endDate) {
+            return $asset->condition_label;
+        }
+
+        $maintenance = $asset->maintenances
+            ->filter(function ($maintenance) {
+                return $maintenance->maintenance_date && $maintenance->maintenance_date->lte($this->endDate);
+            })
+            ->sortByDesc('maintenance_date')
+            ->first();
+
+        if ($maintenance && $maintenance->condition_after) {
+            return Asset::conditionOptions()[Asset::normalizeCondition($maintenance->condition_after)] ?? $maintenance->condition_after;
+        }
+
+        return $asset->condition_label;
     }
 
     public function headings(): array

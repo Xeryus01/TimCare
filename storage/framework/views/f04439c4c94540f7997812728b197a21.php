@@ -124,6 +124,45 @@ unset($__errorArgs, $__bag); ?>
         </div>
         <?php endif; ?>
 
+        <!-- Search and Filters -->
+        <form id="asset-filters" method="GET" action="<?php echo e(route('assets.index')); ?>" class="mb-6 rounded-xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-dark-800">
+            <div class="grid gap-4 lg:grid-cols-4">
+                <div class="col-span-full lg:col-span-2">
+                    <label for="search" class="text-sm font-medium text-gray-900 dark:text-white">Cari Aset</label>
+                    <input id="search" name="search" type="search" value="<?php echo e(request('search')); ?>" placeholder="Kode, nama, serial, pegawai, lokasi..." class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 dark:border-gray-600 dark:bg-dark-800 dark:text-white" />
+                </div>
+
+                <div>
+                    <label for="status" class="text-sm font-medium text-gray-900 dark:text-white">Status Aset</label>
+                    <select id="status" name="status" class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 dark:border-gray-600 dark:bg-dark-800 dark:text-white">
+                        <option value="">Semua Status</option>
+                        <?php $__currentLoopData = \App\Models\Asset::statusOptions(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $value => $label): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <option value="<?php echo e($value); ?>"<?php echo e(request('status') === $value ? ' selected' : ''); ?>><?php echo e($label); ?></option>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="condition" class="text-sm font-medium text-gray-900 dark:text-white">Kondisi</label>
+                    <select id="condition" name="condition" class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 dark:border-gray-600 dark:bg-dark-800 dark:text-white">
+                        <option value="">Semua Kondisi</option>
+                        <option value="GOOD"<?php echo e(request('condition') === 'GOOD' ? ' selected' : ''); ?>>Baik</option>
+                        <option value="LIGHT"<?php echo e(request('condition') === 'LIGHT' ? ' selected' : ''); ?>>Rusak Ringan</option>
+                        <option value="HEAVY"<?php echo e(request('condition') === 'HEAVY' ? ' selected' : ''); ?>>Rusak Berat</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="type" class="text-sm font-medium text-gray-900 dark:text-white">Jenis Aset</label>
+                    <input id="type" name="type" type="text" value="<?php echo e(request('type')); ?>" placeholder="Contoh: Laptop" class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 dark:border-gray-600 dark:bg-dark-800 dark:text-white" />
+                </div>
+            </div>
+            <div class="mt-4 flex flex-wrap items-center gap-3">
+                <button type="submit" class="rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700">Terapkan Filter</button>
+                <a href="<?php echo e(route('assets.index')); ?>" class="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:bg-dark-800 dark:text-gray-300 dark:hover:bg-white/10">Reset</a>
+            </div>
+        </form>
+
         <!-- Assets Table -->
         <?php
             $sort = request('sort');

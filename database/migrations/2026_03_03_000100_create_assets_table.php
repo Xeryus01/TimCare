@@ -10,12 +10,12 @@ return new class extends Migration
     {
         Schema::create('assets', function (Blueprint $table) {
             $table->id();
-            $table->string('asset_code', 50)->unique();
+            $table->string('asset_code', 50);
             $table->string('name', 150);
             $table->string('type', 50);
             $table->string('brand', 80)->nullable();
             $table->string('model', 80)->nullable();
-            $table->string('serial_number', 120)->nullable();
+            $table->string('serial_number', 120)->nullable()->unique();
             $table->json('specs')->nullable();
             $table->string('location', 120)->nullable();
             $table->string('holder', 120)->nullable();

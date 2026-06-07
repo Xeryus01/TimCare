@@ -34,9 +34,7 @@ class AssetsImport implements ToCollection, WithHeadingRow
             $row = $this->normalizeRow($row->toArray());
 
             $assetCode = trim($this->getValue($row, 'asset_code', ''));
-            if ($assetCode === '') {
-                continue;
-            }
+            $assetTag = trim($this->getValue($row, 'serial_number', ''));
 
             $status = $this->normalizeStatus($this->getValue($row, 'status', Asset::STATUS_ALLOCATED));
             $condition = $this->getValue($row, 'condition', 'GOOD');
@@ -68,12 +66,46 @@ class AssetsImport implements ToCollection, WithHeadingRow
                 $data['specs'] = $this->mergeSpecs($data['specs'], $unknownValues);
             }
 
-            Asset::updateOrCreate(
-                ['asset_code' => $assetCode],
-                array_merge(['asset_code' => $assetCode], $data)
-            );
+            // Normalize keys
+            $assetCodeNormalized = trim($assetCode);
+            $assetTagNormalized = trim($assetTag);
+
+            // Only match existing records by serial_number (asset tag).
+            // Do NOT update existing records based solely on asset_code to avoid overwriting
+            // multiple rows that share the same NO BMN in the import file.
+            $existingAsset = null;
+            if ($assetTagNormalized !== '') {
+                $existingAsset = Asset::where('serial_number', $assetTagNormalized)->first();
+            }
+
+            if ($existingAsset) {
+                $existingAsset->update(array_merge([
+                    'asset_code' => $assetCodeNormalized ?: $existingAsset->asset_code,
+                    'serial_number' => $assetTagNormalized ?: $existingAsset->serial_number,
+                ], $data));
+            } else {
+                // Prepare create payload. Use asset_code if provided, otherwise fallback to asset_tag.
+                $newAssetData = array_merge([
+                    'asset_code' => $assetCodeNormalized ?: $assetTagNormalized,
+                    'serial_number' => $assetTagNormalized ?: null,
+                ], $data);
+
+                // Ensure asset_code uniqueness by appending suffix only if collision still occurs
+                $baseCode = $newAssetData['asset_code'] ?: ('ASSET-' . uniqid());
+                $attempt = 0;
+                while (Asset::where('asset_code', $newAssetData['asset_code'])->exists()) {
+                    $attempt++;
+                    $newAssetData['asset_code'] = $baseCode . '-' . $attempt;
+                    if ($attempt > 100) {
+                        break;
+                    }
+                }
+
+                Asset::create($newAssetData);
+            }
         }
     }
+    
 
     protected function normalizeRow(array $row): array
     {
