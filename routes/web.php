@@ -8,6 +8,22 @@ Route::middleware([\App\Http\Middleware\ContentSecurityPolicy::class])->group(fu
     Route::get('/', function () {
         return view('welcome');
     });
+
+    Route::get('/documentation', function () {
+        return view('pages.documentation');
+    })->name('documentation');
+
+    Route::get('/faq', function () {
+        return view('pages.faq');
+    })->name('faq');
+
+    Route::get('/contact', function () {
+        return view('pages.contact');
+    })->name('contact');
+
+    Route::get('/status-sistem', function () {
+        return view('pages.status');
+    })->name('status');
 });
 
 Route::get('/dashboard', function () {

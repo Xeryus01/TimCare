@@ -17,7 +17,7 @@ class Admin
     {
         // Check if user is authenticated and has admin role
         if (!auth()->check() || !auth()->user()->hasRole('Admin')) {
-            abort(403, 'Unauthorized. Admin access required.');
+            abort(403, 'Akses tidak sesuai. Hanya role Admin yang bisa mengakses halaman ini.');
         }
 
         return $next($request);

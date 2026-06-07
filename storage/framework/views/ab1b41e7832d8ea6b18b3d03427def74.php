@@ -24,59 +24,7 @@
 </head>
 <body class="h-full bg-gray-50">
 
-    <!-- Navigation -->
-    <nav class="bg-white shadow-sm border-b border-gray-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <div class="flex items-center flex-shrink-0">
-                    <a href="<?php echo e(url('/')); ?>" class="flex items-center gap-2">
-                        <?php if (isset($component)) { $__componentOriginal8892e718f3d0d7a916180885c6f012e7 = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginal8892e718f3d0d7a916180885c6f012e7 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.application-logo','data' => ['class' => 'h-10 w-auto text-brand-600']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
-<?php $component->withName('application-logo'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['class' => 'h-10 w-auto text-brand-600']); ?>
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginal8892e718f3d0d7a916180885c6f012e7)): ?>
-<?php $attributes = $__attributesOriginal8892e718f3d0d7a916180885c6f012e7; ?>
-<?php unset($__attributesOriginal8892e718f3d0d7a916180885c6f012e7); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginal8892e718f3d0d7a916180885c6f012e7)): ?>
-<?php $component = $__componentOriginal8892e718f3d0d7a916180885c6f012e7; ?>
-<?php unset($__componentOriginal8892e718f3d0d7a916180885c6f012e7); ?>
-<?php endif; ?>
-                    </a>
-                </div>
-                <div class="flex items-center space-x-2 sm:space-x-4">
-                    <?php if(auth()->guard()->check()): ?>
-                        <a href="<?php echo e(url('/dashboard')); ?>" class="bg-brand-600 text-white px-4 sm:px-5 py-2 rounded-md text-sm font-medium hover:bg-brand-700 transition-colors">
-                            Dashboard
-                        </a>
-                        <form method="POST" action="<?php echo e(route('logout')); ?>" class="inline">
-                            <?php echo csrf_field(); ?>
-                            <button type="submit" class="text-gray-700 hover:text-gray-900 px-3 sm:px-4 py-2 rounded-md text-sm font-medium border border-gray-300 hover:border-gray-400 transition-colors">
-                                Logout
-                            </button>
-                        </form>
-                    <?php else: ?>
-                        <a href="<?php echo e(url()->to(route('login'))); ?>" class="text-gray-700 hover:text-gray-900 px-3 sm:px-4 py-2 rounded-md text-sm font-medium">
-                            Masuk
-                        </a>
-                        <?php if(Route::has('register')): ?>
-                            <a href="<?php echo e(url()->to(route('register'))); ?>" class="bg-brand-600 text-white px-3 sm:px-4 py-2 rounded-md text-sm font-medium hover:bg-brand-700">
-                                Daftar
-                            </a>
-                        <?php endif; ?>
-                    <?php endif; ?>
-                </div>
-            </div>
-        </div>
-    </nav>
+    <?php echo $__env->make('partials.landing-navigation', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
     <!-- Hero Section -->
     <section class="hero-gradient text-white min-h-screen flex items-center justify-center relative overflow-hidden">
@@ -157,9 +105,6 @@
                 </div>
             </div>
         </div>
-    </section>
-
-    <!-- Features Section -->
     </section>
 
     <!-- Features Section -->
@@ -329,61 +274,7 @@
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="bg-gray-900 text-white py-8 sm:py-12 lg:py-16">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid gap-8 sm:gap-12 sm:grid-cols-2 lg:grid-cols-3">
-                <div>
-                    <div class="flex items-center gap-3 mb-4">
-                        <?php if (isset($component)) { $__componentOriginal8892e718f3d0d7a916180885c6f012e7 = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginal8892e718f3d0d7a916180885c6f012e7 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.application-logo','data' => ['class' => 'h-10 w-auto text-white']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
-<?php $component->withName('application-logo'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['class' => 'h-10 w-auto text-white']); ?>
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginal8892e718f3d0d7a916180885c6f012e7)): ?>
-<?php $attributes = $__attributesOriginal8892e718f3d0d7a916180885c6f012e7; ?>
-<?php unset($__attributesOriginal8892e718f3d0d7a916180885c6f012e7); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginal8892e718f3d0d7a916180885c6f012e7)): ?>
-<?php $component = $__componentOriginal8892e718f3d0d7a916180885c6f012e7; ?>
-<?php unset($__componentOriginal8892e718f3d0d7a916180885c6f012e7); ?>
-<?php endif; ?>
-                    </div>
-                    <p class="text-gray-400 text-sm sm:text-base max-w-md leading-relaxed">
-                        Solusi helpdesk IT yang menyatukan tiket, pengajuan Zoom, dan pemantauan layanan dalam satu platform yang mudah digunakan.
-                    </p>
-                </div>
-                <div>
-                    <h3 class="text-base sm:text-lg font-semibold mb-4 text-white">Fitur</h3>
-                    <ul class="space-y-2 sm:space-y-3 text-gray-400">
-                        <li><a href="<?php echo e(url('/tickets/create')); ?>" class="text-sm sm:text-base transition hover:text-white">Pengajuan Tiket</a></li>
-                        <li><a href="<?php echo e(url('/reservations/create')); ?>" class="text-sm sm:text-base transition hover:text-white">Pengajuan Room Zoom</a></li>
-                        <li><a href="<?php echo e(url('/dashboard')); ?>" class="text-sm sm:text-base transition hover:text-white">Dashboard</a></li>
-                        <li><a href="<?php echo e(url('/notifications')); ?>" class="text-sm sm:text-base transition hover:text-white">Notifikasi</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h3 class="text-base sm:text-lg font-semibold mb-4 text-white">Dukungan</h3>
-                    <ul class="space-y-2 sm:space-y-3 text-gray-400">
-                        <li><a href="#" class="text-sm sm:text-base transition hover:text-white">Dokumentasi</a></li>
-                        <li><a href="#" class="text-sm sm:text-base transition hover:text-white">FAQ</a></li>
-                        <li><a href="#" class="text-sm sm:text-base transition hover:text-white">Kontak</a></li>
-                        <li><a href="#" class="text-sm sm:text-base transition hover:text-white">Status Sistem</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="mt-8 sm:mt-12 lg:mt-16 border-t border-gray-800 pt-6 sm:pt-8 text-xs sm:text-sm text-gray-500">
-                © <?php echo e(date('Y')); ?> TimCare. All rights reserved.
-            </div>
-        </div>
-    </footer>
+    <?php echo $__env->make('partials.landing-footer', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
 </body>
 </html>
