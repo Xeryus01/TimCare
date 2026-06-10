@@ -163,8 +163,9 @@
                     </div>
 
                     <?php if(
-                        auth()->user()->hasAnyRole(['Admin','Teknisi']) ||
-                        (auth()->id() === $ticket->requester_id && ! in_array($ticket->status, [\App\Models\Ticket::STATUS_SOLVED, \App\Models\Ticket::STATUS_SOLVED_WITH_NOTES], true))
+                        auth()->user()->hasRole('Admin') ||
+                        (auth()->id() === $ticket->requester_id && ! in_array($ticket->status, [\App\Models\Ticket::STATUS_SOLVED, \App\Models\Ticket::STATUS_SOLVED_WITH_NOTES], true)) ||
+                        (auth()->user()->hasRole('Teknisi') && $ticket->assignee_id === auth()->id())
                     ): ?>
                     <form method="POST" action="<?php echo e(route('tickets.comment', $ticket)); ?>" enctype="multipart/form-data" class="mt-5 space-y-4 rounded-xl bg-gray-50 p-4 dark:bg-white/5">
                         <?php echo csrf_field(); ?>
@@ -221,9 +222,8 @@ $message = $__bag->first($__errorArgs[0]); ?> border-red-500 <?php unset($messag
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>">
-                                    <option value="">Tetap seperti sekarang</option>
                                     <?php $__currentLoopData = \App\Models\Ticket::statusLabels(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $value => $label): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                        <option value="<?php echo e($value); ?>"><?php echo e($label); ?></option>
+                                        <option value="<?php echo e($value); ?>" <?php echo e(old('status', $ticket->status) === $value ? 'selected' : ''); ?>><?php echo e($label); ?></option>
                                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                 </select>
                                 <?php $__errorArgs = ['status'];

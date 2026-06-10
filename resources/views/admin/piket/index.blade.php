@@ -98,7 +98,7 @@
                 </div>
             </div>
 
-            <div class="h-[580px] w-full rounded-3xl border border-gray-100 bg-white shadow-sm dark:border-gray-800 dark:bg-dark-900" id="piketCalendar"></div>
+            <div class="min-h-[580px] w-full overflow-hidden rounded-3xl border border-gray-100 bg-white shadow-sm dark:border-gray-800 dark:bg-dark-900" id="piketCalendar"></div>
         </div>
 
         <div class="mt-6 rounded-3xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-dark-800">
@@ -171,6 +171,8 @@
 
         <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
         <style>
+            #piketCalendar { min-height: 580px; }
+            #piketCalendar .fc { min-height: 100%; }
             #piketCalendar .fc .fc-toolbar-title { font-size: 1rem; font-weight: 600; }
             #piketCalendar .fc .fc-daygrid-day-top { padding: 0.55rem 0.65rem; }
             #piketCalendar .fc .fc-daygrid-event { padding: 0.4rem 0.45rem; font-size: 0.75rem; border-radius: 0.55rem; }
@@ -200,7 +202,7 @@
                         center: 'title',
                         right: 'dayGridMonth,timeGridWeek,timeGridDay'
                     },
-                    height: '100%',
+                    height: 'auto',
                     contentHeight: 'auto',
                     aspectRatio: 1.35,
                     events: @json($calendarEvents),

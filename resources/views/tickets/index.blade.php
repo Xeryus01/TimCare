@@ -79,6 +79,15 @@
                                 </a>
                             </th>
                             <th class="px-5 py-3.5 text-left text-xs font-semibold uppercase text-gray-500 dark:text-gray-400 sm:px-6">
+                                @php $nextDir = ($sort === 'created_at' && $direction === 'asc') ? 'desc' : 'asc'; @endphp
+                                <a href="{{ url()->current() . '?' . http_build_query(array_merge($baseQuery, ['sort' => 'created_at', 'direction' => $nextDir])) }}" class="inline-flex items-center gap-1">
+                                    Waktu Pembuatan
+                                    @if($sort === 'created_at')
+                                        <span>{{ $direction === 'asc' ? '▲' : '▼' }}</span>
+                                    @endif
+                                </a>
+                            </th>
+                            <th class="px-5 py-3.5 text-left text-xs font-semibold uppercase text-gray-500 dark:text-gray-400 sm:px-6">
                                 @php $nextDir = ($sort === 'requester' && $direction === 'asc') ? 'desc' : 'asc'; @endphp
                                 <a href="{{ url()->current() . '?' . http_build_query(array_merge($baseQuery, ['sort' => 'requester', 'direction' => $nextDir])) }}" class="inline-flex items-center gap-1">
                                     Pemohon
@@ -118,6 +127,7 @@
                                     <p class="text-sm font-semibold text-gray-900 dark:text-white">{{ $ticket->title }}</p>
                                     <p class="text-xs text-gray-500 dark:text-gray-400">{{ $ticket->category_label }}</p>
                                 </td>
+                                <td class="px-5 py-4 sm:px-6 text-sm text-gray-700 dark:text-gray-300">{{ $ticket->created_at->format('d/m/Y H:i') }}</td>
                                 <td class="px-5 py-4 sm:px-6 text-sm text-gray-700 dark:text-gray-300">{{ optional($ticket->requester)->name ?? '-' }}</td>
                                 <td class="px-5 py-4 sm:px-6">
                                     <span class="inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium {{ $ticket->status_badge_classes }}">
@@ -131,7 +141,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="7" class="px-5 py-8 text-center text-sm text-gray-500 dark:text-gray-400 sm:px-6">Belum ada tiket yang sesuai filter.</td>
+                                <td colspan="8" class="px-5 py-8 text-center text-sm text-gray-500 dark:text-gray-400 sm:px-6">Belum ada tiket yang sesuai filter.</td>
                             </tr>
                         @endforelse
                     </tbody>

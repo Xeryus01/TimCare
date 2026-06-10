@@ -220,6 +220,53 @@ class TicketWorkflowTest extends TestCase
     }
 
     /** @test */
+    public function unassigned_technician_cannot_comment_on_ticket()
+    {
+        $requester = User::factory()->create();
+        $assignedTech = User::factory()->create();
+        $assignedTech->assignRole('Teknisi');
+
+        $unassignedTech = User::factory()->create();
+        $unassignedTech->assignRole('Teknisi');
+
+        $ticket = Ticket::factory()->create([
+            'requester_id' => $requester->id,
+            'assignee_id' => $assignedTech->id,
+        ]);
+
+        $this->actingAs($unassignedTech)
+            ->post("/tickets/{$ticket->id}/comments", [
+                'message' => 'Saya tidak ditugaskan di tiket ini.',
+            ])
+            ->assertForbidden();
+
+        $this->assertDatabaseMissing('ticket_comments', [
+            'ticket_id' => $ticket->id,
+            'user_id' => $unassignedTech->id,
+        ]);
+    }
+
+    /** @test */
+    public function unassigned_technician_can_view_ticket_details()
+    {
+        $requester = User::factory()->create();
+        $assignedTech = User::factory()->create();
+        $assignedTech->assignRole('Teknisi');
+
+        $unassignedTech = User::factory()->create();
+        $unassignedTech->assignRole('Teknisi');
+
+        $ticket = Ticket::factory()->create([
+            'requester_id' => $requester->id,
+            'assignee_id' => $assignedTech->id,
+        ]);
+
+        $this->actingAs($unassignedTech)
+            ->get("/tickets/{$ticket->id}")
+            ->assertOk();
+    }
+
+    /** @test */
     public function unrelated_user_cannot_comment_on_someone_elses_ticket()
     {
         $requester = User::factory()->create();

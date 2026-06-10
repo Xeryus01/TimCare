@@ -63,7 +63,7 @@
             })->toArray();
         ?>
 
-        <div class="grid gap-4 xl:grid-cols-[1.2fr_0.8fr] mb-6">
+        <div class="grid gap-4 xl:grid-cols-[0.95fr_1.05fr] mb-6">
             <div class="rounded-3xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-dark-800">
                 <p class="text-sm uppercase tracking-[0.2em] text-gray-500 dark:text-gray-400">Ringkasan Piket</p>
                 <div class="mt-4 grid gap-3 sm:grid-cols-2">
@@ -77,7 +77,7 @@
                                     : $activeStart->copy()->addDays(6);
                             ?>
                             <p class="mt-2 text-lg font-semibold text-gray-900 dark:text-white"><?php echo e($activeStart->format('d M')); ?> — <?php echo e($activeEnd->format('d M Y')); ?></p>
-                            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Petugas: <?php echo e($currentSchedule->technician_1); ?>, <?php echo e($currentSchedule->technician_2); ?>, <?php echo e($currentSchedule->technician_3); ?></p>
+                            <p class="mt-1 text-sm text-gray-500 dark:text-gray-200">Petugas: <?php echo e($currentSchedule->technician_1); ?>, <?php echo e($currentSchedule->technician_2); ?>, <?php echo e($currentSchedule->technician_3); ?></p>
                         <?php else: ?>
                             <p class="mt-2 text-lg font-semibold text-gray-900 dark:text-white">Tidak ada jadwal</p>
                             <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Silakan hubungi admin untuk jadwal piket.</p>
@@ -93,7 +93,7 @@
                                     : $nextStart->copy()->addDays(6);
                             ?>
                             <p class="mt-2 text-lg font-semibold text-gray-900 dark:text-white"><?php echo e($nextStart->format('d M')); ?> — <?php echo e($nextEnd->format('d M Y')); ?></p>
-                            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Petugas: <?php echo e($nextSchedule->technician_1); ?>, <?php echo e($nextSchedule->technician_2); ?></p>
+                            <p class="mt-1 text-sm text-gray-500 dark:text-gray-200">Petugas: <?php echo e($nextSchedule->technician_1); ?>, <?php echo e($nextSchedule->technician_2); ?></p>
                         <?php else: ?>
                             <p class="mt-2 text-lg font-semibold text-gray-900 dark:text-white">Tidak ada jadwal berikutnya</p>
                             <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Semua jadwal sudah terisi.</p>
@@ -104,7 +104,7 @@
             <div class="rounded-3xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-dark-800">
                 <p class="text-sm uppercase tracking-[0.2em] text-gray-500 dark:text-gray-400">Rincian Tugas Piket</p>
                 <h2 class="mt-2 text-xl font-semibold text-gray-900 dark:text-white">Tugas Teknisi Saat Piket</h2>
-                <div class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                <div class="mt-4 grid gap-3 sm:grid-cols-2">
                     <div class="rounded-2xl border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-900">
                         <p class="font-semibold text-gray-900 dark:text-white">Penyiapan Video Conference</p>
                         <p class="mt-2 text-sm text-gray-600 dark:text-gray-300">Siapkan perangkat, koneksi, dan pengaturan audio/video untuk pertemuan online.</p>
@@ -138,11 +138,13 @@
                 <span class="inline-flex items-center rounded-full bg-brand-50 px-3 py-1 text-sm font-semibold text-brand-700"><?php echo e(count($schedules)); ?> jadwal</span>
             </div>
 
-            <div class="h-[520px] w-full rounded-3xl border border-gray-100 bg-white shadow-sm dark:border-gray-800 dark:bg-dark-900" id="piketCalendar"></div>
+            <div class="min-h-[520px] w-full overflow-hidden rounded-3xl border border-gray-100 bg-white shadow-sm dark:border-gray-800 dark:bg-dark-900" id="piketCalendar"></div>
         </div>
 
         <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
         <style>
+            #piketCalendar { min-height: 520px; }
+            #piketCalendar .fc { min-height: 100%; }
             #piketCalendar .fc .fc-toolbar-title { font-size: 1rem; font-weight: 600; }
             #piketCalendar .fc .fc-daygrid-day-top { padding: 0.55rem 0.65rem; }
             #piketCalendar .fc .fc-daygrid-event { padding: 0.4rem 0.45rem; font-size: 0.75rem; border-radius: 0.55rem; }
@@ -172,7 +174,7 @@
                         center: 'title',
                         right: 'dayGridMonth,timeGridWeek,timeGridDay'
                     },
-                    height: '100%',
+                    height: 'auto',
                     contentHeight: 'auto',
                     aspectRatio: 1.35,
                     events: <?php echo json_encode($calendarEvents, 15, 512) ?>,

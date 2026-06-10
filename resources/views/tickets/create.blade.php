@@ -47,8 +47,8 @@
                 </div>
 
                 <div>
-                    <label for="attachment" class="mb-2 block text-sm font-medium text-gray-900 dark:text-white">Lampiran Awal <span class="text-gray-400">(opsional)</span></label>
-                    <input id="attachment" type="file" name="attachment" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.csv,.txt" class="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-gray-900 dark:border-gray-600 dark:bg-dark-800 dark:text-white @error('attachment') border-red-500 @enderror" />
+                    <label for="attachment" class="mb-2 block text-sm font-medium text-gray-900 dark:text-white">Lampiran Awal <span class="text-red-500">(wajib)</span></label>
+                    <input id="attachment" type="file" name="attachment" required accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.csv,.txt" class="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-gray-900 dark:border-gray-600 dark:bg-dark-800 dark:text-white @error('attachment') border-red-500 @enderror" />
                     <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Ukuran lampiran maksimal 1MB. Hanya gambar dan PDF disarankan.</p>
                     @error('attachment')
                         <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>

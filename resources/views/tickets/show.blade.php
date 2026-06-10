@@ -154,8 +154,9 @@
                     </div>
 
                     @if(
-                        auth()->user()->hasAnyRole(['Admin','Teknisi']) ||
-                        (auth()->id() === $ticket->requester_id && ! in_array($ticket->status, [\App\Models\Ticket::STATUS_SOLVED, \App\Models\Ticket::STATUS_SOLVED_WITH_NOTES], true))
+                        auth()->user()->hasRole('Admin') ||
+                        (auth()->id() === $ticket->requester_id && ! in_array($ticket->status, [\App\Models\Ticket::STATUS_SOLVED, \App\Models\Ticket::STATUS_SOLVED_WITH_NOTES], true)) ||
+                        (auth()->user()->hasRole('Teknisi') && $ticket->assignee_id === auth()->id())
                     )
                     <form method="POST" action="{{ route('tickets.comment', $ticket) }}" enctype="multipart/form-data" class="mt-5 space-y-4 rounded-xl bg-gray-50 p-4 dark:bg-white/5">
                         @csrf
@@ -177,9 +178,8 @@
                             <div>
                                 <label for="status" class="mb-2 block text-sm font-medium text-gray-900 dark:text-white">Ubah status saat ini</label>
                                 <select id="status" name="status" class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-gray-900 dark:border-gray-600 dark:bg-dark-800 dark:text-white @error('status') border-red-500 @enderror">
-                                    <option value="">Tetap seperti sekarang</option>
                                     @foreach(\App\Models\Ticket::statusLabels() as $value => $label)
-                                        <option value="{{ $value }}">{{ $label }}</option>
+                                        <option value="{{ $value }}" {{ old('status', $ticket->status) === $value ? 'selected' : '' }}>{{ $label }}</option>
                                     @endforeach
                                 </select>
                                 @error('status')

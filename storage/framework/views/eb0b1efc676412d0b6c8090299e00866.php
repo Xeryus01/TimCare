@@ -77,8 +77,8 @@ unset($__errorArgs, $__bag); ?>"><?php echo e(old('description')); ?></textarea>
                 </div>
 
                 <div>
-                    <label for="attachment" class="mb-2 block text-sm font-medium text-gray-900 dark:text-white">Lampiran Awal <span class="text-gray-400">(opsional)</span></label>
-                    <input id="attachment" type="file" name="attachment" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.csv,.txt" class="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-gray-900 dark:border-gray-600 dark:bg-dark-800 dark:text-white <?php $__errorArgs = ['attachment'];
+                    <label for="attachment" class="mb-2 block text-sm font-medium text-gray-900 dark:text-white">Lampiran Awal <span class="text-red-500">(wajib)</span></label>
+                    <input id="attachment" type="file" name="attachment" required accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.csv,.txt" class="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-gray-900 dark:border-gray-600 dark:bg-dark-800 dark:text-white <?php $__errorArgs = ['attachment'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }

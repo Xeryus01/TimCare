@@ -47,11 +47,12 @@
         $recentReservations = \App\Models\Reservation::latest()->take(5)->get();
 
         // Data untuk kalender zoom - semua reservasi dengan Zoom link dalam bulan ini
-        $zoomEvents = \App\Models\Reservation::whereNotNull('zoom_link')
+        $zoomEvents = \App\Models\Reservation::with('requester')
+            ->whereNotNull('zoom_link')
             ->where('zoom_link', '!=', '')
             ->where('start_time', '>=', now()->startOfMonth())
             ->where('end_time', '<=', now()->endOfMonth())
-            ->get(['start_time', 'end_time', 'room_name', 'purpose', 'status', 'code', 'participants_count', 'operator_needed', 'breakroom_needed', 'id']);
+            ->get(['start_time', 'end_time', 'room_name', 'purpose', 'status', 'code', 'participants_count', 'operator_needed', 'breakroom_needed', 'requester_id', 'id']);
 
         // Data untuk kalender piket - semua jadwal piket dalam bulan ini
         $piketEvents = \App\Models\PiketSchedule::where('week_start_date', '>=', now()->startOfMonth()->toDateString())
@@ -108,6 +109,7 @@
                     'room' => $event->room_name,
                     'start' => $event->start_time->format('d/m/Y H:i'),
                     'end' => $event->end_time->format('d/m/Y H:i'),
+                    'requester' => optional($event->requester)->name,
                 ]
             ];
         })->toArray();
@@ -149,11 +151,12 @@
         $recentReservations = \App\Models\Reservation::where('requester_id', $user->id)->latest()->take(5)->get();
 
         // Data untuk kalender zoom - semua reservasi dengan Zoom link dalam bulan ini
-        $zoomEvents = \App\Models\Reservation::whereNotNull('zoom_link')
+        $zoomEvents = \App\Models\Reservation::with('requester')
+            ->whereNotNull('zoom_link')
             ->where('zoom_link', '!=', '')
             ->where('start_time', '>=', now()->startOfMonth())
             ->where('end_time', '<=', now()->endOfMonth())
-            ->get(['start_time', 'end_time', 'room_name', 'purpose', 'status', 'code', 'participants_count', 'operator_needed', 'breakroom_needed', 'id']);
+            ->get(['start_time', 'end_time', 'room_name', 'purpose', 'status', 'code', 'participants_count', 'operator_needed', 'breakroom_needed', 'requester_id', 'id']);
 
         $piketEvents = \App\Models\PiketSchedule::where('week_start_date', '>=', now()->startOfMonth()->toDateString())
             ->where('week_start_date', '<=', now()->endOfMonth()->toDateString())
@@ -209,6 +212,7 @@
                     'room' => $event->room_name,
                     'start' => $event->start_time->format('d/m/Y H:i'),
                     'end' => $event->end_time->format('d/m/Y H:i'),
+                    'requester' => optional($event->requester)->name,
                 ]
             ];
         })->toArray();
@@ -417,6 +421,77 @@
 
     .link { font-size: .75rem; font-weight: 600; color: var(--brand); text-decoration: none; }
     .link:hover { text-decoration: underline; }
+
+    .dark .page-content,
+    html.dark .page-content {
+        color: #e2e8f0;
+    }
+    .dark .pg-head h1,
+    html.dark .pg-head h1 { color: #ffffff; }
+    .dark .pg-head p,
+    html.dark .pg-head p { color: #94a3b8; }
+
+    .dark .card,
+    html.dark .card,
+    .dark .stat-card,
+    html.dark .stat-card {
+        background: #111827;
+        border-color: #374151;
+        box-shadow: 0 10px 30px rgba(0,0,0,.4);
+    }
+    .dark .card-head,
+    html.dark .card-head {
+        border-bottom-color: #374151;
+    }
+    .dark .card-title,
+    html.dark .card-title { color: #f8fafc; }
+    .dark .card-sub,
+    html.dark .card-sub { color: #94a3b8; }
+    .dark .stat-label,
+    html.dark .stat-label { color: #94a3b8; }
+
+    .dark .ticket-item,
+    html.dark .ticket-item {
+        border-color: #374151;
+        background: #111827;
+    }
+    .dark .ticket-item:hover,
+    html.dark .ticket-item:hover { background: #1f2937; }
+    .dark .ticket-icon,
+    html.dark .ticket-icon { background: #1f2937; color: #93c5fd; }
+    .dark .ticket-title,
+    html.dark .ticket-title { color: #f8fafc; }
+    .dark .ticket-code,
+    html.dark .ticket-code { color: #94a3b8; }
+    .dark .ticket-badge,
+    html.dark .ticket-badge { background: #1f2937; color: #cbd5e1; }
+    .dark .ticket-badge.open,
+    html.dark .ticket-badge.open { background: #1e40af1a; color: #93c5fd; }
+    .dark .ticket-badge.assigned,
+    html.dark .ticket-badge.assigned { background: #7c2d12; color: #fbbf24; }
+    .dark .ticket-badge.waiting,
+    html.dark .ticket-badge.waiting { background: #5b21b6; color: #ddd6fe; }
+    .dark .ticket-badge.done,
+    html.dark .ticket-badge.done { background: #134e4a; color: #a7f3d0; }
+    .dark .ticket-badge.cancelled,
+    html.dark .ticket-badge.cancelled { background: #7f1d1d; color: #fecaca; }
+
+    .dark .empty-icon,
+    html.dark .empty-icon { background: #1f2937; color: #9ca3af; }
+    .dark .empty-title,
+    html.dark .empty-title { color: #f8fafc; }
+    .dark .empty-desc,
+    html.dark .empty-desc { color: #94a3b8; }
+
+    .dark select,
+    html.dark select {
+        color: #e5e7eb;
+        background: #1f2937;
+        border-color: #4b5563;
+    }
+
+    .dark .link,
+    html.dark .link { color: #93c5fd; }
 </style>
 
 <div class="page-content">
@@ -493,19 +568,19 @@
             <div class="card-body">
                 <?php if($activePiketSchedules->isNotEmpty()): ?>
                     <?php $__currentLoopData = $activePiketSchedules; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $schedule): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                        <div style="margin-bottom: 12px; padding: 12px; border: 1px solid var(--slate-200); border-radius: 8px;">
-                            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
-                                <div style="font-size: 0.875rem; font-weight: 600; color: var(--slate-800);">
+                        <div class="mb-3 rounded-2xl border border-gray-200 bg-white p-3 dark:border-gray-700 dark:bg-dark-800">
+                            <div class="mb-2 flex items-center justify-between gap-4">
+                                <div class="text-sm font-semibold text-slate-800 dark:text-slate-100">
                                     <?php echo e($schedule['week_start_date']); ?> - <?php echo e($schedule['week_end_date']); ?>
 
                                 </div>
                                 <?php if(!empty($schedule['is_active']) && $schedule['is_active']): ?>
-                                    <div style="font-size:0.72rem;background:#ecfdf5;color:#065f46;padding:4px 8px;border-radius:999px;font-weight:700;">Aktif</div>
+                                    <div class="inline-flex items-center rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-200">Aktif</div>
                                 <?php endif; ?>
                             </div>
-                            <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+                            <div class="flex flex-wrap gap-2">
                                 <?php $__currentLoopData = $schedule['technicians']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $tech): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                    <span style="font-size: 0.75rem; padding: 4px 12px; background: var(--slate-100); border-radius: 999px; color: var(--slate-600);"><?php echo e($tech); ?></span>
+                                    <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-300"><?php echo e($tech); ?></span>
                                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </div>
                         </div>
@@ -748,6 +823,7 @@
                             <div class="bg-gray-900 text-white p-3 rounded-lg shadow-lg max-w-[18rem]">
                                 <div class="font-semibold mb-2">${props.room || info.event.title}</div>
                                 <div class="text-xs sm:text-sm space-y-1">
+                                    <div><strong>Pemohon:</strong> ${props.requester || 'Tidak diketahui'}</div>
                                     <div><strong>Detail:</strong> ${props.purpose || ''}</div>
                                     <div><strong>Status:</strong> ${props.status || ''}</div>
                                     <div><strong>Mulai:</strong> ${props.start || ''}</div>

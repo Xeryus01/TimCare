@@ -25,6 +25,52 @@ class TicketViewController extends Controller
         $this->notificationService = $notificationService;
     }
 
+    protected function authorizeTicketView(Request $request, Ticket $ticket): void
+    {
+        $user = $request->user();
+
+        if (! $user) {
+            abort(403);
+        }
+
+        if ($user->hasRole('Admin')) {
+            return;
+        }
+
+        if ($ticket->requester_id === $user->id) {
+            return;
+        }
+
+        if ($user->hasRole('Teknisi')) {
+            return;
+        }
+
+        abort(403);
+    }
+
+    protected function authorizeTicketAction(Request $request, Ticket $ticket): void
+    {
+        $user = $request->user();
+
+        if (! $user) {
+            abort(403);
+        }
+
+        if ($user->hasRole('Admin')) {
+            return;
+        }
+
+        if ($ticket->requester_id === $user->id) {
+            return;
+        }
+
+        if ($user->hasRole('Teknisi') && $ticket->assignee_id === $user->id) {
+            return;
+        }
+
+        abort(403);
+    }
+
     public function index(Request $request)
     {
         $user = $request->user();
@@ -123,6 +169,8 @@ class TicketViewController extends Controller
 
     public function show(Request $request, Ticket $ticket)
     {
+        $this->authorizeTicketView($request, $ticket);
+
         $ticket->load('requester', 'assignee', 'asset', 'comments.user', 'comments.attachments', 'attachments.uploader');
 
         $technicians = \App\Models\User::role('Teknisi')->get();
@@ -261,14 +309,11 @@ class TicketViewController extends Controller
 
     public function comment(Request $request, Ticket $ticket)
     {
+        $this->authorizeTicketAction($request, $ticket);
+
         $user = $request->user();
 
-        if (! $user->hasAnyRole(['Admin', 'Teknisi']) && $ticket->requester_id !== $user->id) {
-            abort(403);
-        }
-
-        if (! $user->hasAnyRole(['Admin', 'Teknisi'])
-            && in_array($ticket->status, [Ticket::STATUS_SOLVED, Ticket::STATUS_SOLVED_WITH_NOTES], true)) {
+        if (! $user->hasRole('Admin') && ! $user->hasRole('Teknisi') && in_array($ticket->status, [Ticket::STATUS_SOLVED, Ticket::STATUS_SOLVED_WITH_NOTES], true)) {
             abort(403, 'Tiket yang sudah selesai tidak dapat dikomentari kembali oleh pemohon.');
         }
 
@@ -367,11 +412,9 @@ class TicketViewController extends Controller
 
     public function uploadAttachment(Request $request, Ticket $ticket)
     {
-        $user = $request->user();
+        $this->authorizeTicketAction($request, $ticket);
 
-        if (! $user->hasAnyRole(['Admin', 'Teknisi']) && $ticket->requester_id !== $user->id) {
-            abort(403);
-        }
+        $user = $request->user();
 
         $validated = $request->validate([
             'file' => 'required|file|max:10240|mimes:jpg,jpeg,png,webp,pdf,doc,docx,xls,xlsx,csv,txt',
@@ -394,8 +437,8 @@ class TicketViewController extends Controller
 
     public function showAttachment(Request $request, Ticket $ticket, Attachment $attachment)
     {
-        $user = $request->user();
-
+        // Allow all users to access ticket attachment files directly.
+        // Keep only the ticket-attachment relationship check for safety.
         if ((int) $attachment->ticket_id !== (int) $ticket->id) {
             abort(404);
         }

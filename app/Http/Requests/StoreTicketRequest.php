@@ -19,13 +19,14 @@ class StoreTicketRequest extends FormRequest
             'description' => 'required|string',
             'priority' => 'nullable|in:LOW,MEDIUM,HIGH,CRITICAL',
             'asset_id' => 'nullable|exists:assets,id',
-            'attachment' => 'nullable|file|max:1024',
+            'attachment' => 'required|file|max:1024',
         ];
     }
 
     public function messages(): array
     {
         return [
+            'attachment.required' => 'Lampiran awal tiket harus diunggah.',
             'attachment.file' => 'Lampiran harus berupa file.',
             'attachment.max' => 'Ukuran lampiran maksimal 1MB.',
         ];
