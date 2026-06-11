@@ -284,7 +284,16 @@ unset($__errorArgs, $__bag); ?>
                         </div>
                         <div>
                             <p class="text-gray-500 dark:text-gray-400">Aset terkait</p>
-                            <p><?php echo e(optional($ticket->asset)->name ?? 'Tidak ada'); ?></p>
+                            <?php if($ticket->asset): ?>
+                                <p>
+                                    <a href="<?php echo e(route('assets.show', $ticket->asset)); ?>" class="text-brand-600 hover:text-brand-700 dark:text-brand-400 dark:hover:text-brand-300">
+                                        <?php echo e($ticket->asset->name); ?>
+
+                                    </a>
+                                </p>
+                            <?php else: ?>
+                                <p>Tidak ada</p>
+                            <?php endif; ?>
                         </div>
                         <div>
                             <p class="text-gray-500 dark:text-gray-400">Selesai pada</p>

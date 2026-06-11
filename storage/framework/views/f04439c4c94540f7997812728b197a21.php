@@ -153,8 +153,13 @@ unset($__errorArgs, $__bag); ?>
                 </div>
 
                 <div>
-                    <label for="type" class="text-sm font-medium text-gray-900 dark:text-white">Jenis Aset</label>
-                    <input id="type" name="type" type="text" value="<?php echo e(request('type')); ?>" placeholder="Contoh: Laptop" class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 dark:border-gray-600 dark:bg-dark-800 dark:text-white" />
+                    <label for="type" class="text-sm font-medium text-gray-900 dark:text-white">Jenis Barang/Kategori</label>
+                    <select id="type" name="type" class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 dark:border-gray-600 dark:bg-dark-800 dark:text-white">
+                        <option value="">Semua Jenis Barang / Kategori</option>
+                        <?php $__currentLoopData = $assetTypes; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $assetType): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <option value="<?php echo e($assetType); ?>"<?php echo e(request('type') === $assetType ? ' selected' : ''); ?>><?php echo e($assetType); ?></option>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                    </select>
                 </div>
             </div>
             <div class="mt-4 flex flex-wrap items-center gap-3">

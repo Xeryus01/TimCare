@@ -100,21 +100,42 @@ unset($__errorArgs, $__bag); ?>
                 </div>
 
                 <div>
-                    <label for="asset_id" class="mb-2 block text-sm font-medium text-gray-900 dark:text-white">Aset Terkait <span class="text-gray-400">(opsional)</span></label>
-                    <select id="asset_id" name="asset_id" class="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-gray-900 dark:border-gray-600 dark:bg-dark-800 dark:text-white <?php $__errorArgs = ['asset_id'];
+                    <label for="asset_search" class="mb-2 block text-sm font-medium text-gray-900 dark:text-white">Aset Terkait <span class="text-gray-400">(opsional)</span></label>
+                    <?php
+                        $oldAsset = $assets->firstWhere('id', old('asset_id'));
+                        $oldAssetLabel = $oldAsset ? $oldAsset->asset_code . ' - ' . $oldAsset->name : '';
+                    ?>
+                    <input id="asset_search" type="text" autocomplete="off" value="<?php echo e(old('asset_id') ? $oldAssetLabel : ''); ?>" placeholder="Cari aset berdasarkan kode atau nama" class="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-gray-900 dark:border-gray-600 dark:bg-dark-800 dark:text-white <?php $__errorArgs = ['asset_id'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }
 $message = $__bag->first($__errorArgs[0]); ?> border-red-500 <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
-unset($__errorArgs, $__bag); ?>">
-                        <option value="">Pilih aset jika ada</option>
+unset($__errorArgs, $__bag); ?>" list="asset_list" />
+                    <input id="asset_id" type="hidden" name="asset_id" value="<?php echo e(old('asset_id', '')); ?>" />
+                    <datalist id="asset_list">
                         <?php $__currentLoopData = $assets; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $asset): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                            <option value="<?php echo e($asset->id); ?>" <?php echo e(old('asset_id') == $asset->id ? 'selected' : ''); ?>><?php echo e($asset->name); ?> (<?php echo e($asset->asset_code); ?>)</option>
+                            <option value="<?php echo e($asset->asset_code); ?> - <?php echo e($asset->name); ?>"><?php echo e($asset->asset_code); ?> - <?php echo e($asset->name); ?></option>
                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                    </select>
+                    </datalist>
+                    <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Ketik untuk mencari aset, lalu pilih dari daftar dropdown.</p>
                 </div>
+                <script>
+                    document.addEventListener('DOMContentLoaded', function () {
+                        const assetInput = document.getElementById('asset_search');
+                        const assetHidden = document.getElementById('asset_id');
+                        const assetMap = <?php echo json_encode($assets->mapWithKeys(fn($asset) => [$asset->asset_code . ' - ' . $asset->name => $asset->id]), 15, 512) ?>;
+
+                        const syncAssetId = () => {
+                            const value = assetInput.value.trim();
+                            assetHidden.value = assetMap[value] ?? '';
+                        };
+
+                        assetInput.addEventListener('input', syncAssetId);
+                        assetInput.addEventListener('change', syncAssetId);
+                    });
+                </script>
 
                 <div class="flex gap-3 pt-4">
                     <a href="<?php echo e(url()->to(route('tickets.index'))); ?>" class="flex-1 rounded-lg border border-gray-300 px-4 py-2.5 text-center font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-white/5">Batal</a>

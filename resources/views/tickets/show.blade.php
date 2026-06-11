@@ -233,7 +233,15 @@
                         </div>
                         <div>
                             <p class="text-gray-500 dark:text-gray-400">Aset terkait</p>
-                            <p>{{ optional($ticket->asset)->name ?? 'Tidak ada' }}</p>
+                            @if($ticket->asset)
+                                <p>
+                                    <a href="{{ route('assets.show', $ticket->asset) }}" class="text-brand-600 hover:text-brand-700 dark:text-brand-400 dark:hover:text-brand-300">
+                                        {{ $ticket->asset->name }}
+                                    </a>
+                                </p>
+                            @else
+                                <p>Tidak ada</p>
+                            @endif
                         </div>
                         <div>
                             <p class="text-gray-500 dark:text-gray-400">Selesai pada</p>
