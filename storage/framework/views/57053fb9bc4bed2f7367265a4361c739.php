@@ -16,8 +16,17 @@
         // Admin/Teknisi melihat semua data
         $totalTickets = \App\Models\Ticket::count();
         $totalZooms = \App\Models\Reservation::count();
-        $layananSelesai = \App\Models\Ticket::whereIn('status', [\App\Models\Ticket::STATUS_SOLVED, \App\Models\Ticket::STATUS_SOLVED_WITH_NOTES])->count()
-            + \App\Models\Reservation::where('status', \App\Models\Reservation::STATUS_COMPLETED)->count();
+        $layananSelesai = \App\Models\Ticket::whereIn('status', [
+                \App\Models\Ticket::STATUS_SOLVED,
+                \App\Models\Ticket::STATUS_SOLVED_WITH_NOTES,
+                \App\Models\Ticket::STATUS_REJECTED,
+                \App\Models\Ticket::STATUS_CANCELLED,
+            ])->count()
+            + \App\Models\Reservation::whereIn('status', [
+                \App\Models\Reservation::STATUS_COMPLETED,
+                \App\Models\Reservation::STATUS_REJECTED,
+                \App\Models\Reservation::STATUS_CANCELLED,
+            ])->count();
         $totalLayanan = $totalTickets + $totalZooms;
         $capaianPersentase = $totalLayanan > 0 ? round(($layananSelesai / $totalLayanan) * 100, 1) : 0;
 
@@ -122,8 +131,17 @@
         // User biasa melihat semua data di dashboard, tapi hanya yang mereka ajukan di daftar
         $totalTickets = \App\Models\Ticket::count();
         $totalZooms = \App\Models\Reservation::count();
-        $layananSelesai = \App\Models\Ticket::whereIn('status', [\App\Models\Ticket::STATUS_SOLVED, \App\Models\Ticket::STATUS_SOLVED_WITH_NOTES])->count()
-            + \App\Models\Reservation::where('status', \App\Models\Reservation::STATUS_COMPLETED)->count();
+        $layananSelesai = \App\Models\Ticket::whereIn('status', [
+                \App\Models\Ticket::STATUS_SOLVED,
+                \App\Models\Ticket::STATUS_SOLVED_WITH_NOTES,
+                \App\Models\Ticket::STATUS_REJECTED,
+                \App\Models\Ticket::STATUS_CANCELLED,
+            ])->count()
+            + \App\Models\Reservation::whereIn('status', [
+                \App\Models\Reservation::STATUS_COMPLETED,
+                \App\Models\Reservation::STATUS_REJECTED,
+                \App\Models\Reservation::STATUS_CANCELLED,
+            ])->count();
         $totalLayanan = $totalTickets + $totalZooms;
         $capaianPersentase = $totalLayanan > 0 ? round(($layananSelesai / $totalLayanan) * 100, 1) : 0;
 
