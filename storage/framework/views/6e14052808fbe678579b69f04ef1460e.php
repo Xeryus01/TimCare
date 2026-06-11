@@ -255,14 +255,7 @@ unset($__errorArgs, $__bag); ?>
             <div class="space-y-6">
                 <div class="rounded-xl border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-dark-800">
                     <h3 class="mb-3 text-sm font-bold uppercase text-gray-500 dark:text-gray-400">Status Penanganan</h3>
-                    <span class="inline-flex rounded-full px-3 py-1 text-sm font-medium
-                        <?php if($reservation->status === \App\Models\Reservation::STATUS_PENDING): ?> bg-red-100 text-red-700 dark:bg-red-500/15 dark:text-red-400
-                        <?php elseif($reservation->status === \App\Models\Reservation::STATUS_APPROVED): ?> bg-yellow-100 text-yellow-700 dark:bg-yellow-500/15 dark:text-yellow-400
-                        <?php elseif($reservation->status === \App\Models\Reservation::STATUS_WAITING_MONITORING): ?> bg-blue-100 text-blue-700 dark:bg-blue-500/15 dark:text-blue-400
-                        <?php elseif($reservation->status === \App\Models\Reservation::STATUS_COMPLETED): ?> bg-green-100 text-green-700 dark:bg-green-500/15 dark:text-green-400
-                        <?php elseif($reservation->status === \App\Models\Reservation::STATUS_REJECTED || $reservation->status === \App\Models\Reservation::STATUS_CANCELLED): ?> bg-gray-100 text-gray-700 dark:bg-gray-500/15 dark:text-gray-400
-                        <?php else: ?> bg-gray-100 text-gray-700 dark:bg-gray-500/15 dark:text-gray-400
-                        <?php endif; ?>">
+                    <span class="inline-flex rounded-full px-3 py-1 text-sm font-medium <?php echo e($reservation->status_badge_classes); ?>">
                         <?php echo e($reservation->status_label); ?>
 
                     </span>

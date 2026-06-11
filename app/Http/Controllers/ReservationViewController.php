@@ -211,9 +211,17 @@ class ReservationViewController extends Controller
                 $data['end_time'] = $endTime;
             }
 
-            $data['operator_needed'] = $request->boolean('operator_needed');
-            $data['breakroom_needed'] = $request->boolean('breakroom_needed');
-            $data['participants_count'] = $request->input('participants_count', $reservation->participants_count ?? 1);
+            if ($request->exists('operator_needed')) {
+                $data['operator_needed'] = $request->boolean('operator_needed');
+            }
+
+            if ($request->exists('breakroom_needed')) {
+                $data['breakroom_needed'] = $request->boolean('breakroom_needed');
+            }
+
+            if ($request->exists('participants_count')) {
+                $data['participants_count'] = $request->input('participants_count', $reservation->participants_count ?? 1);
+            }
         }
 
         if ($isApprover) {

@@ -75,10 +75,12 @@
 
                 <div class="grid gap-6 sm:grid-cols-2">
                     <div class="flex items-center gap-3 rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-white/5">
+                        <input type="hidden" name="operator_needed" value="0">
                         <input id="operator_needed" type="checkbox" name="operator_needed" value="1" class="h-4 w-4 rounded border-gray-300 text-brand-600 focus:ring-brand-500 dark:border-gray-600 dark:bg-dark-800" {{ old('operator_needed') ? 'checked' : '' }}>
                         <label for="operator_needed" class="text-sm text-gray-700 dark:text-gray-300">Butuh Operator Zoom</label>
                     </div>
                     <div class="flex items-center gap-3 rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-white/5">
+                        <input type="hidden" name="breakroom_needed" value="0">
                         <input id="breakroom_needed" type="checkbox" name="breakroom_needed" value="1" class="h-4 w-4 rounded border-gray-300 text-brand-600 focus:ring-brand-500 dark:border-gray-600 dark:bg-dark-800" {{ old('breakroom_needed') ? 'checked' : '' }}>
                         <label for="breakroom_needed" class="text-sm text-gray-700 dark:text-gray-300">Butuh Breakout Room</label>
                     </div>
