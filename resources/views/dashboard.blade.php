@@ -61,6 +61,8 @@
                 'technicians' => array_filter([$schedule->technician_1, $schedule->technician_2, $schedule->technician_3]),
                 'is_active' => $isCurrentWeek,
             ];
+        })->filter(function ($schedule) {
+            return $schedule['is_active'];
         })->values();
 
         $zoomEventsArray = $zoomEvents->map(function($event) {
@@ -552,36 +554,41 @@
             <div class="card-head">
                 <div>
                     <div class="card-title">Tim Piket Aktif</div>
-                    <div class="card-sub">Jadwal tim piket minggu ini</div>
+                    <div class="card-sub">Tim yang bertugas saat ini</div>
                 </div>
                 <a href="{{ route('piket.index') }}" class="link">Lihat semua</a>
             </div>
             <div class="card-body">
                 @if ($activePiketSchedules->isNotEmpty())
-                    @foreach ($activePiketSchedules as $schedule)
-                        <div class="mb-3 rounded-2xl border border-gray-200 bg-white p-3 dark:border-gray-700 dark:bg-dark-800">
-                            <div class="mb-2 flex items-center justify-between gap-4">
-                                <div class="text-sm font-semibold text-slate-800 dark:text-slate-100">
-                                    {{ $schedule['week_start_date'] }} - {{ $schedule['week_end_date'] }}
-                                </div>
-                                @if(!empty($schedule['is_active']) && $schedule['is_active'])
-                                    <div class="inline-flex items-center rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-200">Aktif</div>
-                                @endif
+                    @php $schedule = $activePiketSchedules->first(); @endphp
+                    <div class="mb-4 rounded-2xl border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-dark-800">
+                        <div class="flex items-center justify-between gap-4">
+                            <div class="text-sm font-semibold text-slate-800 dark:text-slate-100">
+                                {{ $schedule['week_start_date'] }} - {{ $schedule['week_end_date'] }}
                             </div>
-                            <div class="flex flex-wrap gap-2">
-                                @foreach ($schedule['technicians'] as $tech)
-                                    <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-300">{{ $tech }}</span>
-                                @endforeach
-                            </div>
+                            <div class="inline-flex items-center rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-200">Aktif</div>
                         </div>
-                    @endforeach
+                    </div>
+                    <div class="space-y-3">
+                        @foreach ($schedule['technicians'] as $index => $tech)
+                            <div class="rounded-2xl border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-dark-800">
+                                <div class="flex items-center justify-between gap-4">
+                                    <div>
+                                        <div class="text-xs uppercase tracking-[0.2em] text-gray-500 dark:text-gray-400">Petugas {{ $index + 1 }}</div>
+                                        <div class="mt-1 text-sm font-semibold text-slate-800 dark:text-slate-100">{{ $tech }}</div>
+                                    </div>
+                                    <div class="inline-flex items-center rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600 dark:bg-slate-800 dark:text-slate-300">Dalam tugas</div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
                 @else
                     <div class="empty-state">
                         <div class="empty-icon">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"/></svg>
                         </div>
                         <div class="empty-title">Belum ada jadwal piket</div>
-                        <div class="empty-desc">Jadwal piket aktif untuk minggu ini belum tersedia.</div>
+                        <div class="empty-desc">Jadwal piket aktif saat ini belum tersedia.</div>
                     </div>
                 @endif
             </div>
