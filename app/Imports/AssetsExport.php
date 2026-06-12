@@ -43,6 +43,8 @@ class AssetsExport implements FromCollection, WithHeadings
                 'nip_pegawai' => $asset->nip_pegawai,
                 'type' => $asset->type,
                 'brand' => $asset->brand,
+                'photo_serial' => $asset->photo_serial,
+                'photo_asset' => $asset->photo_asset,
                 'condition' => $this->resolveCondition($asset),
                 'status' => $asset->status_label,
             ];
@@ -103,6 +105,8 @@ class AssetsExport implements FromCollection, WithHeadings
             'NIP Pegawai',
             'Jenis Barang / Kategori',
             'Merek',
+            'Foto Serial',
+            'Foto Aset',
             'Kondisi',
             'Status',
         ];

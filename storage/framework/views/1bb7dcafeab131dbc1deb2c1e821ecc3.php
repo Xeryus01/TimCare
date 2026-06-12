@@ -207,54 +207,76 @@
                         <?php endif; ?>
                     </div>
                 </div>
-
-                <!-- Sidebar Status -->
-                <div>
-                    <div class="rounded-xl border border-gray-200 bg-white p-5 sm:p-7.5 dark:border-gray-700 dark:bg-dark-800">
+                <div class="space-y-6">
+                    <div class="rounded-3xl border border-gray-200 bg-white p-5 sm:p-6 dark:border-gray-700 dark:bg-dark-800">
+                        <h2 class="mb-4 text-lg font-semibold text-gray-900 dark:text-white">Foto Aset</h2>
+                        <div class="grid gap-4">
+                            <div class="rounded-3xl border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-white/5">
+                                <div class="flex items-center justify-between gap-3">
+                                    <div>
+                                        <p class="text-sm font-medium text-gray-900 dark:text-white">Foto Serial Number</p>
+                                        <p class="text-xs text-gray-500 dark:text-gray-400">Foto label atau nomor seri</p>
+                                    </div>
+                                </div>
+                                <div class="mt-4 overflow-hidden rounded-3xl border border-gray-200 bg-white dark:border-gray-700 dark:bg-dark-800">
+                                    <?php if($asset->photo_serial): ?>
+                                        <?php if(str_starts_with($asset->photo_serial, 'drive:')): ?>
+                                            <iframe src="<?php echo e(\App\Models\Asset::googleDrivePreviewUrl(substr($asset->photo_serial, 6))); ?>" class="h-44 w-full" frameborder="0" allowfullscreen></iframe>
+                                        <?php elseif(preg_match('/^https?:\/\//', $asset->photo_serial)): ?>
+                                            <img src="<?php echo e($asset->photo_serial); ?>" class="h-44 w-full object-contain" alt="Foto Serial" />
+                                        <?php else: ?>
+                                            <img src="<?php echo e(\Illuminate\Support\Facades\Storage::url($asset->photo_serial)); ?>" class="h-44 w-full object-contain" alt="Foto Serial" />
+                                        <?php endif; ?>
+                                    <?php else: ?>
+                                        <div class="flex h-44 items-center justify-center text-center text-sm text-gray-500 dark:text-gray-400">Belum ada foto serial</div>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                            <div class="rounded-3xl border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-white/5">
+                                <div class="flex items-center justify-between gap-3">
+                                    <div>
+                                        <p class="text-sm font-medium text-gray-900 dark:text-white">Foto Barang/Aset</p>
+                                        <p class="text-xs text-gray-500 dark:text-gray-400">Foto tampilan fisik aset</p>
+                                    </div>
+                                </div>
+                                <div class="mt-4 overflow-hidden rounded-3xl border border-gray-200 bg-white dark:border-gray-700 dark:bg-dark-800">
+                                    <?php if($asset->photo_asset): ?>
+                                        <?php if(str_starts_with($asset->photo_asset, 'drive:')): ?>
+                                            <iframe src="<?php echo e(\App\Models\Asset::googleDrivePreviewUrl(substr($asset->photo_asset, 6))); ?>" class="h-44 w-full" frameborder="0" allowfullscreen></iframe>
+                                        <?php elseif(preg_match('/^https?:\/\//', $asset->photo_asset)): ?>
+                                            <img src="<?php echo e($asset->photo_asset); ?>" class="h-44 w-full object-contain" alt="Foto Aset" />
+                                        <?php else: ?>
+                                            <img src="<?php echo e(\Illuminate\Support\Facades\Storage::url($asset->photo_asset)); ?>" class="h-44 w-full object-contain" alt="Foto Aset" />
+                                        <?php endif; ?>
+                                    <?php else: ?>
+                                        <div class="flex h-44 items-center justify-center text-center text-sm text-gray-500 dark:text-gray-400">Belum ada foto aset</div>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="rounded-3xl border border-gray-200 bg-white p-5 sm:p-6 dark:border-gray-700 dark:bg-dark-800">
                         <h2 class="mb-4 text-lg font-semibold text-gray-900 dark:text-white">Status Aset</h2>
                         <div class="space-y-4">
-                            <div>
+                            <div class="rounded-3xl bg-gray-50 p-4 dark:bg-white/5">
                                 <p class="text-sm text-gray-500 dark:text-gray-400">Status</p>
-                                <div class="mt-1">
-                                    <span class="inline-flex items-center rounded-full px-3 py-1 text-sm font-medium
-                                        <?php if($asset->status === 'ACTIVE'): ?> bg-green-100 text-green-800 dark:bg-green-500/15 dark:text-green-400
-                                        <?php elseif($asset->status === 'INACTIVE'): ?> bg-gray-100 text-gray-800 dark:bg-gray-500/15 dark:text-gray-400
-                                        <?php elseif($asset->status === 'PENDING'): ?> bg-amber-100 text-amber-800 dark:bg-amber-500/15 dark:text-amber-400
-                                        <?php elseif($asset->status === 'DECOMMISSIONED'): ?> bg-red-100 text-red-800 dark:bg-red-500/15 dark:text-red-400
-                                        <?php endif; ?>">
-                                        <?php echo e($asset->status_label); ?>
-
-                                    </span>
-                                </div>
+                                <p class="mt-2 inline-flex items-center rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-800 dark:bg-green-500/15 dark:text-green-400"><?php echo e($asset->status_label); ?></p>
                             </div>
-
-                            <div class="border-t border-gray-200 pt-4 dark:border-gray-700">
+                            <div class="rounded-3xl bg-gray-50 p-4 dark:bg-white/5">
                                 <p class="text-sm text-gray-500 dark:text-gray-400">Kondisi</p>
-                                <div class="mt-1">
-                                    <span class="inline-flex items-center rounded-full px-3 py-1 text-sm font-medium
-                                        <?php if($asset->condition === 'GOOD'): ?> bg-green-100 text-green-800 dark:bg-green-500/15 dark:text-green-400
-                                        <?php elseif($asset->condition === 'LIGHT'): ?> bg-amber-100 text-amber-800 dark:bg-amber-500/15 dark:text-amber-400
-                                        <?php elseif($asset->condition === 'HEAVY'): ?> bg-red-100 text-red-800 dark:bg-red-500/15 dark:text-red-400
-                                        <?php endif; ?>">
-                                        <?php echo e($asset->condition_label); ?>
-
-                                    </span>
-                                </div>
+                                <p class="mt-2 inline-flex items-center rounded-full bg-amber-100 px-3 py-1 text-sm font-medium text-amber-800 dark:bg-amber-500/15 dark:text-amber-400"><?php echo e($asset->condition_label); ?></p>
                             </div>
-
-                            <div class="border-t border-gray-200 pt-4 dark:border-gray-700">
+                            <div class="rounded-3xl bg-gray-50 p-4 dark:bg-white/5">
                                 <p class="text-sm text-gray-500 dark:text-gray-400">Nama Pegawai</p>
-                                <p class="mt-1 font-medium text-gray-900 dark:text-white"><?php echo e($asset->holder ?? 'Belum Ditugaskan'); ?></p>
+                                <p class="mt-2 font-medium text-gray-900 dark:text-white"><?php echo e($asset->holder ?? 'Belum Ditugaskan'); ?></p>
                             </div>
-
-                            <div class="border-t border-gray-200 pt-4 dark:border-gray-700">
+                            <div class="rounded-3xl bg-gray-50 p-4 dark:bg-white/5">
                                 <p class="text-sm text-gray-500 dark:text-gray-400">Dibuat</p>
-                                <p class="mt-1 text-sm font-medium text-gray-900 dark:text-white"><?php echo e($asset->created_at->format('d/m/Y H:i')); ?></p>
+                                <p class="mt-2 text-sm font-medium text-gray-900 dark:text-white"><?php echo e($asset->created_at->format('d/m/Y H:i')); ?></p>
                             </div>
-
-                            <div>
+                            <div class="rounded-3xl bg-gray-50 p-4 dark:bg-white/5">
                                 <p class="text-sm text-gray-500 dark:text-gray-400">Terakhir Diperbarui</p>
-                                <p class="mt-1 text-sm font-medium text-gray-900 dark:text-white"><?php echo e($asset->updated_at->format('d/m/Y H:i')); ?></p>
+                                <p class="mt-2 text-sm font-medium text-gray-900 dark:text-white"><?php echo e($asset->updated_at->format('d/m/Y H:i')); ?></p>
                             </div>
                         </div>
                     </div>

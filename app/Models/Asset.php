@@ -21,6 +21,8 @@ class Asset extends Model
         'brand',
         'model',
         'serial_number',
+        'photo_serial',
+        'photo_asset',
         'specs',
         'location',
         'holder',
@@ -36,6 +38,43 @@ class Asset extends Model
         'specs' => 'array',
         'purchased_at' => 'date',
     ];
+
+    public static function extractGoogleDriveId(?string $value): ?string
+    {
+        if (!$value) {
+            return null;
+        }
+
+        if (str_starts_with($value, 'drive:')) {
+            return substr($value, 6);
+        }
+
+        $patterns = [
+            '/drive\.google\.com\/file\/d\/([^\/\?]+)/',
+            '/drive\.google\.com\/open\?id=([^&]+)/',
+            '/drive\.google\.com\/uc\?id=([^&]+)/',
+            '/drive\.google\.com\/drive\/folders\/([^\/\?]+)/',
+            '/^([a-zA-Z0-9_-]{10,})$/',
+        ];
+
+        foreach ($patterns as $pattern) {
+            if (preg_match($pattern, $value, $matches)) {
+                return $matches[1];
+            }
+        }
+
+        return null;
+    }
+
+    public static function googleDrivePreviewUrl(string $fileId): string
+    {
+        return "https://drive.google.com/file/d/{$fileId}/preview";
+    }
+
+    public static function googleDriveFileLink(string $fileId): string
+    {
+        return "https://drive.google.com/file/d/{$fileId}/view";
+    }
 
     public static function statusOptions(): array
     {

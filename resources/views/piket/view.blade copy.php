@@ -58,44 +58,93 @@
             })->toArray();
         @endphp
 
-        <div class="grid w-full gap-4 mb-6">
-            <div class="w-full rounded-3xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-dark-800">
-                <p class="text-sm uppercase tracking-[0.2em] text-gray-500 dark:text-gray-400">Ringkasan Piket</p>
-                <div class="mt-4 grid gap-3 sm:grid-cols-2">
-                    <div class="rounded-3xl bg-gray-50 p-4 dark:bg-gray-900">
-                        <p class="text-xs uppercase tracking-[0.25em] text-gray-500 dark:text-gray-400">Minggu Aktif</p>
-                        @if ($currentSchedule)
-                            @php
-                                $activeStart = \Carbon\Carbon::parse($currentSchedule->week_start_date);
-                                $activeEnd = $currentSchedule->week_end_date
-                                    ? \Carbon\Carbon::parse($currentSchedule->week_end_date)
-                                    : $activeStart->copy()->addDays(6);
-                                $currentTechs = array_filter(array_map('trim', [$currentSchedule->technician_1, $currentSchedule->technician_2, $currentSchedule->technician_3]));
-                            @endphp
-                            <p class="mt-2 text-lg font-semibold text-gray-900 dark:text-white">{{ $activeStart->format('d M') }} — {{ $activeEnd->format('d M Y') }}</p>
-                            <p class="mt-1 text-sm text-gray-500 dark:text-gray-200">Petugas: {{ implode(', ', $currentTechs) }}</p>
-                        @else
-                            <p class="mt-2 text-lg font-semibold text-gray-900 dark:text-white">Tidak ada jadwal</p>
-                            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Silakan hubungi admin untuk jadwal piket.</p>
-                        @endif
+        <!-- Current & Next Week Cards -->
+        <div class="mb-8 grid gap-6 md:grid-cols-2">
+            <!-- Current Week -->
+            <div class="relative overflow-hidden rounded-2xl border border-blue-200 bg-gradient-to-br from-blue-50 to-blue-100 p-6 shadow-sm dark:border-blue-900/30 dark:from-blue-900/20 dark:to-blue-900/10">
+                <div class="absolute -right-12 -top-12 h-32 w-32 bg-blue-200 opacity-10 rounded-full dark:bg-blue-400/10"></div>
+                <div class="relative z-10">
+                    <div class="inline-flex items-center gap-2 rounded-full bg-blue-600 px-3 py-1 text-xs font-semibold text-white mb-3">
+                        <svg class="h-4 w-4 animate-pulse" fill="currentColor" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8"/></svg>
+                        SEDANG BERLANGSUNG
                     </div>
-                    <div class="rounded-3xl bg-gray-50 p-4 dark:bg-gray-900">
-                        <p class="text-xs uppercase tracking-[0.25em] text-gray-500 dark:text-gray-400">Jadwal Selanjutnya</p>
-                        @if ($nextSchedule)
-                            @php
-                                $nextStart = \Carbon\Carbon::parse($nextSchedule->week_start_date);
-                                $nextEnd = $nextSchedule->week_end_date
-                                    ? \Carbon\Carbon::parse($nextSchedule->week_end_date)
-                                    : $nextStart->copy()->addDays(6);
-                                $nextTechs = array_filter(array_map('trim', [$nextSchedule->technician_1, $nextSchedule->technician_2, $nextSchedule->technician_3]));
-                            @endphp
-                            <p class="mt-2 text-lg font-semibold text-gray-900 dark:text-white">{{ $nextStart->format('d M') }} — {{ $nextEnd->format('d M Y') }}</p>
-                            <p class="mt-1 text-sm text-gray-500 dark:text-gray-200">Petugas: {{ implode(', ', $nextTechs) }}</p>
-                        @else
-                            <p class="mt-2 text-lg font-semibold text-gray-900 dark:text-white">Tidak ada jadwal berikutnya</p>
-                            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Semua jadwal sudah terisi.</p>
-                        @endif
+                    <p class="text-sm uppercase tracking-widest text-blue-700 dark:text-blue-300 font-semibold">Minggu Piket Aktif</p>
+                    @if ($currentSchedule)
+                        @php
+                            $activeStart = \Carbon\Carbon::parse($currentSchedule->week_start_date);
+                            $activeEnd = $currentSchedule->week_end_date
+                                ? \Carbon\Carbon::parse($currentSchedule->week_end_date)
+                                : $activeStart->copy()->addDays(6);
+                        @endphp
+                        <p class="mt-3 text-2xl font-bold text-blue-900 dark:text-blue-100">{{ $activeStart->format('d M') }} — {{ $activeEnd->format('d M Y') }}</p>
+                        <div class="mt-4 space-y-2">
+                            <p class="text-xs text-blue-700 dark:text-blue-300">Petugas yang Bertugas:</p>
+                            <div class="flex flex-wrap gap-2">
+                                @php $techs = array_filter([$currentSchedule->technician_1, $currentSchedule->technician_2, $currentSchedule->technician_3]) @endphp
+                                @if (count($techs) > 0)
+
+                                <span class="inline-flex items-center gap-1.5 rounded-lg bg-blue-600 px-3 py-1.5 text-sm font-medium text-white">
+                                    <span class="h-2 w-2 rounded-full bg-blue-200"></span>
+                                    {{ $currentSchedule->technician_1 }}
+                                </span>
+                                <span class="inline-flex items-center gap-1.5 rounded-lg bg-blue-600 px-3 py-1.5 text-sm font-medium text-white">
+                                    <span class="h-2 w-2 rounded-full bg-blue-200"></span>
+                                    {{ $currentSchedule->technician_2 }}
+                                </span>
+                                <span class="inline-flex items-center gap-1.5 rounded-lg bg-blue-600 px-3 py-1.5 text-sm font-medium text-white">
+                                    <span class="h-2 w-2 rounded-full bg-blue-200"></span>
+                                    {{ $currentSchedule->technician_3 }}
+                                </span>
+
+                                @else
+                                    <p class="text-sm text-blue-600 dark:text-blue-300 italic">Petugas belum ditentukan</p>
+                                @endif
+                            </div>
+                        </div>
+                    @else
+                        <p class="mt-3 text-2xl font-bold text-blue-900 dark:text-blue-100">Tidak ada jadwal aktif</p>
+                        <p class="mt-2 text-sm text-blue-700 dark:text-blue-300">Silakan hubungi admin untuk jadwal piket minggu ini.</p>
+                    @endif
+                </div>
+            </div>
+
+            <!-- Next Week -->
+            <div class="relative overflow-hidden rounded-2xl border border-purple-200 bg-gradient-to-br from-purple-50 to-purple-100 p-6 shadow-sm dark:border-purple-900/30 dark:from-purple-900/20 dark:to-purple-900/10">
+                <div class="absolute -right-12 -top-12 h-32 w-32 bg-purple-200 opacity-10 rounded-full dark:bg-purple-400/10"></div>
+                <div class="relative z-10">
+                    <div class="inline-flex items-center gap-2 rounded-full bg-purple-600 px-3 py-1 text-xs font-semibold text-white mb-3">
+                        <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20"><path d="M6 2a1 1 0 000 2h8a1 1 0 100-2H6z"/><path fill-rule="evenodd" d="M6 4a2 2 0 012-2h8a2 2 0 012 2v12a2 2 0 01-2 2H8a2 2 0 01-2-2V4zm2 2h8v10H8V6z" clip-rule="evenodd"/></svg>
+                        JADWAL BERIKUTNYA
                     </div>
+                    <p class="text-sm uppercase tracking-widest text-purple-700 dark:text-purple-300 font-semibold">Minggu Depan</p>
+                    @if ($nextSchedule)
+                        @php
+                            $nextStart = \Carbon\Carbon::parse($nextSchedule->week_start_date);
+                            $nextEnd = $nextSchedule->week_end_date
+                                ? \Carbon\Carbon::parse($nextSchedule->week_end_date)
+                                : $nextStart->copy()->addDays(6);
+                        @endphp
+                        <p class="mt-3 text-2xl font-bold text-purple-900 dark:text-purple-100">{{ $nextStart->format('d M') }} — {{ $nextEnd->format('d M Y') }}</p>
+                        <div class="mt-4 space-y-2">
+                            <p class="text-xs text-purple-700 dark:text-purple-300">Petugas yang Ditugaskan:</p>
+                            <div class="flex flex-wrap gap-2">
+                                @php $nextTechs = array_filter([$nextSchedule->technician_1, $nextSchedule->technician_2, $nextSchedule->technician_3]) @endphp
+                                @if (count($nextTechs) > 0)
+                                    @foreach ($nextTechs as $tech)
+                                        <span class="inline-flex items-center gap-1.5 rounded-lg bg-purple-600 px-3 py-1.5 text-sm font-medium text-white">
+                                            <span class="h-2 w-2 rounded-full bg-purple-200"></span>
+                                            {{ $tech }}
+                                        </span>
+                                    @endforeach
+                                @else
+                                    <p class="text-sm text-purple-600 dark:text-purple-300 italic">Petugas belum ditentukan</p>
+                                @endif
+                            </div>
+                        </div>
+                    @else
+                        <p class="mt-3 text-2xl font-bold text-purple-900 dark:text-purple-100">Tidak ada jadwal berikutnya</p>
+                        <p class="mt-2 text-sm text-purple-700 dark:text-purple-300">Semua jadwal piket sudah terisi untuk bulan ini.</p>
+                    @endif
                 </div>
             </div>
         </div>

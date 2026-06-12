@@ -20,7 +20,6 @@ class StoreAssetRequest extends FormRequest
             'brand' => 'nullable|string|max:80',
             'model' => 'nullable|string|max:80',
             'serial_number' => 'nullable|string|max:120|unique:assets',
-            'specs' => 'nullable|json',
             'location' => 'nullable|string|max:120',
             'holder' => 'nullable|string|max:120',
             'nilai_perolehan' => 'nullable|numeric|min:0',
@@ -29,6 +28,10 @@ class StoreAssetRequest extends FormRequest
             'status' => 'required|string|in:ACTIVE,INACTIVE,PENDING',
             'condition' => 'required|string|in:GOOD,LIGHT,HEAVY',
             'purchased_at' => 'nullable|date',
+            'photo_serial' => 'nullable|image|max:5120',
+            'photo_serial_url' => 'nullable|url',
+            'photo_asset' => 'nullable|image|max:5120',
+            'photo_asset_url' => 'nullable|url',
         ];
     }
 }

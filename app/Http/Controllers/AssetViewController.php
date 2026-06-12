@@ -18,6 +18,7 @@ use App\Models\AssetHolderHistory;
 use App\Models\AssetMaintenance;
 use App\Models\Log;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class AssetViewController extends Controller
 {
@@ -107,12 +108,42 @@ class AssetViewController extends Controller
 
     public function store(StoreAssetRequest $request)
     {
-        $asset = Asset::create($request->validated());
+        $data = $request->validated();
+
+        // Handle serial photo (file or URL)
+        if ($photoSerial = $this->resolvePhotoField($request, 'photo_serial', 'photo_serial_url')) {
+            $data['photo_serial'] = $photoSerial;
+        }
+
+        // Handle asset photo (file or URL)
+        if ($photoAsset = $this->resolvePhotoField($request, 'photo_asset', 'photo_asset_url')) {
+            $data['photo_asset'] = $photoAsset;
+        }
+
+        $asset = Asset::create($data);
         
         // Send notification
         $this->notificationService->notifyAssetCreated($request->user(), $asset);
 
         return redirect()->route('assets.show', $asset)->with('success', 'Asset created');
+    }
+
+    private function resolvePhotoField(Request $request, string $fileKey, string $urlKey): ?string
+    {
+        if ($request->hasFile($fileKey)) {
+            return $request->file($fileKey)->store('assets', 'public');
+        }
+
+        if ($request->filled($urlKey)) {
+            $url = $request->input($urlKey);
+            if ($id = Asset::extractGoogleDriveId($url)) {
+                return 'drive:' . $id;
+            }
+
+            return $url;
+        }
+
+        return null;
     }
 
     public function show(Asset $asset)
@@ -129,6 +160,16 @@ class AssetViewController extends Controller
     public function update(UpdateAssetRequest $request, Asset $asset)
     {
         $changes = $request->validated();
+
+        // Handle uploads or URLs for serial photo
+        if ($photoSerial = $this->resolvePhotoField($request, 'photo_serial', 'photo_serial_url')) {
+            $changes['photo_serial'] = $photoSerial;
+        }
+
+        // Handle uploads or URLs for asset photo
+        if ($photoAsset = $this->resolvePhotoField($request, 'photo_asset', 'photo_asset_url')) {
+            $changes['photo_asset'] = $photoAsset;
+        }
         $before = $asset->only(array_keys($changes));
 
         $asset->update($changes);

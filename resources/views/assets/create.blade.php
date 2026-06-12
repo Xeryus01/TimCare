@@ -29,7 +29,7 @@
                 </div>
             @endif
 
-            <form method="POST" action="{{ route('assets.store') }}" class="space-y-6">
+            <form method="POST" action="{{ route('assets.store') }}" class="space-y-6" enctype="multipart/form-data">
                 @csrf
 
                 <!-- Asset Code -->
@@ -98,15 +98,33 @@
                     @enderror
                 </div>
 
-                <!-- Specs -->
-                <div>
-                    <label for="specs" class="block text-sm font-medium text-gray-900 dark:text-white mb-2">
-                        Spesifikasi
-                    </label>
-                    <textarea id="specs" name="specs" rows="3" placeholder='e.g., {"cpu":"i5","ram":"16GB","storage":"512GB SSD"} atau CPU: i5, RAM: 16GB, Storage: 512GB SSD' class="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-gray-900 placeholder-gray-500 outline-none transition focus:border-brand-600 focus:ring-2 focus:ring-brand-100 disabled:cursor-default disabled:bg-gray-50 dark:border-gray-600 dark:bg-dark-800 dark:text-white dark:placeholder-gray-400 dark:focus:border-brand-600 dark:focus:ring-brand-900/20 @error('specs') border-red-500 @enderror">{{ old('specs') }}</textarea>
-                    @error('specs')
-                        <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
-                    @enderror
+                <!-- Photos: Serial and Asset -->
+                <div class="grid gap-6 sm:grid-cols-2">
+                    <div>
+                        <label for="photo_serial" class="block text-sm font-medium text-gray-900 dark:text-white mb-2">Foto Serial Number (Upload)</label>
+                        <input id="photo_serial" type="file" name="photo_serial" accept="image/*" class="w-full" />
+                        <p class="mt-1 text-sm text-gray-500">Atau masukkan link drive pada kolom berikut.</p>
+                        <input id="photo_serial_url" type="url" name="photo_serial_url" value="{{ old('photo_serial_url') }}" placeholder="https://drive.google.com/..." class="w-full mt-2 rounded-lg border border-gray-300 px-3 py-2" />
+                        @error('photo_serial')
+                            <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                        @enderror
+                        @error('photo_serial_url')
+                            <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="photo_asset" class="block text-sm font-medium text-gray-900 dark:text-white mb-2">Foto Barang/Aset (Upload)</label>
+                        <input id="photo_asset" type="file" name="photo_asset" accept="image/*" class="w-full" />
+                        <p class="mt-1 text-sm text-gray-500">Atau masukkan link drive pada kolom berikut.</p>
+                        <input id="photo_asset_url" type="url" name="photo_asset_url" value="{{ old('photo_asset_url') }}" placeholder="https://drive.google.com/..." class="w-full mt-2 rounded-lg border border-gray-300 px-3 py-2" />
+                        @error('photo_asset')
+                            <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                        @enderror
+                        @error('photo_asset_url')
+                            <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                        @enderror
+                    </div>
                 </div>
 
                 <!-- Location -->
