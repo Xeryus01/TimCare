@@ -57,6 +57,21 @@
                 </a>
             </li>
 
+            <!-- Pemeliharaan - Admin, Teknisi, ULP -->
+            <?php if(auth()->user()->hasAnyRole(['Admin', 'Teknisi', 'ULP'])): ?>
+            <li>
+                <a href="<?php echo e(url()->to(route('maintenance.index'))); ?>" class="group relative flex items-center gap-3 rounded-lg px-4 py-2.5 font-medium text-gray-500 dark:text-gray-400 <?php echo e(request()->routeIs('maintenance.*') ? 'bg-brand-50 text-brand-600 dark:bg-brand-500/10 dark:text-brand-400' : 'hover:bg-gray-100 dark:hover:bg-white/5'); ?>">
+                    <svg class="fill-current" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M13.5 2.5C13.5 2.22386 13.7239 2 14 2H16C17.1046 2 18 2.89543 18 4V16C18 17.1046 17.1046 18 16 18H14C13.7239 18 13.5 17.7761 13.5 17.5C13.5 17.2239 13.7239 17 14 17H16V4H14C13.7239 4 13.5 3.77614 13.5 3V2.5Z"></path>
+                        <path d="M11.3536 7.14645C11.5488 6.95118 11.5488 6.63858 11.3536 6.44332C11.1583 6.24805 10.8457 6.24805 10.6504 6.44332L6.79082 10.3029C6.2 10.8937 6.2 11.8437 6.79082 12.4345L10.6504 16.2941C10.8457 16.4893 11.1583 16.4893 11.3536 16.2941C11.5488 16.0988 11.5488 15.7862 11.3536 15.5909L7.98528 12.2224H15C15.2761 12.2224 15.5 11.9985 15.5 11.7224C15.5 11.4463 15.2761 11.2224 15 11.2224H7.98528L11.3536 7.85413C11.5488 7.65887 11.5488 7.34627 11.3536 7.15101V7.14645Z"></path>
+                        <path d="M10 4C10.5523 4 11 4.44772 11 5V7C11 7.55228 10.5523 8 10 8C9.44772 8 9 7.55228 9 7V5C9 4.44772 9.44772 4 10 4Z"></path>
+                        <path d="M10 12C10.5523 12 11 12.4477 11 13V15C11 15.5523 10.5523 16 10 16C9.44772 16 9 15.5523 9 15V13C9 12.4477 9.44772 12 10 12Z"></path>
+                    </svg>
+                    <span>Pemeliharaan</span>
+                </a>
+            </li>
+            <?php endif; ?>
+
             <!-- Jadwal Piket - Teknisi -->
             <?php if(auth()->user()->hasRole('Teknisi')): ?>
             <li>
