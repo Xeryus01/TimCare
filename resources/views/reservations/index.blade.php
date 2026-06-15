@@ -152,7 +152,16 @@
                                 </td>
                                 <td class="px-5 py-4 sm:px-6 text-sm text-gray-700 dark:text-gray-300">{{ optional($r->approver)->name ?? '-' }}</td>
                                 <td class="px-5 py-4 text-right sm:px-6">
-                                    <a href="{{ url()->to(route('reservations.show', $r)) }}" class="text-sm font-medium text-brand-600 hover:text-brand-700 dark:text-brand-400">Detail</a>
+                                    <div class="flex items-center justify-end gap-3">
+                                        <a href="{{ url()->to(route('reservations.show', $r)) }}" class="text-sm font-medium text-brand-600 hover:text-brand-700 dark:text-brand-400">Detail</a>
+                                        @if(auth()->user()->hasRole('Admin'))
+                                            <form method="POST" action="{{ route('reservations.destroy', $r) }}" class="inline" onsubmit="return confirm('Hapus pengajuan Zoom {{ $r->code }}? Tindakan ini tidak dapat dibatalkan.')">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="text-sm font-medium text-red-600 hover:text-red-700 dark:text-red-400">Hapus</button>
+                                            </form>
+                                        @endif
+                                    </div>
                                 </td>
                             </tr>
                         @empty

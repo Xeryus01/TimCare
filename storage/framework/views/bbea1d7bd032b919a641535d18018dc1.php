@@ -146,7 +146,16 @@
                                 </td>
                                 <td class="px-5 py-4 sm:px-6 text-sm text-gray-700 dark:text-gray-300"><?php echo e(optional($ticket->assignee)->name ?? '-'); ?></td>
                                 <td class="px-5 py-4 text-right sm:px-6">
-                                    <a href="<?php echo e(url()->to(route('tickets.show', $ticket))); ?>" class="text-sm font-medium text-brand-600 hover:text-brand-700 dark:text-brand-400">Detail</a>
+                                    <div class="flex items-center justify-end gap-3">
+                                        <a href="<?php echo e(url()->to(route('tickets.show', $ticket))); ?>" class="text-sm font-medium text-brand-600 hover:text-brand-700 dark:text-brand-400">Detail</a>
+                                        <?php if(auth()->user()->hasRole('Admin')): ?>
+                                            <form method="POST" action="<?php echo e(route('tickets.destroy', $ticket)); ?>" class="inline" onsubmit="return confirm('Hapus tiket <?php echo e($ticket->code); ?>? Tindakan ini tidak dapat dibatalkan.')">
+                                                <?php echo csrf_field(); ?>
+                                                <?php echo method_field('DELETE'); ?>
+                                                <button type="submit" class="text-sm font-medium text-red-600 hover:text-red-700 dark:text-red-400">Hapus</button>
+                                            </form>
+                                        <?php endif; ?>
+                                    </div>
                                 </td>
                             </tr>
                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>

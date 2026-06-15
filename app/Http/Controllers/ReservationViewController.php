@@ -286,14 +286,12 @@ class ReservationViewController extends Controller
 
     public function destroy(Request $request, Reservation $reservation)
     {
-        $user = $request->user();
-
-        if (! $user->hasAnyRole(['Admin', 'Teknisi']) && $reservation->requester_id !== $user->id) {
-            abort(403);
+        if (! $request->user()->hasRole('Admin')) {
+            abort(403, 'Hanya Admin yang dapat menghapus pengajuan Zoom.');
         }
 
         $reservation->delete();
-        return redirect()->route('reservations.index')->with('success', 'Reservation deleted');
+        return redirect()->route('reservations.index')->with('success', 'Pengajuan Zoom berhasil dihapus');
     }
 
     public function showNotaDinas(Request $request, Reservation $reservation)

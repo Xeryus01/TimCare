@@ -297,14 +297,12 @@ class TicketViewController extends Controller
 
     public function destroy(Request $request, Ticket $ticket)
     {
-        $user = $request->user();
-
-        if (! $user->hasAnyRole(['Admin', 'Teknisi']) && $ticket->requester_id !== $user->id) {
-            abort(403);
+        if (! $request->user()->hasRole('Admin')) {
+            abort(403, 'Hanya Admin yang dapat menghapus tiket.');
         }
 
         $ticket->delete();
-        return redirect()->route('tickets.index')->with('success','Ticket deleted');
+        return redirect()->route('tickets.index')->with('success','Tiket berhasil dihapus');
     }
 
     public function comment(Request $request, Ticket $ticket)
