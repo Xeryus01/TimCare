@@ -131,6 +131,10 @@ class ReservationController extends Controller
 
     public function destroy(Request $request, Reservation $reservation)
     {
+        if (! $request->user()->hasRole('Admin')) {
+            abort(403, 'Hanya Admin yang dapat menghapus pengajuan Zoom.');
+        }
+
         $reservation->delete();
         Log::create([
             'actor_id' => $request->user()->id,

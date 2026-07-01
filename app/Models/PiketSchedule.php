@@ -36,7 +36,7 @@ class PiketSchedule extends Model
         $weekStart = $currentDate->copy()->startOfWeek(); // Monday
 
         return self::whereDate('week_start_date', $weekStart->toDateString())
-            ->first() ?? self::createDefault($weekStart);
+            ->first() ?? self::makeDefault($weekStart);
     }
 
     public static function findForDate($date = null)
@@ -83,6 +83,21 @@ class PiketSchedule extends Model
             })
             ->orderBy('name')
             ->get();
+    }
+
+    // Build an in-memory default schedule WITHOUT saving it to the database.
+    // Used for display/edit so that merely viewing a week never auto-creates a row.
+    public static function makeDefault($weekStart)
+    {
+        $technicians = self::getTechnicians();
+
+        return new self([
+            'week_start_date' => $weekStart->toDateString(),
+            'week_end_date' => $weekStart->copy()->endOfWeek()->toDateString(),
+            'technician_1' => $technicians[0] ?? 'Fadil Rahman',
+            'technician_2' => $technicians[1] ?? 'Marko Santoso',
+            'technician_3' => $technicians[2] ?? 'Eji Wijaya',
+        ]);
     }
 
     // Create default schedule if not exists

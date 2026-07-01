@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Jobs\SendNotificationDelivery;
 use App\Models\Notification;
 use App\Models\User;
 
@@ -17,7 +18,19 @@ class NotificationService
     }
 
     /**
-     * Create notification and send to user
+     * Create notification and send to user.
+     *
+     * Kebijakan pengiriman:
+     * - Notifikasi sistem (in-app) SELALU dibuat.
+     * - WhatsApp hanya dikirim bila $sendWhatsApp = true DAN user punya nomor HP.
+     *   Kapan WA dikirim diatur di tiap helper notify* sesuai aturan:
+     *     1) Tiket/Zoom baru        -> WA ke ADMIN
+     *     2) Penugasan ke teknisi   -> WA ke TEKNISI yang ditugaskan + PENGAJU
+     *     3) Link Zoom siap         -> WA ke PENGAJU (beserta link)
+     *     4) Tiket/Zoom selesai     -> WA ke PENGAJU + TEKNISI
+     * - Email dikirim bila $sendEmail = true DAN user punya email.
+     * - Pengiriman berjalan SETELAH respons HTTP (dispatchAfterResponse), tanpa
+     *   queue worker, sehingga cocok untuk hosting cPanel biasa.
      */
     public function notify(
         User $user,
@@ -39,14 +52,12 @@ class NotificationService
             'action_id' => $actionId,
         ]);
 
-        // Send WhatsApp if phone number exists
-        if ($sendWhatsApp && !empty($user->phone_number)) {
-            $this->sendWhatsAppNotification($user, $notification);
-        }
+        // Kirim WA/Email sesuai flag & ketersediaan kontak user.
+        $doWhatsApp = $sendWhatsApp && !empty($user->phone_number);
+        $doEmail = $sendEmail && !empty($user->email);
 
-        // Send Email if email exists
-        if ($sendEmail && !empty($user->email)) {
-            $this->sendEmailNotification($user, $notification);
+        if ($doWhatsApp || $doEmail) {
+            SendNotificationDelivery::dispatchAfterResponse($notification->id, $doWhatsApp, $doEmail);
         }
 
         return $notification;
@@ -55,12 +66,19 @@ class NotificationService
     /**
      * Send WhatsApp notification
      */
-    protected function sendWhatsAppNotification(User $user, Notification $notification): void
+    public function sendWhatsAppNotification(User $user, Notification $notification): void
     {
         try {
+            // Sisipkan link langsung menuju tiket/permintaan Zoom ke isi pesan WA.
+            $message = $notification->message;
+            $actionUrl = $this->buildActionUrl($notification->action_type, $notification->action_id);
+            if ($actionUrl) {
+                $message .= "\n\n" . $this->actionLabel($notification->action_type) . ': ' . $actionUrl;
+            }
+
             $response = $this->whatsAppService->send(
                 $user->phone_number,
-                $notification->message,
+                $message,
                 $notification->title
             );
 
@@ -87,13 +105,19 @@ class NotificationService
     /**
      * Send Email notification
      */
-    protected function sendEmailNotification(User $user, Notification $notification): void
+    public function sendEmailNotification(User $user, Notification $notification): void
     {
         try {
+            // Sertakan tombol/link langsung menuju tiket/permintaan Zoom di email.
+            $actionUrl = $this->buildActionUrl($notification->action_type, $notification->action_id);
+            $actionText = $actionUrl ? $this->actionLabel($notification->action_type) : null;
+
             $response = $this->emailService->send(
                 $user->email,
                 $notification->title,
-                $notification->message
+                $notification->message,
+                $actionUrl,
+                $actionText
             );
 
             if ($response['success'] ?? false) {
@@ -117,7 +141,52 @@ class NotificationService
     }
 
     /**
-     * Create ticket notification
+     * Bangun URL absolut menuju detail entitas terkait notifikasi
+     * (tiket / permintaan Zoom / aset) berdasarkan action_type & action_id.
+     * Mengembalikan null bila tipe tidak dikenal atau route tidak tersedia.
+     * Catatan: URL memakai APP_URL, jadi pastikan APP_URL di .env sudah benar
+     * (mis. https://domain-anda) agar link dapat diklik dari WA/email.
+     */
+    private function buildActionUrl(?string $actionType, ?int $actionId): ?string
+    {
+        if (empty($actionType) || empty($actionId)) {
+            return null;
+        }
+
+        $routeName = match ($actionType) {
+            'ticket' => 'tickets.show',
+            'reservation' => 'reservations.show',
+            'asset' => 'assets.show',
+            default => null,
+        };
+
+        if ($routeName === null) {
+            return null;
+        }
+
+        try {
+            return route($routeName, $actionId);
+        } catch (\Throwable $e) {
+            return null;
+        }
+    }
+
+    /**
+     * Label tombol/teks link sesuai jenis entitas.
+     */
+    private function actionLabel(?string $actionType): string
+    {
+        return match ($actionType) {
+            'ticket' => 'Buka Tiket',
+            'reservation' => 'Buka Permintaan Zoom',
+            'asset' => 'Buka Aset',
+            default => 'Buka di TimCare',
+        };
+    }
+
+    /**
+     * Create ticket notification (untuk PENGAJU saat tiket dibuat).
+     * WA TIDAK dikirim ke pengaju di sini -- WA tiket baru hanya ke admin.
      */
     public function notifyTicketCreated(User $user, $ticket, bool $sendWhatsApp = true, bool $sendEmail = true): Notification
     {
@@ -128,13 +197,14 @@ class NotificationService
             "Tiket '{$ticket->title}' telah dibuat.",
             'ticket',
             $ticket->id,
-            $sendWhatsApp,
+            false,
             $sendEmail
         );
     }
 
     /**
-     * Create ticket status update notification
+     * Create ticket status update notification.
+     * Perubahan status di luar 4 kondisi WA -> WA tidak dikirim.
      */
     public function notifyTicketUpdated(User $user, $ticket, string $oldStatus, bool $sendWhatsApp = true, bool $sendEmail = true): Notification
     {
@@ -145,13 +215,14 @@ class NotificationService
             "Tiket '{$ticket->code}' status berubah dari {$oldStatus} menjadi {$ticket->status}.",
             'ticket',
             $ticket->id,
-            $sendWhatsApp,
+            false,
             $sendEmail
         );
     }
 
     /**
-     * Create ticket resolved notification
+     * Create ticket resolved notification.
+     * Tiket selesai -> WA ke penerima (dipakai untuk PENGAJU & TEKNISI).
      */
     public function notifyTicketResolved(User $user, $ticket, bool $sendWhatsApp = true, bool $sendEmail = true): Notification
     {
@@ -162,7 +233,7 @@ class NotificationService
             "Tiket '{$ticket->code}' telah diselesaikan.",
             'ticket',
             $ticket->id,
-            $sendWhatsApp,
+            true,
             $sendEmail
         );
     }
@@ -180,7 +251,8 @@ class NotificationService
     }
 
     /**
-     * Notify technician assigned to a ticket
+     * Notify technician assigned to a ticket.
+     * Penugasan -> WA ke teknisi yang ditugaskan.
      */
     public function notifyTicketAssigned(User $assignee, $ticket, bool $sendWhatsApp = true, bool $sendEmail = true): Notification
     {
@@ -191,13 +263,14 @@ class NotificationService
             "Anda ditugaskan menangani tiket {$ticket->code}.",
             'ticket',
             $ticket->id,
-            $sendWhatsApp,
+            true,
             $sendEmail
         );
     }
 
     /**
-     * Notify requester that a technician has been assigned
+     * Notify requester that a technician has been assigned.
+     * Penugasan -> WA ke pengaju tiket.
      */
     public function notifyTicketAssignedToRequester(User $requester, $ticket, bool $sendWhatsApp = true, bool $sendEmail = true): Notification
     {
@@ -208,13 +281,14 @@ class NotificationService
             "Tiket {$ticket->code} telah ditugaskan ke teknisi.",
             'ticket',
             $ticket->id,
-            $sendWhatsApp,
+            true,
             $sendEmail
         );
     }
 
     /**
-     * Notify user about a new ticket comment
+     * Notify user about a new ticket comment.
+     * Komentar di luar 4 kondisi WA -> WA tidak dikirim.
      */
     public function notifyTicketCommented(User $recipient, $ticket, $comment, bool $sendWhatsApp = true, bool $sendEmail = true): Notification
     {
@@ -225,13 +299,14 @@ class NotificationService
             "Komentar baru pada tiket {$ticket->code}: {$comment->message}",
             'ticket',
             $ticket->id,
-            $sendWhatsApp,
+            false,
             $sendEmail
         );
     }
 
     /**
-     * Notify admins about a newly created ticket
+     * Notify admins about a newly created ticket.
+     * Tiket baru -> WA ke ADMIN.
      */
     public function notifyAdminsTicketCreated($ticket): void
     {
@@ -240,12 +315,15 @@ class NotificationService
             '📌 Permintaan Baru Masuk',
             "Tiket baru {$ticket->code} telah diajukan oleh {$ticket->requester->name}.",
             'ticket',
-            $ticket->id
+            $ticket->id,
+            true,
+            true
         );
     }
 
     /**
-     * Notify admins about a ticket resolution
+     * Notify admins about a ticket resolution.
+     * Tiket selesai -> admin TIDAK menerima WA (hanya pengaju & teknisi).
      */
     public function notifyAdminsTicketResolved($ticket): void
     {
@@ -254,12 +332,15 @@ class NotificationService
             '✅ Permintaan Selesai',
             "Tiket {$ticket->code} telah diselesaikan.",
             'ticket',
-            $ticket->id
+            $ticket->id,
+            false,
+            true
         );
     }
 
     /**
-     * Notify admins about a reservation request
+     * Notify admins about a reservation request.
+     * Zoom baru -> WA ke ADMIN.
      */
     public function notifyAdminsReservationCreated($reservation): void
     {
@@ -268,12 +349,15 @@ class NotificationService
             '📌 Pengajuan Zoom Baru',
             "Pengajuan Zoom {$reservation->code} oleh {$reservation->requester->name} telah dibuat.",
             'reservation',
-            $reservation->id
+            $reservation->id,
+            true,
+            true
         );
     }
 
     /**
-     * Notify admins about a reservation completion
+     * Notify admins about a reservation completion.
+     * Zoom selesai -> admin TIDAK menerima WA (hanya pengaju & teknisi).
      */
     public function notifyAdminsReservationCompleted($reservation): void
     {
@@ -282,12 +366,15 @@ class NotificationService
             '✅ Pengajuan Zoom Selesai',
             "Pengajuan Zoom {$reservation->code} telah selesai.",
             'reservation',
-            $reservation->id
+            $reservation->id,
+            false,
+            true
         );
     }
 
     /**
-     * Notify technician assigned to a reservation
+     * Notify technician assigned to a reservation.
+     * Penugasan -> WA ke teknisi (petugas) yang ditugaskan.
      */
     public function notifyReservationAssigned(User $approver, $reservation, bool $sendWhatsApp = true, bool $sendEmail = true): Notification
     {
@@ -298,13 +385,14 @@ class NotificationService
             "Anda ditugaskan sebagai teknisi untuk pengajuan Zoom {$reservation->code}.",
             'reservation',
             $reservation->id,
-            $sendWhatsApp,
+            true,
             $sendEmail
         );
     }
 
     /**
-     * Notify requester when Zoom link becomes available
+     * Notify requester when Zoom link becomes available.
+     * Link Zoom siap -> WA ke PENGAJU beserta link Zoom.
      */
     public function notifyReservationZoomLinkAvailable(User $requester, $reservation, bool $sendWhatsApp = true, bool $sendEmail = true): Notification
     {
@@ -315,13 +403,14 @@ class NotificationService
             "Link Zoom untuk pengajuan {$reservation->code} telah tersedia: {$reservation->zoom_link}",
             'reservation',
             $reservation->id,
-            $sendWhatsApp,
+            true,
             $sendEmail
         );
     }
 
     /**
-     * Notify requester when reservation is completed
+     * Notify requester when reservation is completed.
+     * Zoom selesai -> WA ke PENGAJU.
      */
     public function notifyReservationCompleted(User $user, $reservation, bool $sendWhatsApp = true, bool $sendEmail = true): Notification
     {
@@ -332,13 +421,14 @@ class NotificationService
             "Pengajuan Zoom {$reservation->code} telah selesai.",
             'reservation',
             $reservation->id,
-            $sendWhatsApp,
+            true,
             $sendEmail
         );
     }
 
     /**
-     * Create reservation notification
+     * Create reservation notification (untuk PENGAJU saat Zoom dibuat).
+     * WA TIDAK dikirim ke pengaju di sini -- WA Zoom baru hanya ke admin.
      */
     public function notifyReservationCreated(User $user, $reservation, bool $sendWhatsApp = true, bool $sendEmail = true): Notification
     {
@@ -349,13 +439,14 @@ class NotificationService
             "Pengajuan Zoom '{$reservation->room_name}' pada {$reservation->start_time->format('d/m/Y H:i')} telah dibuat.",
             'reservation',
             $reservation->id,
-            $sendWhatsApp,
+            false,
             $sendEmail
         );
     }
 
     /**
-     * Create reservation approved notification
+     * Create reservation approved notification.
+     * Disetujui di luar 4 kondisi WA (WA khusus saat link Zoom siap) -> WA tidak dikirim.
      */
     public function notifyReservationApproved(User $user, $reservation, bool $sendWhatsApp = true, bool $sendEmail = true): Notification
     {
@@ -366,13 +457,14 @@ class NotificationService
             "Pengajuan Zoom '{$reservation->room_name}' telah disetujui." . ($reservation->zoom_link ? " Link: {$reservation->zoom_link}" : ''),
             'reservation',
             $reservation->id,
-            $sendWhatsApp,
+            false,
             $sendEmail
         );
     }
 
     /**
-     * Create asset notification
+     * Create asset notification.
+     * Di luar 4 kondisi WA -> WA tidak dikirim.
      */
     public function notifyAssetCreated(User $user, $asset, bool $sendWhatsApp = true, bool $sendEmail = true): Notification
     {
@@ -383,7 +475,7 @@ class NotificationService
             "Aset '{$asset->name}' (Kode: {$asset->asset_code}) telah ditambahkan ke sistem.",
             'asset',
             $asset->id,
-            $sendWhatsApp,
+            false,
             $sendEmail
         );
     }

@@ -101,7 +101,16 @@ class TicketController extends Controller
         $oldStatus = $ticket->status;
 
         $ticket->status = $validated['status'];
-        $ticket->assignee_id = $validated['assignee_id'] ?? $ticket->assignee_id;
+
+        // Tiket yang dibatalkan tidak boleh memiliki penugasan teknisi.
+        // Jika status diubah menjadi "Batal", hapus penugasan yang ada dan
+        // abaikan upaya penugasan teknisi pada request ini.
+        if ($ticket->status === Ticket::STATUS_CANCELLED) {
+            $validated['assignee_id'] = null;
+            $ticket->assignee_id = null;
+        } else {
+            $ticket->assignee_id = $validated['assignee_id'] ?? $ticket->assignee_id;
+        }
         
         // Automatic status change when assigning petugas
         if (isset($validated['assignee_id']) && $validated['assignee_id'] !== null) {

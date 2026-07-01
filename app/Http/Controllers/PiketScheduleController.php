@@ -24,7 +24,7 @@ class PiketScheduleController extends Controller
     {
         $weekStartDate = \Carbon\Carbon::parse($weekStart)->startOfWeek();
         $schedule = PiketSchedule::whereDate('week_start_date', $weekStartDate->toDateString())
-            ->first() ?? PiketSchedule::createDefault($weekStartDate);
+            ->first() ?? PiketSchedule::makeDefault($weekStartDate);
 
         $technicians = PiketSchedule::getTechnicians();
 
@@ -36,11 +36,7 @@ class PiketScheduleController extends Controller
     {
         $weekStartDate = \Carbon\Carbon::parse($weekStart)->startOfWeek();
         $schedule = PiketSchedule::whereDate('week_start_date', $weekStartDate->toDateString())
-            ->first();
-
-        if (!$schedule) {
-            $schedule = PiketSchedule::createDefault($weekStartDate);
-        }
+            ->first() ?? PiketSchedule::makeDefault($weekStartDate);
 
         $request->validate([
             'week_start_date' => ['required', 'date', Rule::unique('piket_schedules', 'week_start_date')->ignore($schedule->id)],
@@ -54,7 +50,8 @@ class PiketScheduleController extends Controller
             'technician_3.different' => 'Petugas 3 tidak boleh sama dengan Petugas 1 atau Petugas 2',
         ]);
 
-        $schedule->update($request->only(['week_start_date', 'week_end_date', 'technician_1', 'technician_2', 'technician_3']));
+        $schedule->fill($request->only(['week_start_date', 'week_end_date', 'technician_1', 'technician_2', 'technician_3']));
+        $schedule->save();
 
         return redirect()->route('piket.index')->with('success', 'Jadwal piket berhasil diperbarui');
     }

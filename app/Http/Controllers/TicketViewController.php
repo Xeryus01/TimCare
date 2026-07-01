@@ -87,6 +87,9 @@ class TicketViewController extends Controller
         if ($request->filled('assignee_id')) {
             $q->where('assignee_id', $request->assignee_id);
         }
+        if ($request->filled('requester_id')) {
+            $q->where('requester_id', $request->requester_id);
+        }
 
         $sort = $request->input('sort');
         $direction = $request->input('direction', 'asc') === 'desc' ? 'desc' : 'asc';
@@ -117,8 +120,13 @@ class TicketViewController extends Controller
         $perPage = $request->input('per_page', 10);
         $perPage = in_array($perPage, [10, 20, 50]) ? (int)$perPage : 10;
         
+        $requesters = User::whereIn('id', Ticket::query()->distinct()->pluck('requester_id')->filter())
+            ->orderBy('name')->get(['id', 'name']);
+        $assignees = User::whereIn('id', Ticket::query()->whereNotNull('assignee_id')->distinct()->pluck('assignee_id')->filter())
+            ->orderBy('name')->get(['id', 'name']);
+
         $tickets = $q->paginate($perPage)->appends(request()->query());
-        return view('tickets.index', compact('tickets', 'sort', 'direction'));
+        return view('tickets.index', compact('tickets', 'sort', 'direction', 'requesters', 'assignees'));
     }
 
     public function create(Request $request)
@@ -248,6 +256,14 @@ class TicketViewController extends Controller
             unset($data['status']);
         }
 
+        // Tiket yang dibatalkan tidak boleh memiliki penugasan teknisi.
+        // Jika status akhir adalah "Batal" (baru dibatalkan user maupun memang sudah batal),
+        // penugasan teknisi dihapus/diabaikan.
+        $finalStatus = $data['status'] ?? $ticket->status;
+        if ($finalStatus === Ticket::STATUS_CANCELLED) {
+            $data['assignee_id'] = null;
+        }
+
         $ticket->fill($data);
         if (isset($data['status']) && in_array($data['status'], [Ticket::STATUS_SOLVED, Ticket::STATUS_SOLVED_WITH_NOTES], true)) {
             $ticket->resolved_at = now();
@@ -297,14 +313,12 @@ class TicketViewController extends Controller
 
     public function destroy(Request $request, Ticket $ticket)
     {
-        $user = $request->user();
-
-        if (! $user->hasAnyRole(['Admin', 'Teknisi']) && $ticket->requester_id !== $user->id) {
-            abort(403);
+        if (! $request->user()->hasRole('Admin')) {
+            abort(403, 'Hanya Admin yang dapat menghapus tiket.');
         }
 
         $ticket->delete();
-        return redirect()->route('tickets.index')->with('success','Ticket deleted');
+        return redirect()->route('tickets.index')->with('success','Tiket berhasil dihapus');
     }
 
     public function comment(Request $request, Ticket $ticket)
@@ -450,8 +464,12 @@ class TicketViewController extends Controller
             abort(404);
         }
 
-        return $disk->response($attachment->file_path, $attachment->file_name, [
-            'Content-Type' => $attachment->mime_type ?: ($disk->mimeType($attachment->file_path) ?: 'application/octet-stream'),
+        $mime = $attachment->mime_type ?: ($disk->mimeType($attachment->file_path) ?: 'application/octet-stream');
+
+        // Sajikan via response()->file() (BinaryFileResponse) agar mendukung HTTP Range request,
+        // sehingga gambar/PDF besar dimuat andal di browser (StreamedResponse tidak mendukung range).
+        return response()->file($disk->path($attachment->file_path), [
+            'Content-Type' => $mime,
             'Content-Disposition' => 'inline; filename="' . $attachment->file_name . '"',
         ]);
     }

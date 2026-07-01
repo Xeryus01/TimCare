@@ -157,96 +157,73 @@
             $baseQuery = request()->except('page');
         @endphp
 
+                @php
+            $assetColumns = [
+                ['key' => 'asset_code', 'label' => 'NO BMN', 'sortable' => true, 'type' => 'code', 'default' => true],
+                ['key' => 'name', 'label' => 'Nama', 'sortable' => true, 'type' => 'strong', 'default' => true],
+                ['key' => 'serial_number', 'label' => 'Asset Tag', 'sortable' => true, 'type' => 'text', 'default' => true],
+                ['key' => 'model', 'label' => 'Model', 'sortable' => true, 'type' => 'text', 'default' => false],
+                ['key' => 'brand', 'label' => 'Merek', 'sortable' => true, 'type' => 'text', 'default' => true],
+                ['key' => 'type', 'label' => 'Jenis Barang / Kategori', 'sortable' => true, 'type' => 'text', 'default' => true],
+                ['key' => 'specs', 'label' => 'Spesifikasi', 'sortable' => false, 'type' => 'specs', 'default' => false],
+                ['key' => 'purchased_at', 'label' => 'Tanggal Perolehan', 'sortable' => true, 'type' => 'date', 'default' => true],
+                ['key' => 'nilai_perolehan', 'label' => 'Nilai Perolehan', 'sortable' => true, 'type' => 'currency', 'default' => true],
+                ['key' => 'location', 'label' => 'Lokasi Aset', 'sortable' => true, 'type' => 'text', 'default' => true],
+                ['key' => 'kode_satker', 'label' => 'Kode Satker', 'sortable' => true, 'type' => 'text', 'default' => true],
+                ['key' => 'holder', 'label' => 'Nama Pegawai', 'sortable' => true, 'type' => 'text', 'default' => true],
+                ['key' => 'nip_pegawai', 'label' => 'NIP Pegawai', 'sortable' => false, 'type' => 'text', 'default' => false],
+                ['key' => 'photo_serial', 'label' => 'Foto Serial', 'sortable' => false, 'type' => 'photo', 'default' => false],
+                ['key' => 'photo_asset', 'label' => 'Foto Aset', 'sortable' => false, 'type' => 'photo', 'default' => false],
+                ['key' => 'photo_bmn', 'label' => 'Foto Nomor BMN', 'sortable' => false, 'type' => 'photo', 'default' => false],
+                ['key' => 'condition', 'label' => 'Kondisi', 'sortable' => true, 'type' => 'condition', 'default' => true],
+                ['key' => 'status', 'label' => 'Status', 'sortable' => true, 'type' => 'status', 'default' => true],
+            ];
+        @endphp
+        <!-- Column Chooser -->
+        <div class="mb-4 flex justify-end">
+            <div class="relative inline-block text-left" id="assetColumnChooser">
+                <button type="button" id="assetColumnChooserBtn" class="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:bg-dark-800 dark:text-gray-300 dark:hover:bg-white/10">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM4 15a1 1 0 100 2h12a1 1 0 100-2H4z" />
+                    </svg>
+                    Pilih Kolom
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" /></svg>
+                </button>
+                <div id="assetColumnChooserPanel" class="absolute right-0 z-20 mt-2 hidden w-64 origin-top-right rounded-lg border border-gray-200 bg-white p-3 shadow-lg dark:border-gray-700 dark:bg-dark-800">
+                    <div class="mb-2 flex items-center justify-between">
+                        <span class="text-xs font-semibold uppercase text-gray-500 dark:text-gray-400">Tampilkan Kolom</span>
+                        <div class="flex gap-2"><button type="button" data-col-action="all" class="text-xs font-medium text-brand-600 hover:underline dark:text-brand-400">Tampilkan Semua</button><button type="button" data-col-action="reset" class="text-xs font-medium text-gray-500 hover:underline dark:text-gray-400">Reset</button></div>
+                    </div>
+                    <div class="max-h-72 space-y-1 overflow-y-auto">
+                        @foreach($assetColumns as $col)
+                            <label class="flex cursor-pointer items-center gap-2 px-2 py-1.5 hover:bg-gray-50 dark:hover:bg-white/5">
+                                <input type="checkbox" class="asset-col-toggle rounded border-gray-300 text-brand-600 focus:ring-brand-500 dark:border-gray-600 dark:bg-dark-900" value="{{ $col['key'] }}" data-default-hidden="{{ $col['default'] ? '0' : '1' }}" {{ $col['default'] ? 'checked' : '' }}>
+                                <span class="text-sm text-gray-700 dark:text-gray-300">{{ $col['label'] }}</span>
+                            </label>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="rounded-xl border border-gray-200 bg-white dark:border-gray-700 dark:bg-dark-800 overflow-hidden">
             <!-- Table Header -->
             <div class="overflow-x-auto">
                 <table class="w-full">
                     <thead class="border-b border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-white/5">
                         <tr>
-                            <th class="px-5 py-3.5 text-left sm:px-6">
-                                @php $nextDir = ($sort === 'asset_code' && $direction === 'asc') ? 'desc' : 'asc'; @endphp
-                                <a href="{{ url()->current() . '?' . http_build_query(array_merge($baseQuery, ['sort' => 'asset_code', 'direction' => $nextDir])) }}" class="inline-flex items-center gap-1 text-xs font-semibold uppercase text-gray-500 dark:text-gray-400">
-                                    NO BMN
-                                    @if($sort === 'asset_code') <span>{{ $direction === 'asc' ? '▲' : '▼' }}</span> @endif
-                                </a>
-                            </th>
-                            <th class="px-5 py-3.5 text-left sm:px-6">
-                                @php $nextDir = ($sort === 'name' && $direction === 'asc') ? 'desc' : 'asc'; @endphp
-                                <a href="{{ url()->current() . '?' . http_build_query(array_merge($baseQuery, ['sort' => 'name', 'direction' => $nextDir])) }}" class="inline-flex items-center gap-1 text-xs font-semibold uppercase text-gray-500 dark:text-gray-400">
-                                    Nama
-                                    @if($sort === 'name') <span>{{ $direction === 'asc' ? '▲' : '▼' }}</span> @endif
-                                </a>
-                            </th>
-                            <th class="px-5 py-3.5 text-left sm:px-6">
-                                @php $nextDir = ($sort === 'serial_number' && $direction === 'asc') ? 'desc' : 'asc'; @endphp
-                                <a href="{{ url()->current() . '?' . http_build_query(array_merge($baseQuery, ['sort' => 'serial_number', 'direction' => $nextDir])) }}" class="inline-flex items-center gap-1 text-xs font-semibold uppercase text-gray-500 dark:text-gray-400">
-                                    Asset Tag
-                                    @if($sort === 'serial_number') <span>{{ $direction === 'asc' ? '▲' : '▼' }}</span> @endif
-                                </a>
-                            </th>
-                            <th class="px-5 py-3.5 text-left sm:px-6">
-                                @php $nextDir = ($sort === 'purchased_at' && $direction === 'asc') ? 'desc' : 'asc'; @endphp
-                                <a href="{{ url()->current() . '?' . http_build_query(array_merge($baseQuery, ['sort' => 'purchased_at', 'direction' => $nextDir])) }}" class="inline-flex items-center gap-1 text-xs font-semibold uppercase text-gray-500 dark:text-gray-400">
-                                    Tanggal Perolehan
-                                    @if($sort === 'purchased_at') <span>{{ $direction === 'asc' ? '▲' : '▼' }}</span> @endif
-                                </a>
-                            </th>
-                            <th class="px-5 py-3.5 text-left sm:px-6">
-                                @php $nextDir = ($sort === 'nilai_perolehan' && $direction === 'asc') ? 'desc' : 'asc'; @endphp
-                                <a href="{{ url()->current() . '?' . http_build_query(array_merge($baseQuery, ['sort' => 'nilai_perolehan', 'direction' => $nextDir])) }}" class="inline-flex items-center gap-1 text-xs font-semibold uppercase text-gray-500 dark:text-gray-400">
-                                    Nilai Perolehan
-                                    @if($sort === 'nilai_perolehan') <span>{{ $direction === 'asc' ? '▲' : '▼' }}</span> @endif
-                                </a>
-                            </th>
-                            <th class="px-5 py-3.5 text-left sm:px-6">
-                                @php $nextDir = ($sort === 'location' && $direction === 'asc') ? 'desc' : 'asc'; @endphp
-                                <a href="{{ url()->current() . '?' . http_build_query(array_merge($baseQuery, ['sort' => 'location', 'direction' => $nextDir])) }}" class="inline-flex items-center gap-1 text-xs font-semibold uppercase text-gray-500 dark:text-gray-400">
-                                    Lokasi Aset
-                                    @if($sort === 'location') <span>{{ $direction === 'asc' ? '▲' : '▼' }}</span> @endif
-                                </a>
-                            </th>
-                            <th class="px-5 py-3.5 text-left sm:px-6">
-                                @php $nextDir = ($sort === 'kode_satker' && $direction === 'asc') ? 'desc' : 'asc'; @endphp
-                                <a href="{{ url()->current() . '?' . http_build_query(array_merge($baseQuery, ['sort' => 'kode_satker', 'direction' => $nextDir])) }}" class="inline-flex items-center gap-1 text-xs font-semibold uppercase text-gray-500 dark:text-gray-400">
-                                    Kode Satker
-                                    @if($sort === 'kode_satker') <span>{{ $direction === 'asc' ? '▲' : '▼' }}</span> @endif
-                                </a>
-                            </th>
-                            <th class="px-5 py-3.5 text-left sm:px-6">
-                                @php $nextDir = ($sort === 'holder' && $direction === 'asc') ? 'desc' : 'asc'; @endphp
-                                <a href="{{ url()->current() . '?' . http_build_query(array_merge($baseQuery, ['sort' => 'holder', 'direction' => $nextDir])) }}" class="inline-flex items-center gap-1 text-xs font-semibold uppercase text-gray-500 dark:text-gray-400">
-                                    Nama Pegawai
-                                    @if($sort === 'holder') <span>{{ $direction === 'asc' ? '▲' : '▼' }}</span> @endif
-                                </a>
-                            </th>
-                            <th class="px-5 py-3.5 text-left sm:px-6">
-                                @php $nextDir = ($sort === 'type' && $direction === 'asc') ? 'desc' : 'asc'; @endphp
-                                <a href="{{ url()->current() . '?' . http_build_query(array_merge($baseQuery, ['sort' => 'type', 'direction' => $nextDir])) }}" class="inline-flex items-center gap-1 text-xs font-semibold uppercase text-gray-500 dark:text-gray-400">
-                                    Jenis Barang / Kategori
-                                    @if($sort === 'type') <span>{{ $direction === 'asc' ? '▲' : '▼' }}</span> @endif
-                                </a>
-                            </th>
-                            <th class="px-5 py-3.5 text-left sm:px-6">
-                                @php $nextDir = ($sort === 'brand' && $direction === 'asc') ? 'desc' : 'asc'; @endphp
-                                <a href="{{ url()->current() . '?' . http_build_query(array_merge($baseQuery, ['sort' => 'brand', 'direction' => $nextDir])) }}" class="inline-flex items-center gap-1 text-xs font-semibold uppercase text-gray-500 dark:text-gray-400">
-                                    Merek
-                                    @if($sort === 'brand') <span>{{ $direction === 'asc' ? '▲' : '▼' }}</span> @endif
-                                </a>
-                            </th>
-                            <th class="px-5 py-3.5 text-left sm:px-6">
-                                @php $nextDir = ($sort === 'condition' && $direction === 'asc') ? 'desc' : 'asc'; @endphp
-                                <a href="{{ url()->current() . '?' . http_build_query(array_merge($baseQuery, ['sort' => 'condition', 'direction' => $nextDir])) }}" class="inline-flex items-center gap-1 text-xs font-semibold uppercase text-gray-500 dark:text-gray-400">
-                                    Kondisi
-                                    @if($sort === 'condition') <span>{{ $direction === 'asc' ? '▲' : '▼' }}</span> @endif
-                                </a>
-                            </th>
-                            <th class="px-5 py-3.5 text-left sm:px-6">
-                                @php $nextDir = ($sort === 'status' && $direction === 'asc') ? 'desc' : 'asc'; @endphp
-                                <a href="{{ url()->current() . '?' . http_build_query(array_merge($baseQuery, ['sort' => 'status', 'direction' => $nextDir])) }}" class="inline-flex items-center gap-1 text-xs font-semibold uppercase text-gray-500 dark:text-gray-400">
-                                    Status
-                                    @if($sort === 'status') <span>{{ $direction === 'asc' ? '▲' : '▼' }}</span> @endif
-                                </a>
-                            </th>
+                            @foreach($assetColumns as $col)
+                                <th data-col="{{ $col['key'] }}" class="px-5 py-3.5 text-left sm:px-6">
+                                    @if($col['sortable'])
+                                        @php $nextDir = ($sort === $col['key'] && $direction === 'asc') ? 'desc' : 'asc'; @endphp
+                                        <a href="{{ url()->current() . '?' . http_build_query(array_merge($baseQuery, ['sort' => $col['key'], 'direction' => $nextDir])) }}" class="inline-flex items-center gap-1 text-xs font-semibold uppercase text-gray-500 dark:text-gray-400">
+                                            {{ $col['label'] }}
+                                            @if($sort === $col['key']) <span>{{ $direction === 'asc' ? '▲' : '▼' }}</span> @endif
+                                        </a>
+                                    @else
+                                        <span class="text-xs font-semibold uppercase text-gray-500 dark:text-gray-400">{{ $col['label'] }}</span>
+                                    @endif
+                                </th>
+                            @endforeach
                             <th class="px-5 py-3.5 text-right sm:px-6">
                                 <span class="text-xs font-semibold uppercase text-gray-500 dark:text-gray-400">Aksi</span>
                             </th>
@@ -255,66 +232,78 @@
 
                     <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
                         @forelse($assets as $asset)
-                            <tr class="hover:bg-gray-50 dark:hover:bg-white/5">
-                                <td class="px-5 py-4 sm:px-6">
-                                    <span class="text-sm font-semibold text-gray-900 dark:text-white">{{ $asset->asset_code }}</span>
-                                </td>
-                                <td class="px-5 py-4 sm:px-6">
-                                    <span class="text-sm text-gray-900 dark:text-white">{{ $asset->name }}</span>
-                                </td>
-                                <td class="px-5 py-4 sm:px-6">
-                                    <span class="text-sm text-gray-600 dark:text-gray-400">{{ $asset->serial_number ?? '-' }}</span>
-                                </td>
-                                <td class="px-5 py-4 sm:px-6">
-                                    <span class="text-sm text-gray-600 dark:text-gray-400">{{ $asset->purchased_at ? $asset->purchased_at->format('d/m/Y') : '-' }}</span>
-                                </td>
-                                <td class="px-5 py-4 sm:px-6">
-                                    <span class="text-sm text-gray-600 dark:text-gray-400">{{ $asset->nilai_perolehan ? 'Rp ' . number_format($asset->nilai_perolehan, 2, ',', '.') : '-' }}</span>
-                                </td>
-                                <td class="px-5 py-4 sm:px-6">
-                                    <span class="text-sm text-gray-600 dark:text-gray-400">{{ $asset->location ?? '-' }}</span>
-                                </td>
-                                <td class="px-5 py-4 sm:px-6">
-                                    <span class="text-sm text-gray-600 dark:text-gray-400">{{ $asset->kode_satker ?? '-' }}</span>
-                                </td>
-                                <td class="px-5 py-4 sm:px-6">
-                                    <span class="text-sm text-gray-600 dark:text-gray-400">{{ $asset->holder ?? '-' }}</span>
-                                </td>
-                                <td class="px-5 py-4 sm:px-6">
-                                    <span class="text-sm text-gray-600 dark:text-gray-400">{{ $asset->type ?? '-' }}</span>
-                                </td>
-                                <td class="px-5 py-4 sm:px-6">
-                                    <span class="text-sm text-gray-600 dark:text-gray-400">{{ $asset->brand ?? '-' }}</span>
-                                </td>
-                                <td class="px-5 py-4 sm:px-6">
-                                    <span class="inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium
-                                        @if($asset->condition === 'GOOD') bg-green-100 text-green-700 dark:bg-green-500/15 dark:text-green-400
-                                        @elseif($asset->condition === 'LIGHT') bg-yellow-100 text-yellow-700 dark:bg-yellow-500/15 dark:text-yellow-400
-                                        @elseif($asset->condition === 'HEAVY') bg-red-100 text-red-700 dark:bg-red-500/15 dark:text-red-400
-                                        @else bg-gray-100 text-gray-700 dark:bg-gray-500/15 dark:text-gray-400
-                                        @endif">
-                                        {{ $asset->condition_label }}
-                                    </span>
-                                </td>
-                                <td class="px-5 py-4 sm:px-6">
-                                    <span class="inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium
-                                        @if($asset->status === 'ACTIVE') bg-green-100 text-green-700 dark:bg-green-500/15 dark:text-green-400
-                                        @elseif($asset->status === 'INACTIVE') bg-gray-100 text-gray-700 dark:bg-gray-500/15 dark:text-gray-400
-                                        @elseif($asset->status === 'PENDING') bg-amber-100 text-amber-800 dark:bg-amber-500/15 dark:text-amber-400
-                                        @elseif($asset->status === 'DECOMMISSIONED') bg-red-100 text-red-800 dark:bg-red-500/15 dark:text-red-400
-                                        @else bg-gray-100 text-gray-700 dark:bg-gray-500/15 dark:text-gray-400
-                                        @endif">
-                                        {{ $asset->status_label }}
-                                    </span>
-                                </td>
+                            <tr class="border-b border-gray-100 last:border-0 hover:bg-gray-50 dark:border-gray-800 dark:hover:bg-white/5">
+                                @foreach($assetColumns as $col)
+                                    <td data-col="{{ $col['key'] }}" class="px-5 py-4 sm:px-6">
+                                        @switch($col['type'])
+                                            @case('code')
+                                                <span class="text-sm font-semibold text-gray-900 dark:text-white">{{ $asset->asset_code }}</span>
+                                                @break
+                                            @case('strong')
+                                                <span class="text-sm text-gray-900 dark:text-white">{{ $asset->name }}</span>
+                                                @break
+                                            @case('date')
+                                                <span class="text-sm text-gray-600 dark:text-gray-400">{{ $asset->purchased_at ? $asset->purchased_at->format('d/m/Y') : '-' }}</span>
+                                                @break
+                                            @case('currency')
+                                                <span class="text-sm text-gray-600 dark:text-gray-400">{{ $asset->nilai_perolehan ? 'Rp ' . number_format($asset->nilai_perolehan, 2, ',', '.') : '-' }}</span>
+                                                @break
+                                            @case('specs')
+                                                @php
+                                                    $specsText = is_array($asset->specs)
+                                                        ? collect($asset->specs)->map(fn($v, $k) => is_int($k) ? $v : ($k . ': ' . $v))->implode(', ')
+                                                        : (string) ($asset->specs ?? '');
+                                                @endphp
+                                                <span class="text-sm text-gray-600 dark:text-gray-400">{{ $specsText !== '' ? $specsText : '-' }}</span>
+                                                @break
+                                            @case('photo')
+                                                @php $photoVal = $asset->{$col['key']}; @endphp
+                                                @if($photoVal)
+                                                    @if(str_starts_with($photoVal, 'drive:'))
+                                                        <a href="{{ \App\Models\Asset::googleDriveFileLink(substr($photoVal, 6)) }}" target="_blank" class="text-sm font-medium text-brand-600 hover:underline dark:text-brand-400">Lihat</a>
+                                                    @elseif(preg_match('/^https?:\/\//', $photoVal))
+                                                        <a href="{{ $photoVal }}" target="_blank" class="text-sm font-medium text-brand-600 hover:underline dark:text-brand-400">Lihat</a>
+                                                    @else
+                                                        <a href="{{ \Illuminate\Support\Facades\Storage::url($photoVal) }}" target="_blank" class="text-sm font-medium text-brand-600 hover:underline dark:text-brand-400">Lihat</a>
+                                                    @endif
+                                                @else
+                                                    <span class="text-sm text-gray-400">-</span>
+                                                @endif
+                                                @break
+                                            @case('condition')
+                                                <span class="inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium
+                                                    @if($asset->condition === 'GOOD') bg-green-100 text-green-700 dark:bg-green-500/15 dark:text-green-400
+                                                    @elseif($asset->condition === 'LIGHT') bg-yellow-100 text-yellow-700 dark:bg-yellow-500/15 dark:text-yellow-400
+                                                    @elseif($asset->condition === 'HEAVY') bg-red-100 text-red-700 dark:bg-red-500/15 dark:text-red-400
+                                                    @else bg-gray-100 text-gray-700 dark:bg-gray-500/15 dark:text-gray-400
+                                                    @endif">
+                                                    {{ $asset->condition_label }}
+                                                </span>
+                                                @break
+                                            @case('status')
+                                                <span class="inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium
+                                                    @if($asset->status === 'ACTIVE') bg-green-100 text-green-700 dark:bg-green-500/15 dark:text-green-400
+                                                    @elseif($asset->status === 'INACTIVE') bg-gray-100 text-gray-700 dark:bg-gray-500/15 dark:text-gray-400
+                                                    @elseif($asset->status === 'PENDING') bg-amber-100 text-amber-800 dark:bg-amber-500/15 dark:text-amber-400
+                                                    @elseif($asset->status === 'DECOMMISSIONED') bg-red-100 text-red-800 dark:bg-red-500/15 dark:text-red-400
+                                                    @else bg-gray-100 text-gray-700 dark:bg-gray-500/15 dark:text-gray-400
+                                                    @endif">
+                                                    {{ $asset->status_label }}
+                                                </span>
+                                                @break
+                                            @default
+                                                <span class="text-sm text-gray-600 dark:text-gray-400">{{ $asset->{$col['key']} ?? '-' }}</span>
+                                        @endswitch
+                                    </td>
+                                @endforeach
                                 <td class="px-5 py-4 text-right sm:px-6">
-                                    <a href="{{ url()->to(route('assets.show', $asset)) }}" class="text-sm font-medium text-brand-600 hover:text-brand-700 dark:text-brand-400">View</a>
+                                    <a href="{{ url()->to(route('assets.show', $asset)) }}" class="text-sm font-medium text-brand-600 hover:underline dark:text-brand-400">View</a>
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="13" class="px-5 py-8 text-center sm:px-6">
-                                    <p class="text-sm text-gray-500 dark:text-gray-400">Belum ada aset</p>
+                                <td colspan="{{ count($assetColumns) + 1 }}" class="px-5 py-8 text-center sm:px-6">
+                                    <span class="text-sm text-gray-500 dark:text-gray-400">Belum ada data aset.</span>
                                 </td>
                             </tr>
                         @endforelse
@@ -363,5 +352,70 @@ document.getElementById('period').addEventListener('change', function() {
     document.getElementById('start_date').value = startDate;
     document.getElementById('end_date').value = endDate;
 });
+</script>
+<script>
+(function () {
+    var STORAGE_KEY = 'timcare.assets.hiddenColumns';
+    var chooser = document.getElementById('assetColumnChooser');
+    if (!chooser) return;
+    var btn = document.getElementById('assetColumnChooserBtn');
+    var panel = document.getElementById('assetColumnChooserPanel');
+    var toggles = chooser.querySelectorAll('.asset-col-toggle');
+
+    var DEFAULT_HIDDEN = [];
+    toggles.forEach(function (cb) {
+        if (cb.getAttribute('data-default-hidden') === '1') DEFAULT_HIDDEN.push(cb.value);
+    });
+
+    function getHidden() {
+        var raw = localStorage.getItem(STORAGE_KEY);
+        if (raw === null) return DEFAULT_HIDDEN.slice();
+        try { return JSON.parse(raw) || []; }
+        catch (e) { return DEFAULT_HIDDEN.slice(); }
+    }
+    function setHidden(arr) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(arr));
+    }
+    function applyColumn(key, visible) {
+        document.querySelectorAll('[data-col="' + key + '"]').forEach(function (el) {
+            el.style.display = visible ? '' : 'none';
+        });
+    }
+    function init() {
+        var hidden = getHidden();
+        toggles.forEach(function (cb) {
+            var visible = hidden.indexOf(cb.value) === -1;
+            cb.checked = visible;
+            applyColumn(cb.value, visible);
+        });
+    }
+    function onToggle(cb) {
+        var hidden = getHidden();
+        var idx = hidden.indexOf(cb.value);
+        if (cb.checked) { if (idx !== -1) hidden.splice(idx, 1); }
+        else { if (idx === -1) hidden.push(cb.value); }
+        setHidden(hidden);
+        applyColumn(cb.value, cb.checked);
+    }
+
+    btn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        panel.classList.toggle('hidden');
+    });
+    document.addEventListener('click', function (e) {
+        if (!chooser.contains(e.target)) panel.classList.add('hidden');
+    });
+    toggles.forEach(function (cb) {
+        cb.addEventListener('change', function () { onToggle(cb); });
+    });
+    chooser.querySelectorAll('[data-col-action="all"]').forEach(function (b) {
+        b.addEventListener('click', function () { setHidden([]); init(); });
+    });
+    chooser.querySelectorAll('[data-col-action="reset"]').forEach(function (b) {
+        b.addEventListener('click', function () { localStorage.removeItem(STORAGE_KEY); init(); });
+    });
+
+    init();
+})();
 </script>
 </x-app-layout>

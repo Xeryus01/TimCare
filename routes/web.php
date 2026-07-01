@@ -116,6 +116,13 @@ Route::get('/dashboard', function () {
 
     // Piket schedule view for technicians (read-only)
     Route::get('piket', [\App\Http\Controllers\PiketScheduleController::class, 'view'])->name('piket.view')->middleware('role:Teknisi');
+
+    // Maintenance - Admin, Teknisi, ULP access
+    Route::middleware(['auth', 'role:Admin|Teknisi|ULP'])->group(function () {
+        Route::get('maintenance', [\App\Http\Controllers\MaintenanceController::class, 'index'])->name('maintenance.index');
+        Route::post('maintenance/{ticket}/process', [\App\Http\Controllers\MaintenanceController::class, 'process'])->name('maintenance.process');
+        Route::post('maintenance/{ticket}/complete', [\App\Http\Controllers\MaintenanceController::class, 'complete'])->name('maintenance.complete');
+    });
 });
 
     require __DIR__.'/auth.php';

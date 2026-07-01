@@ -45,6 +45,7 @@ class AssetsExport implements FromCollection, WithHeadings
                 'brand' => $asset->brand,
                 'photo_serial' => $asset->photo_serial,
                 'photo_asset' => $asset->photo_asset,
+                'photo_bmn' => $asset->photo_bmn,
                 'condition' => $this->resolveCondition($asset),
                 'status' => $asset->status_label,
             ];
@@ -107,6 +108,7 @@ class AssetsExport implements FromCollection, WithHeadings
             'Merek',
             'Foto Serial',
             'Foto Aset',
+            'Foto Nomor BMN',
             'Kondisi',
             'Status',
         ];

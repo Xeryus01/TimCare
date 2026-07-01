@@ -23,6 +23,7 @@ class Asset extends Model
         'serial_number',
         'photo_serial',
         'photo_asset',
+        'photo_bmn',
         'specs',
         'location',
         'holder',
@@ -32,6 +33,7 @@ class Asset extends Model
         'nilai_perolehan',
         'kode_satker',
         'nip_pegawai',
+        'user_id',
     ];
 
     protected $casts = [
@@ -126,6 +128,25 @@ class Asset extends Model
         return self::conditionOptions()[$this->condition] ?? ucfirst(strtolower($this->condition));
     }
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Cari id user yang namanya cocok (case-insensitive) dengan nama pemegang.
+     * Mengembalikan null jika tidak ada user dengan nama tersebut.
+     */
+    public static function resolveUserIdByName(?string $name): ?int
+    {
+        $name = trim((string) $name);
+        if ($name === '') {
+            return null;
+        }
+
+        return User::whereRaw('LOWER(name) = ?', [mb_strtolower($name)])->value('id');
+    }
+
     public function tickets()
     {
         return $this->hasMany(Ticket::class);
@@ -158,6 +179,13 @@ class Asset extends Model
 
     protected static function booted()
     {
+        // Otomatis tautkan pemegang aset ke akun user berdasarkan namanya.
+        static::saving(function (Asset $asset) {
+            if ($asset->isDirty('holder') || (empty($asset->user_id) && !empty($asset->holder))) {
+                $asset->user_id = self::resolveUserIdByName($asset->holder);
+            }
+        });
+
         static::updated(function () {
             \Cache::forget('assets.all');
         });

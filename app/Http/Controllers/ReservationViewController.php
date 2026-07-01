@@ -31,6 +31,12 @@ class ReservationViewController extends Controller
         if ($request->filled('status')) {
             $q->where('status', $request->input('status'));
         }
+        if ($request->filled('requester_id')) {
+            $q->where('requester_id', $request->requester_id);
+        }
+        if ($request->filled('approver_id')) {
+            $q->where('approver_id', $request->approver_id);
+        }
 
         $sort = $request->input('sort');
         $direction = $request->input('direction', 'asc') === 'desc' ? 'desc' : 'asc';
@@ -59,8 +65,13 @@ class ReservationViewController extends Controller
         $perPage = $request->input('per_page', 10);
         $perPage = in_array($perPage, [10, 20, 50]) ? (int)$perPage : 10;
         
+        $requesters = User::whereIn('id', Reservation::query()->distinct()->pluck('requester_id')->filter())
+            ->orderBy('name')->get(['id', 'name']);
+        $approvers = User::whereIn('id', Reservation::query()->whereNotNull('approver_id')->distinct()->pluck('approver_id')->filter())
+            ->orderBy('name')->get(['id', 'name']);
+
         $reservations = $q->paginate($perPage)->appends(request()->query());
-        return view('reservations.index', compact('reservations', 'sort', 'direction'));
+        return view('reservations.index', compact('reservations', 'sort', 'direction', 'requesters', 'approvers'));
     }
 
     public function create()
@@ -286,14 +297,12 @@ class ReservationViewController extends Controller
 
     public function destroy(Request $request, Reservation $reservation)
     {
-        $user = $request->user();
-
-        if (! $user->hasAnyRole(['Admin', 'Teknisi']) && $reservation->requester_id !== $user->id) {
-            abort(403);
+        if (! $request->user()->hasRole('Admin')) {
+            abort(403, 'Hanya Admin yang dapat menghapus pengajuan Zoom.');
         }
 
         $reservation->delete();
-        return redirect()->route('reservations.index')->with('success', 'Reservation deleted');
+        return redirect()->route('reservations.index')->with('success', 'Pengajuan Zoom berhasil dihapus');
     }
 
     public function showNotaDinas(Request $request, Reservation $reservation)
@@ -309,7 +318,9 @@ class ReservationViewController extends Controller
             abort(404);
         }
 
-        return $disk->response($reservation->nota_dinas_path, 'nota_dinas_' . $reservation->code . '.pdf', [
+        // Sajikan via response()->file() (BinaryFileResponse) agar mendukung HTTP Range request,
+        // sehingga PDF nota dinas dimuat andal di browser (StreamedResponse tidak mendukung range).
+        return response()->file($disk->path($reservation->nota_dinas_path), [
             'Content-Type' => 'application/pdf',
             'Content-Disposition' => 'inline; filename="nota_dinas_' . $reservation->code . '.pdf"',
         ]);
