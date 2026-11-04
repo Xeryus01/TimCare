@@ -46,8 +46,65 @@
                     <option value="{{ $value }}" {{ request('status') === $value ? 'selected' : '' }}>{{ $label }}</option>
                 @endforeach
             </select>
+            <select name="requester_id" class="rounded-lg border-gray-300 px-3 py-2 dark:bg-dark-800 dark:text-white">
+                <option value="">Semua pemohon</option>
+                @foreach($requesters as $r)
+                    <option value="{{ $r->id }}" {{ (string) request('requester_id') === (string) $r->id ? 'selected' : '' }}>{{ $r->name }}</option>
+                @endforeach
+            </select>
+            <select name="assignee_id" class="rounded-lg border-gray-300 px-3 py-2 dark:bg-dark-800 dark:text-white">
+                <option value="">Semua petugas</option>
+                @foreach($assignees as $a)
+                    <option value="{{ $a->id }}" {{ (string) request('assignee_id') === (string) $a->id ? 'selected' : '' }}>{{ $a->name }}</option>
+                @endforeach
+            </select>
             <button type="submit" class="rounded-lg bg-brand-600 px-4 py-2 text-white">Terapkan</button>
         </form>
+
+        @if(auth()->user()->hasRole('Admin'))
+            <form id="ticket-bulk-assign" method="POST" action="{{ route('tickets.bulk-assign') }}" class="mb-4 flex flex-col gap-3 rounded-xl border border-blue-100 bg-blue-50/70 p-4 dark:border-blue-500/20 dark:bg-blue-500/5 sm:flex-row sm:items-end sm:justify-between">
+                @csrf
+                <div class="flex flex-wrap items-end gap-3">
+                    <div>
+                        <label for="ticket-bulk-action" class="mb-1 block text-sm font-semibold text-gray-800 dark:text-gray-100">Aksi massal</label>
+                        <select id="ticket-bulk-action" name="bulk_action" required class="min-w-48 rounded-lg border-gray-300 px-3 py-2 dark:border-gray-600 dark:bg-dark-800 dark:text-white">
+                            <option value="assign" {{ old('bulk_action', 'assign') === 'assign' ? 'selected' : '' }}>Tugaskan teknisi</option>
+                            <option value="status" {{ old('bulk_action') === 'status' ? 'selected' : '' }}>Ubah status</option>
+                        </select>
+                    </div>
+                    <div id="ticket-bulk-assignee-fields">
+                        <label for="ticket-bulk-assignee" class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Teknisi</label>
+                        <select id="ticket-bulk-assignee" name="assignee_id" class="min-w-60 rounded-lg border-gray-300 px-3 py-2 dark:border-gray-600 dark:bg-dark-800 dark:text-white">
+                            <option value="">Pilih teknisi</option>
+                            @foreach($technicians as $technician)
+                                <option value="{{ $technician->id }}" {{ (string) old('assignee_id') === (string) $technician->id ? 'selected' : '' }}>{{ $technician->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div id="ticket-bulk-status-fields" class="hidden">
+                        <label for="ticket-bulk-status" class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Status baru</label>
+                        <select id="ticket-bulk-status" name="status" class="min-w-60 rounded-lg border-gray-300 px-3 py-2 dark:border-gray-600 dark:bg-dark-800 dark:text-white">
+                            <option value="">Pilih status</option>
+                            @foreach(\App\Models\Ticket::statusLabels() as $value => $label)
+                                <option value="{{ $value }}" {{ old('status') === $value ? 'selected' : '' }}>{{ $label }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <p class="text-xs text-gray-600 dark:text-gray-400">Pilih tiket aktif pada halaman ini, maksimal 50 tiket per proses.</p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <span id="ticket-bulk-count" class="text-sm text-gray-600 dark:text-gray-400">0 tiket dipilih</span>
+                    <button id="ticket-bulk-submit" type="submit" class="rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-700">Tugaskan</button>
+                </div>
+                @if($errors->any())
+                    <div class="basis-full text-sm text-red-600 dark:text-red-400">
+                        @foreach($errors->all() as $error)
+                            <p>{{ $error }}</p>
+                        @endforeach
+                    </div>
+                @endif
+            </form>
+        @endif
 
         @php
             $sort = request('sort');
@@ -60,6 +117,11 @@
                 <table class="w-full">
                     <thead class="border-b border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-white/5">
                         <tr>
+                            @if(auth()->user()->hasRole('Admin'))
+                                <th class="px-4 py-3.5 text-left">
+                                    <input id="ticket-select-page" type="checkbox" aria-label="Pilih semua tiket aktif pada halaman ini" class="rounded border-gray-300 text-brand-600 focus:ring-brand-500">
+                                </th>
+                            @endif
                             <th class="px-5 py-3.5 text-left text-xs font-semibold uppercase text-gray-500 dark:text-gray-400 sm:px-6">
                                 @php $nextDir = ($sort === 'code' && $direction === 'asc') ? 'desc' : 'asc'; @endphp
                                 <a href="{{ url()->current() . '?' . http_build_query(array_merge($baseQuery, ['sort' => 'code', 'direction' => $nextDir])) }}" class="inline-flex items-center gap-1">
@@ -120,6 +182,20 @@
                     <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
                         @forelse($tickets as $ticket)
                             <tr class="hover:bg-gray-50 dark:hover:bg-white/5">
+                                @if(auth()->user()->hasRole('Admin'))
+                                    @php
+                                        $ticketIsClosed = in_array($ticket->status, [
+                                            \App\Models\Ticket::STATUS_SOLVED,
+                                            \App\Models\Ticket::STATUS_SOLVED_WITH_NOTES,
+                                            \App\Models\Ticket::STATUS_REJECTED,
+                                            \App\Models\Ticket::STATUS_CANCELLED,
+                                            'Dibatalkan',
+                                        ], true);
+                                    @endphp
+                                    <td class="px-4 py-4">
+                                        <input type="checkbox" name="ticket_ids[]" value="{{ $ticket->id }}" form="ticket-bulk-assign" {{ $ticketIsClosed ? 'disabled' : '' }} {{ in_array($ticket->id, old('ticket_ids', [])) ? 'checked' : '' }} aria-label="Pilih tiket {{ $ticket->code }}" class="ticket-select-row rounded border-gray-300 text-brand-600 focus:ring-brand-500 disabled:cursor-not-allowed disabled:opacity-40">
+                                    </td>
+                                @endif
                                 <td class="px-5 py-4 sm:px-6">
                                     <span class="text-sm font-semibold text-gray-900 dark:text-white">{{ $ticket->code }}</span>
                                 </td>
@@ -136,12 +212,27 @@
                                 </td>
                                 <td class="px-5 py-4 sm:px-6 text-sm text-gray-700 dark:text-gray-300">{{ optional($ticket->assignee)->name ?? '-' }}</td>
                                 <td class="px-5 py-4 text-right sm:px-6">
-                                    <a href="{{ url()->to(route('tickets.show', $ticket)) }}" class="text-sm font-medium text-brand-600 hover:text-brand-700 dark:text-brand-400">Detail</a>
+                                    <div class="flex items-center justify-end gap-2">
+                                        <a href="{{ url()->to(route('tickets.show', $ticket)) }}" class="inline-flex items-center gap-1.5 rounded-lg border border-blue-200 bg-blue-50 px-3 py-1.5 text-xs font-semibold text-blue-700 shadow-sm hover:bg-blue-100 dark:border-blue-500/20 dark:bg-blue-500/10 dark:text-blue-400 dark:hover:bg-blue-500/20">
+                                            <svg class="size-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                            Detail
+                                        </a>
+                                        @if(auth()->user()->hasRole('Admin'))
+                                            <form method="POST" action="{{ route('tickets.destroy', $ticket) }}" class="inline" onsubmit="return confirm('Hapus tiket {{ $ticket->code }}? Tindakan ini tidak dapat dibatalkan.')">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="inline-flex items-center gap-1.5 rounded-lg border border-red-200 bg-red-50 px-3 py-1.5 text-xs font-semibold text-red-700 shadow-sm hover:bg-red-100 dark:border-red-500/20 dark:bg-red-500/10 dark:text-red-400 dark:hover:bg-red-500/20">
+                                                    <svg class="size-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                                    Hapus
+                                                </button>
+                                            </form>
+                                        @endif
+                                    </div>
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="8" class="px-5 py-8 text-center text-sm text-gray-500 dark:text-gray-400 sm:px-6">Belum ada tiket yang sesuai filter.</td>
+                                <td colspan="{{ auth()->user()->hasRole('Admin') ? 8 : 7 }}" class="px-5 py-8 text-center text-sm text-gray-500 dark:text-gray-400 sm:px-6">Belum ada tiket yang sesuai filter.</td>
                             </tr>
                         @endforelse
                     </tbody>
@@ -154,4 +245,46 @@
         </div>
     </div>
 </div>
+@if(auth()->user()->hasRole('Admin'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const selectAll = document.getElementById('ticket-select-page');
+            const rows = Array.from(document.querySelectorAll('.ticket-select-row:not(:disabled)'));
+            const count = document.getElementById('ticket-bulk-count');
+            const action = document.getElementById('ticket-bulk-action');
+            const assigneeFields = document.getElementById('ticket-bulk-assignee-fields');
+            const assignee = document.getElementById('ticket-bulk-assignee');
+            const statusFields = document.getElementById('ticket-bulk-status-fields');
+            const status = document.getElementById('ticket-bulk-status');
+            const submit = document.getElementById('ticket-bulk-submit');
+
+            const updateAction = function () {
+                const assigning = action.value === 'assign';
+                assigneeFields.classList.toggle('hidden', !assigning);
+                assignee.required = assigning;
+                assignee.disabled = !assigning;
+                statusFields.classList.toggle('hidden', assigning);
+                status.required = !assigning;
+                status.disabled = assigning;
+                submit.textContent = assigning ? 'Tugaskan' : 'Ubah status';
+            };
+
+            const updateSelection = function () {
+                const selected = rows.filter((checkbox) => checkbox.checked).length;
+                count.textContent = `${selected} tiket dipilih`;
+                selectAll.checked = rows.length > 0 && selected === rows.length;
+                selectAll.indeterminate = selected > 0 && selected < rows.length;
+            };
+
+            selectAll.addEventListener('change', function () {
+                rows.forEach((checkbox) => { checkbox.checked = selectAll.checked; });
+                updateSelection();
+            });
+            action.addEventListener('change', updateAction);
+            rows.forEach((checkbox) => checkbox.addEventListener('change', updateSelection));
+            updateAction();
+            updateSelection();
+        });
+    </script>
+@endif
 </x-app-layout>

@@ -32,7 +32,7 @@ class UpdateTicketRequest extends FormRequest
             'status' => ['nullable', 'string', Rule::in($allowedStatus)],
             'asset_id' => 'nullable|integer|exists:assets,id',
             'assignee_id' => 'nullable|integer|exists:users,id',
-            'attachment' => 'nullable|file|max:1024',
+            'attachment' => 'nullable|file|mimes:pdf,jpg,jpeg,png,doc,docx,xls,xlsx,txt|max:1024',
         ];
     }
 

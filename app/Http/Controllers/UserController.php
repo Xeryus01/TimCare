@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Hash;
@@ -23,10 +24,36 @@ class UserController extends Controller
     {
         $perPage = $request->input('per_page', 10);
         $perPage = in_array($perPage, [10, 20, 50]) ? (int)$perPage : 10;
-        
-        $users = User::with('roles')->paginate($perPage)->appends(request()->query());
 
-        return view('users.index', compact('users'));
+        $search = trim((string) $request->input('search', ''));
+
+        $users = User::with('roles', 'teams')
+            ->when($search !== '', function ($query) use ($search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%")
+                        ->orWhere('email', 'like', "%{$search}%")
+                        ->orWhere('phone_number', 'like', "%{$search}%");
+                });
+            });
+
+        $sortable = [
+            'name' => 'name',
+            'email' => 'email',
+            'phone_number' => 'phone_number',
+            'created_at' => 'created_at',
+        ];
+        $sort = $request->input('sort');
+        $direction = $request->input('direction', 'asc') === 'desc' ? 'desc' : 'asc';
+
+        if (array_key_exists($sort, $sortable)) {
+            $users->orderBy($sortable[$sort], $direction);
+        } else {
+            $users->orderBy('name');
+        }
+
+        $users = $users->paginate($perPage)->appends(request()->query());
+
+        return view('users.index', compact('users', 'search', 'sort', 'direction'));
     }
 
     /**
@@ -52,14 +79,13 @@ class UserController extends Controller
             'role' => 'required|string|exists:roles,name',
         ]);
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'phone_number' => $request->phone_number,
-            'password' => Hash::make($request->password),
-        ]);
-
-        $user->assignRole($request->role);
+        DB::transaction(function () use ($request) {
+            $user = User::create([
+                'name' => $request->name, 'email' => $request->email,
+                'phone_number' => $request->phone_number, 'password' => Hash::make($request->password),
+            ]);
+            $user->assignRole($request->role);
+        });
 
         return redirect()->route('users.index')
             ->with('success', 'User berhasil ditambahkan.');
@@ -70,6 +96,7 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
+        $user->load('roles', 'teams.leader');
         return view('users.show', compact('user'));
     }
 
@@ -80,6 +107,7 @@ class UserController extends Controller
     {
         $roles = Role::all();
 
+        $user->load('teams');
         return view('users.edit', compact('user', 'roles'));
     }
 
@@ -95,13 +123,10 @@ class UserController extends Controller
             'role' => 'required|string|exists:roles,name',
         ]);
 
-        $user->update([
-            'name' => $request->name,
-            'email' => $request->email,
-            'phone_number' => $request->phone_number,
-        ]);
-
-        $user->syncRoles([$request->role]);
+        DB::transaction(function () use ($request, $user) {
+            $user->update(['name'=>$request->name, 'email'=>$request->email, 'phone_number'=>$request->phone_number]);
+            $user->syncRoles([$request->role]);
+        });
 
         return redirect()->route('users.index')
             ->with('success', 'User berhasil diperbarui.');
@@ -119,12 +144,8 @@ class UserController extends Controller
         }
 
 
-        // Hapus semua attachment milik user sebelum hapus user
-        \App\Models\Attachment::where('uploader_id', $user->id)->delete();
-        // Hapus semua log milik user sebelum hapus user
-        \App\Models\Log::where('actor_id', $user->id)->delete();
-        // Hapus semua tiket milik user sebelum hapus user
-        \App\Models\Ticket::where('requester_id', $user->id)->delete();
+        // User memakai soft delete. Pertahankan tiket, reservasi, lampiran, dan
+        // audit trail agar riwayat layanan tidak hilang.
         $user->delete();
 
         return redirect()->route('users.index')

@@ -2,10 +2,9 @@
 
 namespace App\Http\Requests;
 
-use App\Models\PiketSchedule;
 use App\Models\Reservation;
-use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateReservationRequest extends FormRequest
 {
@@ -79,13 +78,28 @@ class UpdateReservationRequest extends FormRequest
     public function withValidator($validator)
     {
         $validator->after(function ($validator) {
-            // Check if times are provided and end time is after start time
-            if ($this->filled('start_time_local') && $this->filled('end_time_local')) {
-                $startTime = $this->input('start_time');
-                $endTime = $this->input('end_time');
+            $reservation = $this->route('reservation');
+            $startTime = $this->filled('start_time_local')
+                ? $this->input('start_time')
+                : optional($reservation?->start_time)->format('Y-m-d H:i:s');
+            $endTime = $this->filled('end_time_local')
+                ? $this->input('end_time')
+                : optional($reservation?->end_time)->format('Y-m-d H:i:s');
 
-                if (strtotime($endTime) <= strtotime($startTime)) {
+            if ($startTime && $endTime) {
+                $startTimestamp = strtotime($startTime);
+                $endTimestamp = strtotime($endTime);
+
+                if ($startTimestamp === false || $endTimestamp === false || $endTimestamp <= $startTimestamp) {
                     $validator->errors()->add('end_time_local', 'Waktu selesai harus setelah waktu mulai.');
+                } else {
+                    $requestedStatus = $this->input('status');
+                    $finalStatus = filled($requestedStatus) ? $requestedStatus : $reservation?->status;
+
+                    if (in_array($finalStatus, Reservation::capacityStatuses(), true)
+                        && Reservation::hasCapacityConflict($startTime, $endTime, $reservation?->id)) {
+                        $validator->errors()->add('start_time_local', 'Slot Zoom untuk waktu tersebut sudah penuh. Silakan pilih waktu lain.');
+                    }
                 }
             }
 

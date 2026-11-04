@@ -12,6 +12,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+        // Percayai semua reverse proxy agar Laravel mendeteksi HTTPS dengan benar
+        // (memperbaiki error CSP form-action saat login & kirim form di belakang proxy).
+        $middleware->trustProxies(at: '*');
+
         $middleware->alias([
             'role' => \App\Http\Middleware\CustomRoleMiddleware::class,
             'permission' => \App\Http\Middleware\CustomPermissionMiddleware::class,

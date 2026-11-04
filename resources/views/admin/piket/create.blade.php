@@ -29,7 +29,7 @@
                     <div class="grid gap-4 lg:grid-cols-2">
                         <div>
                             <label for="week_start_date" class="block text-sm font-medium text-gray-900 dark:text-white mb-2">Tanggal Mulai</label>
-                            <input id="week_start_date" name="week_start_date" type="date" required value="{{ old('week_start_date', now()->startOfWeek()->toDateString()) }}" class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 placeholder-gray-500 outline-none transition focus:border-brand-600 focus:ring-2 focus:ring-brand-100 dark:border-gray-600 dark:bg-dark-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-brand-600 dark:focus:ring-brand-900/20">
+                            <input id="week_start_date" name="week_start_date" type="date" required min="{{ today()->toDateString() }}" value="{{ old('week_start_date', today()->toDateString()) }}" class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 placeholder-gray-500 outline-none transition focus:border-brand-600 focus:ring-2 focus:ring-brand-100 dark:border-gray-600 dark:bg-dark-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-brand-600 dark:focus:ring-brand-900/20">
                         </div>
                         <div>
                             <label for="week_end_date" class="block text-sm font-medium text-gray-900 dark:text-white mb-2">Tanggal Selesai</label>
@@ -87,6 +87,12 @@
 
         if (!startDate || !endDate) {
             alert('Tanggal mulai dan selesai harus diisi.');
+            e.preventDefault();
+            return;
+        }
+
+        if (startDate < @json(today()->toDateString())) {
+            alert('Tanggal mulai tidak boleh sebelum hari ini.');
             e.preventDefault();
             return;
         }

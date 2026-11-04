@@ -9,8 +9,10 @@ use App\Models\TicketComment;
 use App\Models\User;
 use App\Services\NotificationService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 
 use App\Http\Requests\StoreTicketRequest;
 use App\Http\Requests\UpdateTicketRequest;
@@ -87,6 +89,9 @@ class TicketViewController extends Controller
         if ($request->filled('assignee_id')) {
             $q->where('assignee_id', $request->assignee_id);
         }
+        if ($request->filled('requester_id')) {
+            $q->where('requester_id', $request->requester_id);
+        }
 
         $sort = $request->input('sort');
         $direction = $request->input('direction', 'asc') === 'desc' ? 'desc' : 'asc';
@@ -117,8 +122,146 @@ class TicketViewController extends Controller
         $perPage = $request->input('per_page', 10);
         $perPage = in_array($perPage, [10, 20, 50]) ? (int)$perPage : 10;
         
+        $filterScope = Ticket::query();
+        if (! $user->hasAnyRole(['Admin', 'Teknisi'])) {
+            $filterScope->where('requester_id', $user->id);
+        }
+
+        $requesters = User::whereIn('id', (clone $filterScope)->distinct()->pluck('requester_id')->filter())
+            ->orderBy('name')->get(['id', 'name']);
+        $assignees = User::whereIn('id', (clone $filterScope)->whereNotNull('assignee_id')->distinct()->pluck('assignee_id')->filter())
+            ->orderBy('name')->get(['id', 'name']);
+
         $tickets = $q->paginate($perPage)->appends(request()->query());
-        return view('tickets.index', compact('tickets', 'sort', 'direction'));
+        $technicians = User::role('Teknisi')->orderBy('name')->get(['id', 'name']);
+
+        return view('tickets.index', compact('tickets', 'sort', 'direction', 'requesters', 'assignees', 'technicians'));
+    }
+
+    public function bulkAssign(Request $request)
+    {
+        if (! $request->user()->hasRole('Admin')) {
+            abort(403, 'Hanya Admin yang dapat menugaskan petugas.');
+        }
+
+        $validated = $request->validate([
+            'bulk_action' => ['required', 'in:assign,status'],
+            'ticket_ids' => ['required', 'array', 'min:1', 'max:50'],
+            'ticket_ids.*' => ['required', 'integer', 'distinct', 'exists:tickets,id'],
+            'assignee_id' => ['required_if:bulk_action,assign', 'nullable', 'integer', 'exists:users,id'],
+            'status' => ['required_if:bulk_action,status', 'nullable', 'string', Rule::in(Ticket::statuses())],
+        ]);
+        $assignee = null;
+        if ($validated['bulk_action'] === 'assign') {
+            $assignee = User::role('Teknisi')->find($validated['assignee_id']);
+
+            if (! $assignee) {
+                throw ValidationException::withMessages([
+                    'assignee_id' => 'Petugas yang dipilih harus memiliki peran Teknisi.',
+                ]);
+            }
+        }
+
+        $tickets = DB::transaction(function () use ($validated) {
+            $selectedTickets = Ticket::query()
+                ->with('requester')
+                ->whereIn('id', $validated['ticket_ids'])
+                ->lockForUpdate()
+                ->get();
+
+            if ($selectedTickets->count() !== count($validated['ticket_ids'])) {
+                throw ValidationException::withMessages([
+                    'ticket_ids' => 'Sebagian tiket yang dipilih sudah tidak tersedia.',
+                ]);
+            }
+
+            $closedStatuses = [
+                Ticket::STATUS_SOLVED,
+                Ticket::STATUS_SOLVED_WITH_NOTES,
+                Ticket::STATUS_REJECTED,
+                Ticket::STATUS_CANCELLED,
+                'Dibatalkan',
+            ];
+            if ($selectedTickets->contains(fn (Ticket $ticket) => in_array($ticket->status, $closedStatuses, true))) {
+                throw ValidationException::withMessages([
+                    'ticket_ids' => 'Tiket selesai atau dibatalkan tidak dapat diproses massal.',
+                ]);
+            }
+
+            if ($validated['bulk_action'] === 'status') {
+                $changedTickets = [];
+                foreach ($selectedTickets as $ticket) {
+                    if ($ticket->status === $validated['status']) {
+                        continue;
+                    }
+
+                    $oldStatus = $ticket->status;
+                    $ticket->status = $validated['status'];
+                    if (in_array($ticket->status, [Ticket::STATUS_SOLVED, Ticket::STATUS_SOLVED_WITH_NOTES], true)) {
+                        $ticket->resolved_at = now();
+                    }
+                    $ticket->save();
+                    $changedTickets[] = [$ticket, $oldStatus];
+                }
+
+                return $changedTickets;
+            }
+
+            $changedTickets = [];
+            foreach ($selectedTickets as $ticket) {
+                if ((int) $ticket->assignee_id === (int) $validated['assignee_id']) {
+                    continue;
+                }
+
+                $oldStatus = $ticket->status;
+                $ticket->assignee_id = $validated['assignee_id'];
+                if ($ticket->status !== Ticket::STATUS_ASSIGNED_DETECT) {
+                    $ticket->status = Ticket::STATUS_ASSIGNED_DETECT;
+                }
+                $ticket->save();
+                $changedTickets[] = [$ticket, $oldStatus];
+            }
+
+            return $changedTickets;
+        });
+
+        foreach ($tickets as [$ticket, $oldStatus]) {
+            if ($validated['bulk_action'] === 'assign') {
+                $this->notificationService->notifyTicketAssigned($assignee, $ticket);
+                $this->notificationService->notifyTicketAssignedToRequester($ticket->requester, $ticket);
+                if ($oldStatus !== $ticket->status) {
+                    $this->notificationService->notifyTicketUpdated($ticket->requester, $ticket, $oldStatus);
+                    if ($ticket->assignee && $ticket->assignee->id !== $ticket->requester_id) {
+                        $this->notificationService->notifyTicketUpdated($ticket->assignee, $ticket, $oldStatus);
+                    }
+                }
+            } elseif (in_array($ticket->status, [Ticket::STATUS_SOLVED, Ticket::STATUS_SOLVED_WITH_NOTES], true)) {
+                $this->notificationService->notifyTicketResolved($ticket->requester, $ticket);
+                if ($ticket->assignee && $ticket->assignee->id !== $ticket->requester_id) {
+                    $this->notificationService->notifyTicketResolved($ticket->assignee, $ticket);
+                }
+                $this->notificationService->notifyAdminsTicketResolved($ticket);
+            } else {
+                $this->notificationService->notifyTicketUpdated($ticket->requester, $ticket, $oldStatus);
+                if ($ticket->assignee && $ticket->assignee->id !== $ticket->requester_id) {
+                    $this->notificationService->notifyTicketUpdated($ticket->assignee, $ticket, $oldStatus);
+                }
+            }
+        }
+
+        $changedCount = count($tickets);
+        $unchangedCount = count($validated['ticket_ids']) - $changedCount;
+        $actionLabel = $validated['bulk_action'] === 'assign'
+            ? "ditugaskan kepada {$assignee->name}"
+            : "diubah statusnya menjadi {$validated['status']}";
+        $message = $changedCount > 0
+            ? "{$changedCount} tiket berhasil {$actionLabel}."
+            : "Tidak ada perubahan; semua tiket sudah {$actionLabel}.";
+        if ($changedCount > 0 && $unchangedCount > 0) {
+            $message .= " {$unchangedCount} tiket sudah memiliki tindakan tersebut.";
+        }
+
+        return back()->with('success', $message);
     }
 
     public function create(Request $request)
@@ -140,7 +283,7 @@ class TicketViewController extends Controller
 
         if ($request->hasFile('attachment')) {
             $file = $request->file('attachment');
-            $path = $file->store('attachments', 'public');
+            $path = $file->store('attachments', 'local');
             Attachment::create([
                 'ticket_id' => $ticket->id,
                 'uploader_id' => $request->user()->id,
@@ -171,7 +314,19 @@ class TicketViewController extends Controller
     {
         $this->authorizeTicketView($request, $ticket);
 
-        $ticket->load('requester', 'assignee', 'asset', 'comments.user', 'comments.attachments', 'attachments.uploader');
+        $canSeeInternalComments = $request->user()->hasAnyRole(['Admin', 'Teknisi']);
+
+        $ticket->load([
+            'requester',
+            'assignee',
+            'asset',
+            'comments' => function ($query) use ($canSeeInternalComments) {
+                $query
+                    ->when(! $canSeeInternalComments, fn ($comments) => $comments->where('is_internal', false))
+                    ->with(['user', 'attachments']);
+            },
+            'attachments.uploader',
+        ]);
 
         $technicians = \App\Models\User::role('Teknisi')->get();
 
@@ -248,11 +403,19 @@ class TicketViewController extends Controller
             unset($data['status']);
         }
 
+        // Tiket yang dibatalkan tidak boleh memiliki penugasan teknisi.
+        // Jika status akhir adalah "Batal" (baru dibatalkan user maupun memang sudah batal),
+        // penugasan teknisi dihapus/diabaikan.
+        $finalStatus = $data['status'] ?? $ticket->status;
+        if ($finalStatus === Ticket::STATUS_CANCELLED) {
+            $data['assignee_id'] = null;
+        }
+
         $ticket->fill($data);
         if (isset($data['status']) && in_array($data['status'], [Ticket::STATUS_SOLVED, Ticket::STATUS_SOLVED_WITH_NOTES], true)) {
             $ticket->resolved_at = now();
         }
-        $ticket->save();
+        DB::transaction(fn () => $ticket->save());
 
         // Notify on assignment changes
         if (array_key_exists('assignee_id', $data) && $data['assignee_id'] !== null && $oldAssigneeId !== $data['assignee_id']) {
@@ -281,7 +444,7 @@ class TicketViewController extends Controller
 
         if ($request->hasFile('attachment')) {
             $file = $request->file('attachment');
-            $path = $file->store('attachments', 'public');
+            $path = $file->store('attachments', 'local');
             Attachment::create([
                 'ticket_id' => $ticket->id,
                 'uploader_id' => $request->user()->id,
@@ -297,14 +460,20 @@ class TicketViewController extends Controller
 
     public function destroy(Request $request, Ticket $ticket)
     {
-        $user = $request->user();
+        if (! $request->user()->hasRole('Admin')) {
+            abort(403, 'Hanya Admin yang dapat menghapus tiket.');
+        }
 
-        if (! $user->hasAnyRole(['Admin', 'Teknisi']) && $ticket->requester_id !== $user->id) {
-            abort(403);
+        foreach ($ticket->attachments as $attachment) {
+            foreach (['local', 'public'] as $diskName) {
+                if (Storage::disk($diskName)->exists($attachment->file_path)) {
+                    Storage::disk($diskName)->delete($attachment->file_path);
+                }
+            }
         }
 
         $ticket->delete();
-        return redirect()->route('tickets.index')->with('success','Ticket deleted');
+        return redirect()->route('tickets.index')->with('success','Tiket berhasil dihapus');
     }
 
     public function comment(Request $request, Ticket $ticket)
@@ -340,7 +509,7 @@ class TicketViewController extends Controller
         // handle optional file
         if ($request->hasFile('attachment')) {
             $file = $request->file('attachment');
-            $path = $file->store('attachments', 'public');
+            $path = $file->store('attachments', 'local');
             Attachment::create([
                 'ticket_id' => $ticket->id,
                 'comment_id' => $comment->id,
@@ -421,7 +590,7 @@ class TicketViewController extends Controller
         ]);
 
         $file = $validated['file'];
-        $path = $file->store('attachments', 'public');
+        $path = $file->store('attachments', 'local');
 
         Attachment::create([
             'ticket_id' => $ticket->id,
@@ -437,10 +606,21 @@ class TicketViewController extends Controller
 
     public function showAttachment(Request $request, Ticket $ticket, Attachment $attachment)
     {
-        // Allow all users to access ticket attachment files directly.
-        // Keep only the ticket-attachment relationship check for safety.
+        $this->authorizeTicketView($request, $ticket);
+
         if ((int) $attachment->ticket_id !== (int) $ticket->id) {
             abort(404);
+        }
+
+        if ($attachment->comment_id) {
+            $comment = $attachment->comment;
+            if (! $comment || (int) $comment->ticket_id !== (int) $ticket->id) {
+                abort(404);
+            }
+
+            if ($comment->is_internal && ! $request->user()->hasAnyRole(['Admin', 'Teknisi'])) {
+                abort(403, 'Lampiran ini merupakan bagian dari catatan internal.');
+            }
         }
 
         $diskName = Storage::disk('public')->exists($attachment->file_path) ? 'public' : 'local';
@@ -450,9 +630,25 @@ class TicketViewController extends Controller
             abort(404);
         }
 
-        return $disk->response($attachment->file_path, $attachment->file_name, [
-            'Content-Type' => $attachment->mime_type ?: ($disk->mimeType($attachment->file_path) ?: 'application/octet-stream'),
+        $mime = $attachment->mime_type ?: ($disk->mimeType($attachment->file_path) ?: 'application/octet-stream');
+
+        // Sajikan via response()->file() (BinaryFileResponse) agar mendukung HTTP Range request,
+        // sehingga gambar/PDF besar dimuat andal di browser (StreamedResponse tidak mendukung range).
+        $response = response()->file($disk->path($attachment->file_path), [
+            'Content-Type' => $mime,
             'Content-Disposition' => 'inline; filename="' . $attachment->file_name . '"',
         ]);
+
+        // Cache + validasi kondisional (ETag/Last-Modified) agar file tidak di-unduh ulang
+        // setiap halaman dibuka/di-reload. Ini mengurangi banyaknya request paralel yang gagal
+        // ketika sebuah komentar memuat banyak gambar sekaligus.
+        $response->setAutoEtag();
+        $response->setAutoLastModified();
+        $response->setPrivate();
+        $response->setMaxAge(31536000);
+        $response->headers->addCacheControlDirective('immutable');
+        $response->isNotModified($request);
+
+        return $response;
     }
 }

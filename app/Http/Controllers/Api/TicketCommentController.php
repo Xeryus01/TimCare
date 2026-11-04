@@ -3,18 +3,24 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\TicketCommentResource;
+use App\Models\Attachment;
 use App\Models\Ticket;
 use App\Models\TicketComment;
-use App\Models\Log;
-use App\Models\Attachment;
+use App\Services\AuditTrailService;
 use App\Services\NotificationService;
+use App\Services\SecureFileUploadService;
 use Illuminate\Http\Request;
 
 class TicketCommentController extends Controller
 {
     protected NotificationService $notificationService;
 
-    public function __construct(NotificationService $notificationService)
+    public function __construct(
+        NotificationService $notificationService,
+        private SecureFileUploadService $fileUploadService,
+        private AuditTrailService $auditTrailService
+    )
     {
         $this->notificationService = $notificationService;
     }
@@ -26,14 +32,15 @@ class TicketCommentController extends Controller
             'is_internal' => 'sometimes|boolean',
             // allow status change when technicians/admins comment
             'status' => 'sometimes|string|in:' . implode(',', Ticket::statuses()),
-            'attachment' => 'sometimes|file|max:10240',
+            'attachment' => 'sometimes|file|mimes:pdf,jpg,jpeg,png,doc,docx,xls,xlsx,txt|max:' . SecureFileUploadService::MAX_ATTACHMENT_KB,
         ]);
 
         $user = $request->user();
 
-        // User only can comment on own ticket
-        if (! $user->hasAnyRole(['Admin', 'Teknisi']) && $ticket->requester_id !== $user->id) {
-            abort(403);
+        if (! $user->hasRole('Admin')
+            && $ticket->requester_id !== $user->id
+            && ! ($user->hasRole('Teknisi') && $ticket->assignee_id === $user->id)) {
+            abort(403, 'Anda tidak memiliki akses untuk mengomentari tiket ini.');
         }
 
         // Normal user cannot create internal notes
@@ -51,16 +58,15 @@ class TicketCommentController extends Controller
 
         // handle optional attachment
         if (isset($validated['attachment'])) {
-            $file = $validated['attachment'];
-            $path = $file->store('attachments', 'public');
+            $fileInfo = $this->fileUploadService->storeTicketAttachment($validated['attachment']);
             Attachment::create([
                 'ticket_id' => $ticket->id,
                 'comment_id' => $comment->id,
                 'uploader_id' => $user->id,
-                'file_path' => $path,
-                'file_name' => $file->getClientOriginalName(),
-                'mime_type' => $file->getClientMimeType(),
-                'size_bytes' => $file->getSize(),
+                'file_path' => $fileInfo['path'],
+                'file_name' => $fileInfo['original_name'],
+                'mime_type' => $fileInfo['mime_type'],
+                'size_bytes' => $fileInfo['size_bytes'],
             ]);
         }
 
@@ -72,21 +78,16 @@ class TicketCommentController extends Controller
             }
             $ticket->save();
 
-            Log::create([
-                'actor_id' => $user->id,
-                'entity_type' => 'TICKET',
-                'entity_id' => $ticket->id,
-                'action' => 'STATUS_CHANGED',
-                'meta' => ['status' => $ticket->status],
+            $this->auditTrailService->record($request, $user->id, 'TICKET', $ticket->id, 'STATUS_CHANGED', [
+                'after' => ['status' => $ticket->status],
+                'source' => 'comment',
             ]);
         }
 
-        Log::create([
-            'actor_id' => $user->id,
-            'entity_type' => 'TICKET',
-            'entity_id' => $ticket->id,
-            'action' => 'COMMENTED',
-            'meta' => ['comment_id' => $comment->id],
+        $this->auditTrailService->record($request, $user->id, 'TICKET', $ticket->id, 'COMMENTED', [
+            'comment_id' => $comment->id,
+            'is_internal' => $comment->is_internal,
+            'has_attachment' => $request->hasFile('attachment'),
         ]);
 
         // notify requester and assignee via custom notification service
@@ -116,6 +117,6 @@ class TicketCommentController extends Controller
             );
         }
 
-        return response()->json($comment->load('user'), 201);
+        return (new TicketCommentResource($comment->load(['user', 'attachments'])))->response()->setStatusCode(201);
     }
 }

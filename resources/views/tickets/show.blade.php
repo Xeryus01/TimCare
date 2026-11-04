@@ -89,7 +89,7 @@
 
                                                 @if($isImage)
                                                     <p class="mb-2 text-xs font-semibold uppercase tracking-wide text-brand-700">Preview Gambar</p>
-                                                    <img src="{{ $attachmentUrl }}" alt="{{ $att->file_name }}" class="max-h-64 w-full rounded-lg border border-gray-200 object-contain dark:border-gray-700">
+                                                    <img src="{{ $attachmentUrl }}" alt="{{ $att->file_name }}" class="max-h-64 w-full rounded-lg border border-gray-200 object-contain dark:border-gray-700 js-attachment-image" loading="lazy" decoding="async">
                                                 @elseif($isPdf)
                                                     <p class="mb-2 text-xs font-semibold uppercase tracking-wide text-red-700">Preview PDF</p>
                                                     <iframe src="{{ $attachmentUrl }}" title="{{ $att->file_name }}" class="h-64 w-full rounded-lg border border-gray-200 dark:border-gray-700"></iframe>
@@ -110,7 +110,7 @@
                                 <div class="w-full max-w-2xl rounded-2xl border p-4 {{ $isRequesterMessage ? 'border-brand-100 bg-brand-50/60 dark:border-brand-500/30 dark:bg-brand-500/10' : 'border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-white/5' }}">
                                     <div class="mb-2 flex items-start justify-between gap-3">
                                         <div class="flex flex-wrap items-center gap-2">
-                                            <p class="font-semibold text-gray-900 dark:text-white">{{ $comment->user->name }}</p>
+                                            <p class="font-semibold text-gray-900 dark:text-white">{{ optional($comment->user)->name ?? 'Pengguna nonaktif' }}</p>
                                             <span class="rounded-full px-2.5 py-1 text-[11px] font-medium {{ $isRequesterMessage ? 'bg-white text-brand-700 dark:bg-brand-500/20 dark:text-brand-200' : 'bg-indigo-100 text-indigo-700 dark:bg-indigo-500/20 dark:text-indigo-200' }}">{{ $roleLabel }}</span>
                                             @if($comment->is_internal)
                                                 <span class="rounded-full bg-yellow-100 px-2.5 py-1 text-[11px] font-medium text-yellow-700 dark:bg-yellow-500/20 dark:text-yellow-200">Internal</span>
@@ -137,7 +137,7 @@
 
                                                     @if($isImage)
                                                         <p class="mb-2 text-xs font-semibold uppercase tracking-wide text-brand-700">Preview Gambar</p>
-                                                        <img src="{{ $attachmentUrl }}" alt="{{ $att->file_name }}" class="max-h-64 w-full rounded-lg border border-gray-200 object-contain dark:border-gray-700">
+                                                        <img src="{{ $attachmentUrl }}" alt="{{ $att->file_name }}" class="max-h-64 w-full rounded-lg border border-gray-200 object-contain dark:border-gray-700 js-attachment-image" loading="lazy" decoding="async">
                                                     @elseif($isPdf)
                                                         <p class="mb-2 text-xs font-semibold uppercase tracking-wide text-red-700">Preview PDF</p>
                                                         <iframe src="{{ $attachmentUrl }}" title="{{ $att->file_name }}" class="h-64 w-full rounded-lg border border-gray-200 dark:border-gray-700"></iframe>
@@ -220,6 +220,11 @@
                     @endif
                 </div>
 
+
+                @if(in_array($ticket->status, [\App\Models\Ticket::STATUS_SOLVED, \App\Models\Ticket::STATUS_SOLVED_WITH_NOTES], true))
+                    <x-service-rating-card :model="$ticket" route-name="tickets.rating.store" title="Penilaian Layanan" subtitle="Nilai pengalaman penanganan tiket masalah TI Anda." />
+                @endif
+
                 <div class="rounded-xl border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-dark-800">
                     <h3 class="mb-3 text-sm font-bold uppercase text-gray-500 dark:text-gray-400">Timeline</h3>
                     <div class="space-y-3 text-sm text-gray-700 dark:text-gray-300">
@@ -253,4 +258,38 @@
         </div>
     </div>
 </div>
+
+<script>
+    // Pemuatan gambar lampiran/komentar kadang gagal saat banyak gambar dimuat
+    // bersamaan (koneksi paralel ke server). Skrip ini otomatis mencoba ulang
+    // memuat gambar yang gagal (dengan cache-buster) sehingga pengguna tidak
+    // perlu me-reload halaman secara manual.
+    (function () {
+        function initAttachmentImages() {
+            var images = document.querySelectorAll('img.js-attachment-image');
+            images.forEach(function (img) {
+                var maxAttempts = 5;
+                var attempts = 0;
+                var baseSrc = (img.getAttribute('src') || '').split('?')[0];
+                if (!baseSrc) { return; }
+                img.addEventListener('error', function () {
+                    if (attempts >= maxAttempts) {
+                        img.style.display = 'none';
+                        return;
+                    }
+                    attempts++;
+                    var delay = 400 * attempts;
+                    setTimeout(function () {
+                        img.setAttribute('src', baseSrc + '?retry=' + attempts + '&_=' + Date.now());
+                    }, delay);
+                });
+            });
+        }
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initAttachmentImages);
+        } else {
+            initAttachmentImages();
+        }
+    })();
+</script>
 </x-app-layout>

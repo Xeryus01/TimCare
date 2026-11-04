@@ -22,7 +22,7 @@
         @endif
 
         <div class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-dark-800">
-            <form action="{{ route('piket.update', $schedule->week_start_date) }}" method="POST" class="p-5 sm:p-7.5 lg:p-9">
+            <form action="{{ route('piket.update', $schedule) }}" method="POST" class="p-5 sm:p-7.5 lg:p-9">
                 @csrf
                 @method('PUT')
 

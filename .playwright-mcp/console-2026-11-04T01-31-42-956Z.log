@@ -1,0 +1,2 @@
+[     905ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://[::1]:5173/:0
+[    1871ms] You must pass your app key when you instantiate Pusher.

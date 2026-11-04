@@ -19,7 +19,7 @@ class StoreTicketRequest extends FormRequest
             'description' => 'required|string',
             'priority' => 'nullable|in:LOW,MEDIUM,HIGH,CRITICAL',
             'asset_id' => 'nullable|exists:assets,id',
-            'attachment' => 'required|file|max:1024',
+            'attachment' => 'required|file|mimes:pdf,jpg,jpeg,png,doc,docx,xls,xlsx,txt|max:1024',
         ];
     }
 

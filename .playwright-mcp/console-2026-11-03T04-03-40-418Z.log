@@ -1,0 +1,8 @@
+[    4740ms] ReferenceError: process is not defined
+    at http://[::1]:5173/resources/js/app.js:17:10
+[   29777ms] ReferenceError: process is not defined
+    at http://[::1]:5173/resources/js/app.js:17:10
+[   72650ms] ReferenceError: process is not defined
+    at http://[::1]:5173/resources/js/app.js:17:10
+[  238840ms] ReferenceError: process is not defined
+    at http://[::1]:5173/resources/js/app.js:17:10

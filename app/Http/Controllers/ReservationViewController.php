@@ -8,7 +8,10 @@ use App\Models\Reservation;
 use App\Models\User;
 use App\Services\NotificationService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 
 class ReservationViewController extends Controller
 {
@@ -30,6 +33,12 @@ class ReservationViewController extends Controller
 
         if ($request->filled('status')) {
             $q->where('status', $request->input('status'));
+        }
+        if ($request->filled('requester_id')) {
+            $q->where('requester_id', $request->requester_id);
+        }
+        if ($request->filled('approver_id')) {
+            $q->where('approver_id', $request->approver_id);
         }
 
         $sort = $request->input('sort');
@@ -59,8 +68,156 @@ class ReservationViewController extends Controller
         $perPage = $request->input('per_page', 10);
         $perPage = in_array($perPage, [10, 20, 50]) ? (int)$perPage : 10;
         
+        $filterScope = Reservation::query();
+        if (! $user->hasAnyRole(['Admin', 'Teknisi'])) {
+            $filterScope->where('requester_id', $user->id);
+        }
+
+        $requesters = User::whereIn('id', (clone $filterScope)->distinct()->pluck('requester_id')->filter())
+            ->orderBy('name')->get(['id', 'name']);
+        $approvers = User::whereIn('id', (clone $filterScope)->whereNotNull('approver_id')->distinct()->pluck('approver_id')->filter())
+            ->orderBy('name')->get(['id', 'name']);
+
         $reservations = $q->paginate($perPage)->appends(request()->query());
-        return view('reservations.index', compact('reservations', 'sort', 'direction'));
+        $technicians = User::role('Teknisi')->orderBy('name')->get(['id', 'name']);
+
+        return view('reservations.index', compact('reservations', 'sort', 'direction', 'requesters', 'approvers', 'technicians'));
+    }
+
+    public function bulkAssign(Request $request)
+    {
+        if (! $request->user()->hasRole('Admin')) {
+            abort(403, 'Hanya Admin yang dapat menugaskan petugas.');
+        }
+
+        $validated = $request->validate([
+            'bulk_action' => ['required', 'in:assign,status'],
+            'reservation_ids' => ['required', 'array', 'min:1', 'max:50'],
+            'reservation_ids.*' => ['required', 'integer', 'distinct', 'exists:reservations,id'],
+            'approver_id' => ['required_if:bulk_action,assign', 'nullable', 'integer', 'exists:users,id'],
+            'status' => ['required_if:bulk_action,status', 'nullable', 'string', Rule::in(Reservation::statuses())],
+        ]);
+        $approver = null;
+        if ($validated['bulk_action'] === 'assign') {
+            $approver = User::role('Teknisi')->find($validated['approver_id']);
+
+            if (! $approver) {
+                throw ValidationException::withMessages([
+                    'approver_id' => 'Petugas yang dipilih harus memiliki peran Teknisi.',
+                ]);
+            }
+        }
+
+        $reservations = DB::transaction(function () use ($validated) {
+            $selectedReservations = Reservation::query()
+                ->with('requester')
+                ->whereIn('id', $validated['reservation_ids'])
+                ->lockForUpdate()
+                ->get();
+
+            if ($selectedReservations->count() !== count($validated['reservation_ids'])) {
+                throw ValidationException::withMessages([
+                    'reservation_ids' => 'Sebagian pengajuan Zoom yang dipilih sudah tidak tersedia.',
+                ]);
+            }
+
+            $closedStatuses = [
+                Reservation::STATUS_COMPLETED,
+                Reservation::STATUS_REJECTED,
+                Reservation::STATUS_CANCELLED,
+            ];
+            if ($selectedReservations->contains(fn (Reservation $reservation) => in_array($reservation->status, $closedStatuses, true))) {
+                throw ValidationException::withMessages([
+                    'reservation_ids' => 'Pengajuan Zoom selesai, ditolak, atau dibatalkan tidak dapat diproses massal.',
+                ]);
+            }
+
+            if ($validated['bulk_action'] === 'status') {
+                $targetStatus = $validated['status'];
+                if ($targetStatus === Reservation::STATUS_PENDING) {
+                    throw ValidationException::withMessages([
+                        'status' => 'Pengajuan Zoom tidak dapat dikembalikan ke status Dibuka melalui aksi massal.',
+                    ]);
+                }
+                if ($targetStatus === Reservation::STATUS_APPROVED
+                    && $selectedReservations->contains(fn (Reservation $reservation) => empty($reservation->zoom_link) || empty($reservation->approver_id))) {
+                    throw ValidationException::withMessages([
+                        'Semua pengajuan harus memiliki petugas dan link Zoom sebelum status Disetujui.',
+                    ]);
+                }
+                if ($targetStatus === Reservation::STATUS_WAITING_MONITORING
+                    && $selectedReservations->contains(fn (Reservation $reservation) => empty($reservation->zoom_link))) {
+                    throw ValidationException::withMessages([
+                        'reservation_ids' => 'Semua pengajuan harus memiliki link Zoom sebelum ditandai siap.',
+                    ]);
+                }
+                if ($targetStatus === Reservation::STATUS_COMPLETED
+                    && $selectedReservations->contains(fn (Reservation $reservation) => empty($reservation->zoom_record_link))) {
+                    throw ValidationException::withMessages([
+                        'reservation_ids' => 'Semua pengajuan harus memiliki link rekaman sebelum diselesaikan.',
+                    ]);
+                }
+
+                $changedReservations = [];
+                foreach ($selectedReservations as $reservation) {
+                    if ($reservation->status === $targetStatus) {
+                        continue;
+                    }
+
+                    $oldStatus = $reservation->status;
+                    $reservation->status = $targetStatus;
+                    $reservation->save();
+                    $changedReservations[] = [$reservation, $oldStatus];
+                }
+
+                return $changedReservations;
+            }
+
+            $changedReservations = [];
+            foreach ($selectedReservations as $reservation) {
+                if ((int) $reservation->approver_id === (int) $validated['approver_id']) {
+                    continue;
+                }
+
+                $oldStatus = $reservation->status;
+                $reservation->approver_id = $validated['approver_id'];
+                if (! $reservation->getOriginal('approver_id')) {
+                    $reservation->status = Reservation::STATUS_APPROVED;
+                }
+                $reservation->save();
+                $changedReservations[] = [$reservation, $oldStatus];
+            }
+
+            return $changedReservations;
+        });
+
+        foreach ($reservations as [$reservation, $oldStatus]) {
+            if ($validated['bulk_action'] === 'assign') {
+                $this->notificationService->notifyReservationAssigned($approver, $reservation);
+                if ($oldStatus !== $reservation->status && $reservation->status === Reservation::STATUS_APPROVED) {
+                    $this->notificationService->notifyReservationApproved($reservation->requester, $reservation);
+                }
+            } elseif ($reservation->status === Reservation::STATUS_APPROVED) {
+                $this->notificationService->notifyReservationApproved($reservation->requester, $reservation);
+            } elseif ($reservation->status === Reservation::STATUS_COMPLETED) {
+                $this->notificationService->notifyReservationCompleted($reservation->requester, $reservation);
+                $this->notificationService->notifyAdminsReservationCompleted($reservation);
+            }
+        }
+
+        $changedCount = count($reservations);
+        $unchangedCount = count($validated['reservation_ids']) - $changedCount;
+        $actionLabel = $validated['bulk_action'] === 'assign'
+            ? "ditugaskan kepada {$approver->name}"
+            : "diubah statusnya menjadi " . Reservation::statusLabels()[$validated['status']];
+        $message = $changedCount > 0
+            ? "{$changedCount} pengajuan Zoom berhasil {$actionLabel}."
+            : "Tidak ada perubahan; semua pengajuan sudah {$actionLabel}.";
+        if ($changedCount > 0 && $unchangedCount > 0) {
+            $message .= " {$unchangedCount} pengajuan sudah memiliki tindakan tersebut.";
+        }
+
+        return back()->with('success', $message);
     }
 
     public function create()
@@ -96,14 +253,24 @@ class ReservationViewController extends Controller
         $data['breakroom_needed'] = $request->boolean('breakroom_needed');
         $data['participants_count'] = $request->input('participants_count', 1);
 
-        // Handle nota dinas upload
-        if ($request->hasFile('nota_dinas')) {
-            $file = $request->file('nota_dinas');
-            $path = $file->store('nota_dinas', 'public');
-            $data['nota_dinas_path'] = $path;
-        }
+        $reservation = DB::transaction(function () use ($request, $data) {
+            Reservation::whereIn('status', Reservation::capacityStatuses())
+                ->lockForUpdate()
+                ->get();
 
-        $reservation = Reservation::create($data);
+            if (Reservation::hasCapacityConflict($data['start_time'], $data['end_time'])) {
+                throw ValidationException::withMessages([
+                    'start_time_local' => 'Slot Zoom untuk waktu tersebut sudah penuh. Silakan pilih waktu lain.',
+                ]);
+            }
+
+            if ($request->hasFile('nota_dinas')) {
+                $file = $request->file('nota_dinas');
+                $data['nota_dinas_path'] = $file->store('nota_dinas', 'local');
+            }
+
+            return Reservation::create($data);
+        });
 
         // Send notification
         $this->notificationService->notifyReservationCreated($request->user(), $reservation);
@@ -114,6 +281,11 @@ class ReservationViewController extends Controller
 
     public function show(Request $request, Reservation $reservation)
     {
+        $user = $request->user();
+        if (! $user->hasAnyRole(['Admin', 'Teknisi']) && $reservation->requester_id !== $user->id) {
+            abort(403);
+        }
+
         $reservation->load(['requester', 'approver']);
 
         $technicians = collect();
@@ -226,7 +398,8 @@ class ReservationViewController extends Controller
 
         if ($isApprover) {
             if ($request->filled('zoom_link') && empty($reservation->zoom_link)) {
-                $data['status'] = Reservation::STATUS_APPROVED;
+                // Saat link Zoom mulai terisi, status berpindah ke "Zoom Siap".
+                $data['status'] = Reservation::STATUS_WAITING_MONITORING;
             }
 
             if ($request->filled('zoom_record_link') && empty($reservation->zoom_record_link)) {
@@ -242,15 +415,16 @@ class ReservationViewController extends Controller
             $data['status'] = Reservation::STATUS_CANCELLED;
         }
 
-        // Handle nota dinas upload if provided
-        if ($request->hasFile('nota_dinas')) {
-            if ($reservation->nota_dinas_path && Storage::disk('public')->exists($reservation->nota_dinas_path)) {
-                Storage::disk('public')->delete($reservation->nota_dinas_path);
-            }
+        $oldNotaDinasPath = null;
+        $newNotaDinasPath = null;
 
+        // Simpan berkas baru lebih dulu. Berkas lama baru dihapus setelah
+        // transaksi database berhasil agar kegagalan validasi tidak kehilangan data.
+        if ($request->hasFile('nota_dinas')) {
             $file = $request->file('nota_dinas');
-            $path = $file->store('nota_dinas', 'public');
-            $data['nota_dinas_path'] = $path;
+            $newNotaDinasPath = $file->store('nota_dinas', 'local');
+            $oldNotaDinasPath = $reservation->nota_dinas_path;
+            $data['nota_dinas_path'] = $newNotaDinasPath;
         }
 
         // Prevent setting status to empty/null which can violate NOT NULL DB constraint
@@ -258,7 +432,35 @@ class ReservationViewController extends Controller
             unset($data['status']);
         }
 
-        $reservation->update($data);
+        try {
+            DB::transaction(function () use ($reservation, $data) {
+                Reservation::whereIn('status', Reservation::capacityStatuses())
+                    ->lockForUpdate()
+                    ->get();
+
+                $finalStatus = $data['status'] ?? $reservation->status;
+                $finalStart = $data['start_time'] ?? $reservation->start_time;
+                $finalEnd = $data['end_time'] ?? $reservation->end_time;
+
+                if (in_array($finalStatus, Reservation::capacityStatuses(), true)
+                    && Reservation::hasCapacityConflict($finalStart, $finalEnd, $reservation->id)) {
+                    throw ValidationException::withMessages([
+                        'start_time_local' => 'Slot Zoom untuk waktu tersebut sudah penuh. Silakan pilih waktu lain.',
+                    ]);
+                }
+
+                $reservation->update($data);
+            });
+        } catch (\Throwable $exception) {
+            if ($newNotaDinasPath) {
+                $this->deleteStoredFile($newNotaDinasPath);
+            }
+            throw $exception;
+        }
+
+        if ($oldNotaDinasPath && $oldNotaDinasPath !== $newNotaDinasPath) {
+            $this->deleteStoredFile($oldNotaDinasPath);
+        }
 
         if ($oldApproverId !== $reservation->approver_id && $reservation->approver_id) {
             $approver = User::find($reservation->approver_id);
@@ -286,18 +488,22 @@ class ReservationViewController extends Controller
 
     public function destroy(Request $request, Reservation $reservation)
     {
-        $user = $request->user();
-
-        if (! $user->hasAnyRole(['Admin', 'Teknisi']) && $reservation->requester_id !== $user->id) {
-            abort(403);
+        if (! $request->user()->hasRole('Admin')) {
+            abort(403, 'Hanya Admin yang dapat menghapus pengajuan Zoom.');
         }
 
+        $this->deleteStoredFile($reservation->nota_dinas_path);
         $reservation->delete();
-        return redirect()->route('reservations.index')->with('success', 'Reservation deleted');
+        return redirect()->route('reservations.index')->with('success', 'Pengajuan Zoom berhasil dihapus');
     }
 
     public function showNotaDinas(Request $request, Reservation $reservation)
     {
+        $user = $request->user();
+        if (! $user->hasAnyRole(['Admin', 'Teknisi']) && $reservation->requester_id !== $user->id) {
+            abort(403);
+        }
+
         if (!$reservation->nota_dinas_path) {
             abort(404);
         }
@@ -309,9 +515,34 @@ class ReservationViewController extends Controller
             abort(404);
         }
 
-        return $disk->response($reservation->nota_dinas_path, 'nota_dinas_' . $reservation->code . '.pdf', [
+        // Sajikan via response()->file() (BinaryFileResponse) agar mendukung HTTP Range request,
+        // sehingga PDF nota dinas dimuat andal di browser (StreamedResponse tidak mendukung range).
+        $response = response()->file($disk->path($reservation->nota_dinas_path), [
             'Content-Type' => 'application/pdf',
             'Content-Disposition' => 'inline; filename="nota_dinas_' . $reservation->code . '.pdf"',
         ]);
+
+        // Cache + validasi kondisional (ETag/Last-Modified) agar PDF tidak di-unduh ulang tiap reload.
+        $response->setAutoEtag();
+        $response->setAutoLastModified();
+        $response->setPrivate();
+        $response->setMaxAge(31536000);
+        $response->headers->addCacheControlDirective('immutable');
+        $response->isNotModified($request);
+
+        return $response;
+    }
+
+    private function deleteStoredFile(?string $path): void
+    {
+        if (! $path) {
+            return;
+        }
+
+        foreach (['local', 'public'] as $diskName) {
+            if (Storage::disk($diskName)->exists($path)) {
+                Storage::disk($diskName)->delete($path);
+            }
+        }
     }
 }

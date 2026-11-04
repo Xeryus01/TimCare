@@ -1,0 +1,452 @@
+- generic [ref=f22e2]:
+  - complementary [ref=f22e3]:
+    - link [ref=f22e5] [cursor=pointer]:
+      - /url: http://localhost:8000/dashboard
+      - img "TimCare ITSM Dashboard" [ref=f22e6]
+    - navigation [ref=f22e7]:
+      - list [ref=f22e8]:
+        - listitem [ref=f22e9]:
+          - link "Beranda" [ref=f22e10] [cursor=pointer]:
+            - /url: http://localhost:8000/dashboard
+        - listitem [ref=f22e17]:
+          - link "Tiket Masalah TI" [ref=f22e18] [cursor=pointer]:
+            - /url: http://localhost:8000/tickets
+        - listitem [ref=f22e24]:
+          - link "Tiket ID Zoom" [ref=f22e25] [cursor=pointer]:
+            - /url: http://localhost:8000/reservations
+        - listitem [ref=f22e30]:
+          - link "Data Aset" [ref=f22e31] [cursor=pointer]:
+            - /url: http://localhost:8000/assets
+        - listitem [ref=f22e36]:
+          - link "Pemeliharaan" [ref=f22e37] [cursor=pointer]:
+            - /url: http://localhost:8000/maintenance
+        - listitem [ref=f22e44]:
+          - link "Monitoring TI" [ref=f22e45] [cursor=pointer]:
+            - /url: http://localhost:8000/monitoring-ti
+        - listitem [ref=f22e50]:
+          - link "Manajemen User" [ref=f22e51] [cursor=pointer]:
+            - /url: http://localhost:8000/users
+        - listitem [ref=f22e55]:
+          - link "Jadwal Piket" [ref=f22e56] [cursor=pointer]:
+            - /url: http://localhost:8000/admin/piket
+        - listitem [ref=f22e60]:
+          - link "Backup & Berkas" [ref=f22e61] [cursor=pointer]:
+            - /url: http://localhost:8000/admin/file-manager
+    - navigation [ref=f22e66]:
+      - list [ref=f22e67]:
+        - listitem [ref=f22e68]:
+          - link "Profil" [ref=f22e69] [cursor=pointer]:
+            - /url: http://localhost:8000/profile
+        - listitem [ref=f22e73]:
+          - button "Keluar" [ref=f22e75] [cursor=pointer]
+  - generic [ref=f22e80]:
+    - banner [ref=f22e81]:
+      - button "Toggle sidebar" [ref=f22e83] [cursor=pointer]
+      - generic [ref=f22e86]:
+        - button "Toggle dark mode" [ref=f22e87] [cursor=pointer]
+        - button [ref=f22e91] [cursor=pointer]
+        - button "A Administrator admin@example.com" [ref=f22e96] [cursor=pointer]:
+          - generic [ref=f22e97]: A
+          - generic [ref=f22e98]:
+            - paragraph [ref=f22e99]: Administrator
+            - paragraph [ref=f22e100]: admin@example.com
+    - main [ref=f22e103]:
+      - generic [ref=f22e104]:
+        - generic [ref=f22e105]:
+          - heading "Anggota tim" [level=1] [ref=f22e106]
+          - paragraph [ref=f22e107]: Atur keanggotaan untuk satu tim saja.
+        - navigation "Menu monitoring TI" [ref=f22e108]:
+          - link "Laporan monitoring" [ref=f22e109] [cursor=pointer]:
+            - /url: http://localhost:8000/monitoring-ti
+          - link "Objek & penanggung jawab" [ref=f22e110] [cursor=pointer]:
+            - /url: http://localhost:8000/monitoring-ti/objects
+          - link "Tim kerja" [ref=f22e111] [cursor=pointer]:
+            - /url: http://localhost:8000/monitoring-ti/teams
+        - generic [ref=f22e112]:
+          - generic [ref=f22e113]:
+            - text: TIM TERPILIH
+            - strong [ref=f22e114]: Tim Kerja Umum
+            - generic [ref=f22e115]: 12 anggota · 0 aplikasi
+          - link "Kembali ke daftar tim" [ref=f22e116] [cursor=pointer]:
+            - /url: http://localhost:8000/monitoring-ti/teams
+        - generic [ref=f22e117]:
+          - text: Perubahan di halaman ini hanya berlaku untuk
+          - strong [ref=f22e118]: Tim Kerja Umum
+          - text: . Keanggotaan pada tim lain tidak berubah. Ketua tim tetap menjadi anggota dan tidak dapat dilepas sebelum penugasan ketua diganti.
+        - generic [ref=f22e120]:
+          - generic [ref=f22e121]:
+            - generic [ref=f22e122]:
+              - text: KEANGGOTAAN
+              - heading "Pilih pegawai" [level=2] [ref=f22e123]
+            - paragraph [ref=f22e124]: 12 anggota dipilih. Cari nama/email lalu centang pegawai yang menjadi anggota tim.
+          - generic [ref=f22e125]:
+            - generic [ref=f22e126]: Cari pegawai
+            - searchbox "Cari pegawai" [ref=f22e127]
+          - group "Anggota tim Tim Kerja Umum" [ref=f22e128]:
+            - generic [ref=f22e130] [cursor=pointer]:
+              - checkbox "Administrator admin@example.com" [ref=f22e131]
+              - generic [ref=f22e132]:
+                - strong [ref=f22e133]: Administrator
+                - generic [ref=f22e134]: admin@example.com
+            - generic [ref=f22e135] [cursor=pointer]:
+              - checkbox "Akhmad Fadil Mubarok S.Tr.Stat. akhmadfadil@bps.go.id" [ref=f22e136]
+              - generic [ref=f22e137]:
+                - strong [ref=f22e138]: Akhmad Fadil Mubarok S.Tr.Stat.
+                - generic [ref=f22e139]: akhmadfadil@bps.go.id
+            - generic [ref=f22e140] [cursor=pointer]:
+              - checkbox "Amelia Rahayu S.Tr.Stat. ameliarahayu@bps.go.id" [ref=f22e141]
+              - generic [ref=f22e142]:
+                - strong [ref=f22e143]: Amelia Rahayu S.Tr.Stat.
+                - generic [ref=f22e144]: ameliarahayu@bps.go.id
+            - generic [ref=f22e145] [cursor=pointer]:
+              - checkbox "Ari Ardiansyah S.E, M.H. aria@bps.go.id" [checked] [ref=f22e146]
+              - generic [ref=f22e147]:
+                - strong [ref=f22e148]: Ari Ardiansyah S.E, M.H.
+                - generic [ref=f22e149]: aria@bps.go.id
+            - generic [ref=f22e150] [cursor=pointer]:
+              - checkbox "Bagastama Iqbalil Fathir S.Tr.Stat. bagas.fathir@bps.go.id" [ref=f22e151]
+              - generic [ref=f22e152]:
+                - strong [ref=f22e153]: Bagastama Iqbalil Fathir S.Tr.Stat.
+                - generic [ref=f22e154]: bagas.fathir@bps.go.id
+            - generic [ref=f22e155] [cursor=pointer]:
+              - checkbox "Deby Andayani SST., M.M. deby@bps.go.id" [ref=f22e156]
+              - generic [ref=f22e157]:
+                - strong [ref=f22e158]: Deby Andayani SST., M.M.
+                - generic [ref=f22e159]: deby@bps.go.id
+            - generic [ref=f22e160] [cursor=pointer]:
+              - checkbox "Desiana Arbani Safari SST, M.A.P. y.desiana@bps.go.id" [ref=f22e161]
+              - generic [ref=f22e162]:
+                - strong [ref=f22e163]: Desiana Arbani Safari SST, M.A.P.
+                - generic [ref=f22e164]: y.desiana@bps.go.id
+            - generic [ref=f22e165] [cursor=pointer]:
+              - checkbox "Desiana Rahayu Susianti SST desianars@bps.go.id" [ref=f22e166]
+              - generic [ref=f22e167]:
+                - strong [ref=f22e168]: Desiana Rahayu Susianti SST
+                - generic [ref=f22e169]: desianars@bps.go.id
+            - generic [ref=f22e170] [cursor=pointer]:
+              - checkbox "Dwi Nova Prihatmoko S.Tr.Stat dwinova@bps.go.id" [ref=f22e171]
+              - generic [ref=f22e172]:
+                - strong [ref=f22e173]: Dwi Nova Prihatmoko S.Tr.Stat
+                - generic [ref=f22e174]: dwinova@bps.go.id
+            - generic [ref=f22e175] [cursor=pointer]:
+              - checkbox "Dwi Unzila Putri A.Md.Stat. dwi.unzila@bps.go.id" [ref=f22e176]
+              - generic [ref=f22e177]:
+                - strong [ref=f22e178]: Dwi Unzila Putri A.Md.Stat.
+                - generic [ref=f22e179]: dwi.unzila@bps.go.id
+            - generic [ref=f22e180] [cursor=pointer]:
+              - checkbox "Eddy Zurisman SE eddy.zurisman@bps.go.id" [checked] [ref=f22e181]
+              - generic [ref=f22e182]:
+                - strong [ref=f22e183]: Eddy Zurisman SE
+                - generic [ref=f22e184]: eddy.zurisman@bps.go.id
+            - generic [ref=f22e185] [cursor=pointer]:
+              - checkbox "Eka Virja SE evirja@bps.go.id" [checked] [ref=f22e186]
+              - generic [ref=f22e187]:
+                - strong [ref=f22e188]: Eka Virja SE
+                - generic [ref=f22e189]: evirja@bps.go.id
+            - generic [ref=f22e190] [cursor=pointer]:
+              - checkbox "Fadhila Ajeng Damaris S.Tr.Stat. ajengdamaris@bps.go.id" [ref=f22e191]
+              - generic [ref=f22e192]:
+                - strong [ref=f22e193]: Fadhila Ajeng Damaris S.Tr.Stat.
+                - generic [ref=f22e194]: ajengdamaris@bps.go.id
+            - generic [ref=f22e195] [cursor=pointer]:
+              - checkbox "Fahrunnisa Maharani S.Tr.Stat. fahrunnisam@bps.go.id" [ref=f22e196]
+              - generic [ref=f22e197]:
+                - strong [ref=f22e198]: Fahrunnisa Maharani S.Tr.Stat.
+                - generic [ref=f22e199]: fahrunnisam@bps.go.id
+            - generic [ref=f22e200] [cursor=pointer]:
+              - checkbox "Fahrur Rozi SST, M.T fahrurrozi@bps.go.id" [ref=f22e201]
+              - generic [ref=f22e202]:
+                - strong [ref=f22e203]: Fahrur Rozi SST, M.T
+                - generic [ref=f22e204]: fahrurrozi@bps.go.id
+            - generic [ref=f22e205] [cursor=pointer]:
+              - checkbox "Femmy Ristia SST ristia@bps.go.id" [ref=f22e206]
+              - generic [ref=f22e207]:
+                - strong [ref=f22e208]: Femmy Ristia SST
+                - generic [ref=f22e209]: ristia@bps.go.id
+            - generic [ref=f22e210] [cursor=pointer]:
+              - checkbox "Fitria Kurniawati S.ST fitriakur@bps.go.id" [ref=f22e211]
+              - generic [ref=f22e212]:
+                - strong [ref=f22e213]: Fitria Kurniawati S.ST
+                - generic [ref=f22e214]: fitriakur@bps.go.id
+            - generic [ref=f22e215] [cursor=pointer]:
+              - checkbox "Gestari SST gestari@bps.go.id" [ref=f22e216]
+              - generic [ref=f22e217]:
+                - strong [ref=f22e218]: Gestari SST
+                - generic [ref=f22e219]: gestari@bps.go.id
+            - generic [ref=f22e220] [cursor=pointer]:
+              - checkbox "Gustiawan S.T. gustiawan-pppk@bps.go.id" [checked] [ref=f22e221]
+              - generic [ref=f22e222]:
+                - strong [ref=f22e223]: Gustiawan S.T.
+                - generic [ref=f22e224]: gustiawan-pppk@bps.go.id
+            - generic [ref=f22e225] [cursor=pointer]:
+              - checkbox "Jamik Safitri SST jsafitri@bps.go.id" [ref=f22e226]
+              - generic [ref=f22e227]:
+                - strong [ref=f22e228]: Jamik Safitri SST
+                - generic [ref=f22e229]: jsafitri@bps.go.id
+            - generic [ref=f22e230] [cursor=pointer]:
+              - checkbox "Jasmine Falo S.E. jasminefalo-pppk@bps.go.id" [checked] [ref=f22e231]
+              - generic [ref=f22e232]:
+                - strong [ref=f22e233]: Jasmine Falo S.E.
+                - generic [ref=f22e234]: jasminefalo-pppk@bps.go.id
+            - generic [ref=f22e235] [cursor=pointer]:
+              - checkbox "Kristin Verahditiya S.Si. verahditiya@bps.go.id" [ref=f22e236]
+              - generic [ref=f22e237]:
+                - strong [ref=f22e238]: Kristin Verahditiya S.Si.
+                - generic [ref=f22e239]: verahditiya@bps.go.id
+            - generic [ref=f22e240] [cursor=pointer]:
+              - checkbox "Kusmanto SE kusmanto@bps.go.id" [ref=f22e241]
+              - generic [ref=f22e242]:
+                - strong [ref=f22e243]: Kusmanto SE
+                - generic [ref=f22e244]: kusmanto@bps.go.id
+            - generic [ref=f22e245] [cursor=pointer]:
+              - checkbox "Listia Nugraheni S.Si. listian@bps.go.id" [ref=f22e246]
+              - generic [ref=f22e247]:
+                - strong [ref=f22e248]: Listia Nugraheni S.Si.
+                - generic [ref=f22e249]: listian@bps.go.id
+            - generic [ref=f22e250] [cursor=pointer]:
+              - checkbox "Livio Mayesta SST, M.A.P. livio@bps.go.id" [ref=f22e251]
+              - generic [ref=f22e252]:
+                - strong [ref=f22e253]: Livio Mayesta SST, M.A.P.
+                - generic [ref=f22e254]: livio@bps.go.id
+            - generic [ref=f22e255] [cursor=pointer]:
+              - checkbox "Mardha Tilla Septiani SST, M.A. mardha.tilla@bps.go.id" [ref=f22e256]
+              - generic [ref=f22e257]:
+                - strong [ref=f22e258]: Mardha Tilla Septiani SST, M.A.
+                - generic [ref=f22e259]: mardha.tilla@bps.go.id
+            - generic [ref=f22e260] [cursor=pointer]:
+              - checkbox "Marissa Widya Ulfa A.Md.Stat. marissawidya@bps.go.id" [ref=f22e261]
+              - generic [ref=f22e262]:
+                - strong [ref=f22e263]: Marissa Widya Ulfa A.Md.Stat.
+                - generic [ref=f22e264]: marissawidya@bps.go.id
+            - generic [ref=f22e265] [cursor=pointer]:
+              - checkbox "Marko Januarta Putra Mulyowidodo S.Tr.Stat. januarta.marko@bps.go.id" [ref=f22e266]
+              - generic [ref=f22e267]:
+                - strong [ref=f22e268]: Marko Januarta Putra Mulyowidodo S.Tr.Stat.
+                - generic [ref=f22e269]: januarta.marko@bps.go.id
+            - generic [ref=f22e270] [cursor=pointer]:
+              - checkbox "Mety Agustini SST, M.Si mety.assahid@bps.go.id" [ref=f22e271]
+              - generic [ref=f22e272]:
+                - strong [ref=f22e273]: Mety Agustini SST, M.Si
+                - generic [ref=f22e274]: mety.assahid@bps.go.id
+            - generic [ref=f22e275] [cursor=pointer]:
+              - checkbox "Muhammad Miftakhul Romadlon SST romadlon@bps.go.id" [ref=f22e276]
+              - generic [ref=f22e277]:
+                - strong [ref=f22e278]: Muhammad Miftakhul Romadlon SST
+                - generic [ref=f22e279]: romadlon@bps.go.id
+            - generic [ref=f22e280] [cursor=pointer]:
+              - checkbox "Musafrizki Putri Istikomah SST musafrizki.istikomah@bps.go.id" [ref=f22e281]
+              - generic [ref=f22e282]:
+                - strong [ref=f22e283]: Musafrizki Putri Istikomah SST
+                - generic [ref=f22e284]: musafrizki.istikomah@bps.go.id
+            - generic [ref=f22e285] [cursor=pointer]:
+              - checkbox "Nadya Fitri Chairani S.Tr.Stat. nadya.fitri@bps.go.id" [ref=f22e286]
+              - generic [ref=f22e287]:
+                - strong [ref=f22e288]: Nadya Fitri Chairani S.Tr.Stat.
+                - generic [ref=f22e289]: nadya.fitri@bps.go.id
+            - generic [ref=f22e290] [cursor=pointer]:
+              - checkbox "Narezi Febriansa SST narezi.febriansa@bps.go.id" [ref=f22e291]
+              - generic [ref=f22e292]:
+                - strong [ref=f22e293]: Narezi Febriansa SST
+                - generic [ref=f22e294]: narezi.febriansa@bps.go.id
+            - generic [ref=f22e295] [cursor=pointer]:
+              - checkbox "Nimrot Sitorus S.E., M.S.E nimrot@bps.go.id" [ref=f22e296]
+              - generic [ref=f22e297]:
+                - strong [ref=f22e298]: Nimrot Sitorus S.E., M.S.E
+                - generic [ref=f22e299]: nimrot@bps.go.id
+            - generic [ref=f22e300] [cursor=pointer]:
+              - checkbox "Nur Faizah S.Stat., M.A.P. nurfaizah@bps.go.id" [ref=f22e301]
+              - generic [ref=f22e302]:
+                - strong [ref=f22e303]: Nur Faizah S.Stat., M.A.P.
+                - generic [ref=f22e304]: nurfaizah@bps.go.id
+            - generic [ref=f22e305] [cursor=pointer]:
+              - checkbox "Nur Jannah Mega Anindita SST megaanindita@bps.go.id" [ref=f22e306]
+              - generic [ref=f22e307]:
+                - strong [ref=f22e308]: Nur Jannah Mega Anindita SST
+                - generic [ref=f22e309]: megaanindita@bps.go.id
+            - generic [ref=f22e310] [cursor=pointer]:
+              - checkbox "Nurul Aini Al'firdausi SST noer_ain@bps.go.id" [ref=f22e311]
+              - generic [ref=f22e312]:
+                - strong [ref=f22e313]: Nurul Aini Al'firdausi SST
+                - generic [ref=f22e314]: noer_ain@bps.go.id
+            - generic [ref=f22e315] [cursor=pointer]:
+              - checkbox "Nurulhuda S.Sos nurulhuda-pppk@bps.go.id" [checked] [ref=f22e316]
+              - generic [ref=f22e317]:
+                - strong [ref=f22e318]: Nurulhuda S.Sos
+                - generic [ref=f22e319]: nurulhuda-pppk@bps.go.id
+            - generic [ref=f22e320] [cursor=pointer]:
+              - checkbox "Nurzikri Saputra S.Tr.Stat. nurzikri.saputra@bps.go.id" [ref=f22e321]
+              - generic [ref=f22e322]:
+                - strong [ref=f22e323]: Nurzikri Saputra S.Tr.Stat.
+                - generic [ref=f22e324]: nurzikri.saputra@bps.go.id
+            - generic [ref=f22e325] [cursor=pointer]:
+              - checkbox "Oktarizal SST., M.S.E oktarizal@bps.go.id" [ref=f22e326]
+              - generic [ref=f22e327]:
+                - strong [ref=f22e328]: Oktarizal SST., M.S.E
+                - generic [ref=f22e329]: oktarizal@bps.go.id
+            - generic [ref=f22e330] [cursor=pointer]:
+              - checkbox "Raden Mohamad Pramadhira S.Tr.Stat. rm.pramadhira@bps.go.id" [ref=f22e331]
+              - generic [ref=f22e332]:
+                - strong [ref=f22e333]: Raden Mohamad Pramadhira S.Tr.Stat.
+                - generic [ref=f22e334]: rm.pramadhira@bps.go.id
+            - generic [ref=f22e335] [cursor=pointer]:
+              - checkbox "Rahma Nurhamidah SST rahma.nurhamidah@bps.go.id" [ref=f22e336]
+              - generic [ref=f22e337]:
+                - strong [ref=f22e338]: Rahma Nurhamidah SST
+                - generic [ref=f22e339]: rahma.nurhamidah@bps.go.id
+            - generic [ref=f22e340] [cursor=pointer]:
+              - checkbox "Ramdani Agusta A.Md.Kb.N. ramdani.agusta@bps.go.id" [checked] [ref=f22e341]
+              - generic [ref=f22e342]:
+                - strong [ref=f22e343]: Ramdani Agusta A.Md.Kb.N.
+                - generic [ref=f22e344]: ramdani.agusta@bps.go.id
+            - generic [ref=f22e345] [cursor=pointer]:
+              - checkbox "Ratnasari SST ratnasari@bps.go.id" [ref=f22e346]
+              - generic [ref=f22e347]:
+                - strong [ref=f22e348]: Ratnasari SST
+                - generic [ref=f22e349]: ratnasari@bps.go.id
+            - generic [ref=f22e350] [cursor=pointer]:
+              - checkbox "Ravinsyah Kesuma A.Md.Stat. ravinsyah.kesuma@bps.go.id" [checked] [ref=f22e351]
+              - generic [ref=f22e352]:
+                - strong [ref=f22e353]: Ravinsyah Kesuma A.Md.Stat.
+                - generic [ref=f22e354]: ravinsyah.kesuma@bps.go.id
+            - generic [ref=f22e355] [cursor=pointer]:
+              - checkbox "Regy Alvapin S.Tr.Stat. regy.alvapin@bps.go.id" [ref=f22e356]
+              - generic [ref=f22e357]:
+                - strong [ref=f22e358]: Regy Alvapin S.Tr.Stat.
+                - generic [ref=f22e359]: regy.alvapin@bps.go.id
+            - generic [ref=f22e360] [cursor=pointer]:
+              - checkbox "Rengga Firmandika SST rengga.firmandika@bps.go.id" [ref=f22e361]
+              - generic [ref=f22e362]:
+                - strong [ref=f22e363]: Rengga Firmandika SST
+                - generic [ref=f22e364]: rengga.firmandika@bps.go.id
+            - generic [ref=f22e365] [cursor=pointer]:
+              - checkbox "Ridho Akbar SST, M.T ridho.akbar@bps.go.id" [ref=f22e366]
+              - generic [ref=f22e367]:
+                - strong [ref=f22e368]: Ridho Akbar SST, M.T
+                - generic [ref=f22e369]: ridho.akbar@bps.go.id
+            - generic [ref=f22e370] [cursor=pointer]:
+              - checkbox "Rizka Prima Agustina SST rizka.prima@bps.go.id" [ref=f22e371]
+              - generic [ref=f22e372]:
+                - strong [ref=f22e373]: Rizka Prima Agustina SST
+                - generic [ref=f22e374]: rizka.prima@bps.go.id
+            - generic [ref=f22e375] [cursor=pointer]:
+              - checkbox "Rommel Yonatan Sianipar S.Tr.Stat. rommel.yonatan@bps.go.id" [ref=f22e376]
+              - generic [ref=f22e377]:
+                - strong [ref=f22e378]: Rommel Yonatan Sianipar S.Tr.Stat.
+                - generic [ref=f22e379]: rommel.yonatan@bps.go.id
+            - generic [ref=f22e380] [cursor=pointer]:
+              - 'checkbox "Ryan Giggs Khikta`Awan Utomo S.Tr.Stat. ryan.giggs@bps.go.id" [ref=f22e381]'
+              - generic [ref=f22e382]:
+                - strong [ref=f22e383]: "Ryan Giggs Khikta`Awan Utomo S.Tr.Stat."
+                - generic [ref=f22e384]: ryan.giggs@bps.go.id
+            - generic [ref=f22e385] [cursor=pointer]:
+              - checkbox "Sabilla Hamda Syahputri S.Tr.Stat. sabillahamdas@bps.go.id" [ref=f22e386]
+              - generic [ref=f22e387]:
+                - strong [ref=f22e388]: Sabilla Hamda Syahputri S.Tr.Stat.
+                - generic [ref=f22e389]: sabillahamdas@bps.go.id
+            - generic [ref=f22e390] [cursor=pointer]:
+              - checkbox "Santy Fajaria SST, MT. santy_fajaria@bps.go.id" [ref=f22e391]
+              - generic [ref=f22e392]:
+                - strong [ref=f22e393]: Santy Fajaria SST, MT.
+                - generic [ref=f22e394]: santy_fajaria@bps.go.id
+            - generic [ref=f22e395] [cursor=pointer]:
+              - checkbox "Sari Sisilianingsih SST, M.Kom. sari.sisilia@bps.go.id" [ref=f22e396]
+              - generic [ref=f22e397]:
+                - strong [ref=f22e398]: Sari Sisilianingsih SST, M.Kom.
+                - generic [ref=f22e399]: sari.sisilia@bps.go.id
+            - generic [ref=f22e400] [cursor=pointer]:
+              - checkbox "Setiawan Karyadi S.H skaryadi@bps.go.id" [checked] [ref=f22e401]
+              - generic [ref=f22e402]:
+                - strong [ref=f22e403]: Setiawan Karyadi S.H
+                - generic [ref=f22e404]: skaryadi@bps.go.id
+            - generic [ref=f22e405] [cursor=pointer]:
+              - checkbox "Shinta Regina Nursedima Marpaung S.E., M.Ak. shintaregina-pppk@bps.go.id" [checked] [ref=f22e406]
+              - generic [ref=f22e407]:
+                - strong [ref=f22e408]: Shinta Regina Nursedima Marpaung S.E., M.Ak.
+                - generic [ref=f22e409]: shintaregina-pppk@bps.go.id
+            - generic [ref=f22e410] [cursor=pointer]:
+              - checkbox "Siti Ashhabul Jannah SST siti.ashhabul@bps.go.id" [ref=f22e411]
+              - generic [ref=f22e412]:
+                - strong [ref=f22e413]: Siti Ashhabul Jannah SST
+                - generic [ref=f22e414]: siti.ashhabul@bps.go.id
+            - generic [ref=f22e415] [cursor=pointer]:
+              - checkbox "Sohidin SST, M.E.K.K. sohidin@bps.go.id" [ref=f22e416]
+              - generic [ref=f22e417]:
+                - strong [ref=f22e418]: Sohidin SST, M.E.K.K.
+                - generic [ref=f22e419]: sohidin@bps.go.id
+            - generic [ref=f22e420] [cursor=pointer]:
+              - checkbox "Sri Hapsari Murni Handayani SST., M.Stat. s.hapsari@bps.go.id" [ref=f22e421]
+              - generic [ref=f22e422]:
+                - strong [ref=f22e423]: Sri Hapsari Murni Handayani SST., M.Stat.
+                - generic [ref=f22e424]: s.hapsari@bps.go.id
+            - generic [ref=f22e425] [cursor=pointer]:
+              - checkbox "Sugeng Arianto M.Si. sugengari@bps.go.id" [ref=f22e426]
+              - generic [ref=f22e427]:
+                - strong [ref=f22e428]: Sugeng Arianto M.Si.
+                - generic [ref=f22e429]: sugengari@bps.go.id
+            - generic [ref=f22e430] [cursor=pointer]:
+              - checkbox "Suhaili SE, M.M. suhaili@bps.go.id" [ref=f22e431]
+              - generic [ref=f22e432]:
+                - strong [ref=f22e433]: Suhaili SE, M.M.
+                - generic [ref=f22e434]: suhaili@bps.go.id
+            - generic [ref=f22e435] [cursor=pointer]:
+              - checkbox "Suryawati S.E suryawati@bps.go.id" [checked] [ref=f22e436]
+              - generic [ref=f22e437]:
+                - strong [ref=f22e438]: Suryawati S.E
+                - generic [ref=f22e439]: suryawati@bps.go.id
+            - generic [ref=f22e440] [cursor=pointer]:
+              - checkbox "Syahrul Toha Saputra S.Tr.Stat. syahrul.toha@bps.go.id" [ref=f22e441]
+              - generic [ref=f22e442]:
+                - strong [ref=f22e443]: Syahrul Toha Saputra S.Tr.Stat.
+                - generic [ref=f22e444]: syahrul.toha@bps.go.id
+            - generic [ref=f22e445] [cursor=pointer]:
+              - checkbox "Tri Ervina Nurjanah S.Stat. tri.ervina@bps.go.id" [ref=f22e446]
+              - generic [ref=f22e447]:
+                - strong [ref=f22e448]: Tri Ervina Nurjanah S.Stat.
+                - generic [ref=f22e449]: tri.ervina@bps.go.id
+            - generic [ref=f22e450] [cursor=pointer]:
+              - checkbox "Tri Vika Listiyawati S.Psi., M.Psi vika@bps.go.id Ketua tim" [checked] [disabled] [ref=f22e451]
+              - generic [ref=f22e452]:
+                - strong [ref=f22e453]: Tri Vika Listiyawati S.Psi., M.Psi
+                - generic [ref=f22e454]: vika@bps.go.id
+              - generic [ref=f22e455]: Ketua tim
+            - generic [ref=f22e456] [cursor=pointer]:
+              - checkbox "Ulfah Nuraini A.Md ulfahnur@bps.go.id" [ref=f22e457]
+              - generic [ref=f22e458]:
+                - strong [ref=f22e459]: Ulfah Nuraini A.Md
+                - generic [ref=f22e460]: ulfahnur@bps.go.id
+            - generic [ref=f22e461] [cursor=pointer]:
+              - checkbox "User user@example.com" [ref=f22e462]
+              - generic [ref=f22e463]:
+                - strong [ref=f22e464]: User
+                - generic [ref=f22e465]: user@example.com
+            - generic [ref=f22e466] [cursor=pointer]:
+              - checkbox "Vivi Yesica Sidabutar S.Tr.Stat. viviyesicas@bps.go.id" [ref=f22e467]
+              - generic [ref=f22e468]:
+                - strong [ref=f22e469]: Vivi Yesica Sidabutar S.Tr.Stat.
+                - generic [ref=f22e470]: viviyesicas@bps.go.id
+            - generic [ref=f22e471] [cursor=pointer]:
+              - checkbox "Yogi Oltas S.E. oltas@bps.go.id" [ref=f22e472]
+              - generic [ref=f22e473]:
+                - strong [ref=f22e474]: Yogi Oltas S.E.
+                - generic [ref=f22e475]: oltas@bps.go.id
+            - generic [ref=f22e476] [cursor=pointer]:
+              - checkbox "Yuda Bagus Rachmatullah SST, M.E. yuda.rachmatullah@bps.go.id" [ref=f22e477]
+              - generic [ref=f22e478]:
+                - strong [ref=f22e479]: Yuda Bagus Rachmatullah SST, M.E.
+                - generic [ref=f22e480]: yuda.rachmatullah@bps.go.id
+            - generic [ref=f22e481] [cursor=pointer]:
+              - checkbox "Yusril Dicky Khoridwan S.Tr.Stat. yusril.dicky@bps.go.id" [ref=f22e482]
+              - generic [ref=f22e483]:
+                - strong [ref=f22e484]: Yusril Dicky Khoridwan S.Tr.Stat.
+                - generic [ref=f22e485]: yusril.dicky@bps.go.id
+            - generic [ref=f22e486] [cursor=pointer]:
+              - checkbox "Yustina Ambarsari SST yusti@bps.go.id" [ref=f22e487]
+              - generic [ref=f22e488]:
+                - strong [ref=f22e489]: Yustina Ambarsari SST
+                - generic [ref=f22e490]: yusti@bps.go.id
+          - generic [ref=f22e491]:
+            - generic [ref=f22e492]: Akses laporan mengikuti keanggotaan tim ini.
+            - generic [ref=f22e493]:
+              - link "Batal" [ref=f22e494] [cursor=pointer]:
+                - /url: http://localhost:8000/monitoring-ti/teams
+              - button "Simpan anggota" [ref=f22e495] [cursor=pointer]

@@ -89,16 +89,7 @@ class StoreReservationRequest extends FormRequest
                 if (strtotime($endTime) <= strtotime($startTime)) {
                     $validator->errors()->add('end_time_local', 'Waktu selesai harus setelah waktu mulai.');
                 } else {
-                    $overlappingCount = \App\Models\Reservation::whereIn('status', [
-                        \App\Models\Reservation::STATUS_PENDING,
-                        \App\Models\Reservation::STATUS_APPROVED,
-                        \App\Models\Reservation::STATUS_WAITING_MONITORING,
-                    ])
-                    ->where('start_time', '<', $endTime)
-                    ->where('end_time', '>', $startTime)
-                    ->count();
-
-                    if ($overlappingCount >= 4) {
+                    if (\App\Models\Reservation::hasCapacityConflict($startTime, $endTime)) {
                         $validator->errors()->add('start_time_local', 'Slot Zoom untuk waktu tersebut sudah penuh. Silakan pilih waktu lain.');
                     }
                 }

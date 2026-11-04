@@ -230,7 +230,7 @@
                                 <div class="form-group">
                                     <label for="phone">Nomor HP</label>
                                     <input type="text" id="phone" name="phone_number" value="{{ old('phone_number', $user->phone_number) }}" autocomplete="tel">
-                                    <div class="input-hint">Format: +62xxxxxxxxxx</div>
+                                    <div class="input-hint">Format: 08xxxxxxxxxx atau 62xxxxxxxxxx</div>
                                     @if ($errors->has('phone_number'))
                                         <div style="font-size:12px;color:#dc2626;margin-top:4px;">{{ $errors->first('phone_number') }}</div>
                                     @endif

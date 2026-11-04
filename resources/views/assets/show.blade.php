@@ -45,8 +45,8 @@
                 <!-- Main Content -->
                 <div class="lg:col-span-2 space-y-6">
                     <!-- Asset Details -->
-                    <div class="rounded-xl border border-gray-200 bg-white p-5 sm:p-7.5 dark:border-gray-700 dark:bg-dark-800">
-                        <h2 class="mb-6 text-lg font-semibold text-gray-900 dark:text-white">Informasi Aset</h2>
+                    <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm sm:p-7.5 dark:border-gray-700 dark:bg-dark-800">
+                        <h2 class="mb-6 flex items-center gap-2.5 text-lg font-semibold text-gray-900 dark:text-white"><span class="mr-0.5 inline-block h-5 w-1.5 shrink-0 rounded-full bg-brand-500"></span>Informasi Aset</h2>
                         <div class="grid gap-6 sm:grid-cols-2">
                             <div>
                                 <p class="text-sm text-gray-500 dark:text-gray-400">NO BMN</p>
@@ -104,8 +104,8 @@
                     </div>
 
                     <!-- History Pemegang -->
-                    <div class="rounded-xl border border-gray-200 bg-white p-5 sm:p-7.5 dark:border-gray-700 dark:bg-dark-800">
-                        <h2 class="mb-4 text-lg font-semibold text-gray-900 dark:text-white">Riwayat Pemegang Aset</h2>
+                    <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm sm:p-7.5 dark:border-gray-700 dark:bg-dark-800">
+                        <h2 class="mb-4 flex items-center gap-2.5 text-lg font-semibold text-gray-900 dark:text-white"><span class="mr-0.5 inline-block h-5 w-1.5 shrink-0 rounded-full bg-brand-500"></span>Riwayat Pemegang Aset</h2>
                         @if($asset->holderHistory && $asset->holderHistory->count() > 0)
                             <div class="space-y-4">
                                 @foreach($asset->holderHistory as $history)
@@ -133,8 +133,8 @@
                     </div>
 
                     <!-- History Perawatan -->
-                    <div class="rounded-xl border border-gray-200 bg-white p-5 sm:p-7.5 dark:border-gray-700 dark:bg-dark-800">
-                        <h2 class="mb-4 text-lg font-semibold text-gray-900 dark:text-white">Riwayat Perawatan</h2>
+                    <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm sm:p-7.5 dark:border-gray-700 dark:bg-dark-800">
+                        <h2 class="mb-4 flex items-center gap-2.5 text-lg font-semibold text-gray-900 dark:text-white"><span class="mr-0.5 inline-block h-5 w-1.5 shrink-0 rounded-full bg-brand-500"></span>Riwayat Perawatan</h2>
                         @if($asset->maintenances && $asset->maintenances->count() > 0)
                             <div class="space-y-4">
                                 @foreach($asset->maintenances as $maintenance)
@@ -198,7 +198,7 @@
                 </div>
                 <div class="space-y-6">
                     <div class="rounded-3xl border border-gray-200 bg-white p-5 sm:p-6 dark:border-gray-700 dark:bg-dark-800">
-                        <h2 class="mb-4 text-lg font-semibold text-gray-900 dark:text-white">Foto Aset</h2>
+                        <h2 class="mb-4 flex items-center gap-2.5 text-lg font-semibold text-gray-900 dark:text-white"><span class="mr-0.5 inline-block h-5 w-1.5 shrink-0 rounded-full bg-brand-500"></span>Foto Aset</h2>
                         <div class="grid gap-4">
                             <div class="rounded-3xl border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-white/5">
                                 <div class="flex items-center justify-between gap-3">
@@ -242,10 +242,31 @@
                                     @endif
                                 </div>
                             </div>
+                            <div class="rounded-3xl border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-white/5">
+                                <div class="flex items-center justify-between gap-3">
+                                    <div>
+                                        <p class="text-sm font-medium text-gray-900 dark:text-white">Foto Nomor BMN</p>
+                                        <p class="text-xs text-gray-500 dark:text-gray-400">Foto label / nomor BMN aset</p>
+                                    </div>
+                                </div>
+                                <div class="mt-4 overflow-hidden rounded-3xl border border-gray-200 bg-white dark:border-gray-700 dark:bg-dark-800">
+                                    @if($asset->photo_bmn)
+                                        @if(str_starts_with($asset->photo_bmn, 'drive:'))
+                                            <iframe src="{{\App\Models\Asset::googleDrivePreviewUrl(substr($asset->photo_bmn, 6))}}" class="h-44 w-full" frameborder="0" allowfullscreen></iframe>
+                                        @elseif(preg_match('/^https?:\/\//', $asset->photo_bmn))
+                                            <img src="{{$asset->photo_bmn}}" class="h-44 w-full object-contain" alt="Foto Nomor BMN" />
+                                        @else
+                                            <img src="{{\Illuminate\Support\Facades\Storage::url($asset->photo_bmn)}}" class="h-44 w-full object-contain" alt="Foto Nomor BMN" />
+                                        @endif
+                                    @else
+                                        <div class="flex h-44 items-center justify-center text-center text-sm text-gray-500 dark:text-gray-400">Belum ada foto nomor BMN</div>
+                                    @endif
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="rounded-3xl border border-gray-200 bg-white p-5 sm:p-6 dark:border-gray-700 dark:bg-dark-800">
-                        <h2 class="mb-4 text-lg font-semibold text-gray-900 dark:text-white">Status Aset</h2>
+                        <h2 class="mb-4 flex items-center gap-2.5 text-lg font-semibold text-gray-900 dark:text-white"><span class="mr-0.5 inline-block h-5 w-1.5 shrink-0 rounded-full bg-brand-500"></span>Status Aset</h2>
                         <div class="space-y-4">
                             <div class="rounded-3xl bg-gray-50 p-4 dark:bg-white/5">
                                 <p class="text-sm text-gray-500 dark:text-gray-400">Status</p>

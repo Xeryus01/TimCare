@@ -5,12 +5,21 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreReservationRequest;
 use App\Http\Requests\UpdateReservationRequest;
+use App\Http\Resources\ReservationResource;
 use App\Models\Reservation;
-use App\Models\Log;
+use App\Services\AuditTrailService;
+use App\Services\SecureFileUploadService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
 
 class ReservationController extends Controller
 {
+    public function __construct(
+        private SecureFileUploadService $fileUploadService,
+        private AuditTrailService $auditTrailService
+    ) {}
     public function index(Request $request)
     {
         $user = $request->user();
@@ -20,7 +29,7 @@ class ReservationController extends Controller
             $q->where('requester_id', $user->id);
         }
 
-        return $q->paginate(15);
+        return ReservationResource::collection($q->with(['requester', 'approver'])->paginate(15));
     }
 
     public function show(Request $request, Reservation $reservation)
@@ -29,7 +38,7 @@ class ReservationController extends Controller
         if (! $user->hasAnyRole(['Admin', 'Teknisi']) && $reservation->requester_id !== $user->id) {
             abort(403);
         }
-        return $reservation;
+        return new ReservationResource($reservation->load(['requester', 'approver']));
     }
 
     public function store(StoreReservationRequest $request)
@@ -57,24 +66,28 @@ class ReservationController extends Controller
         $data['status'] = Reservation::STATUS_PENDING;
         $data['code'] = Reservation::generateCode();
 
-        // Handle nota dinas upload
-        if ($request->hasFile('nota_dinas')) {
-            $file = $request->file('nota_dinas');
-            $path = $file->store('nota_dinas', 'public');
-            $data['nota_dinas_path'] = $path;
-        }
+        $reservation = DB::transaction(function () use ($request, $data) {
+            Reservation::whereIn('status', Reservation::capacityStatuses())
+                ->lockForUpdate()
+                ->get();
 
-        $reservation = Reservation::create($data);
+            if (Reservation::hasCapacityConflict($data['start_time'], $data['end_time'])) {
+                throw ValidationException::withMessages([
+                    'start_time_local' => 'Slot Zoom untuk waktu tersebut sudah penuh. Silakan pilih waktu lain.',
+                ]);
+            }
 
-        Log::create([
-            'actor_id' => $request->user()->id,
-            'entity_type' => 'Reservation',
-            'entity_id' => $reservation->id,
-            'action' => 'CREATED',
-            'meta' => $reservation->toArray(),
-        ]);
+            if ($request->hasFile('nota_dinas')) {
+                $fileInfo = $this->fileUploadService->storeNotaDinas($request->file('nota_dinas'));
+                $data['nota_dinas_path'] = $fileInfo['path'];
+            }
 
-        return response()->json($reservation, 201);
+            return Reservation::create($data);
+        });
+
+        $this->auditTrailService->record($request, $request->user()->id, 'Reservation', $reservation->id, 'CREATED', $reservation->toArray());
+
+        return (new ReservationResource($reservation->load(['requester', 'approver'])))->response()->setStatusCode(201);
     }
 
     public function update(UpdateReservationRequest $request, Reservation $reservation)
@@ -116,29 +129,76 @@ class ReservationController extends Controller
             unset($data['status'], $data['zoom_link'], $data['zoom_record_link'], $data['notes'], $data['approver_id']);
         }
 
-        $reservation->update($data);
+        unset($data['nota_dinas']);
+        $oldNotaDinasPath = null;
+        $newNotaDinasPath = null;
 
-        Log::create([
-            'actor_id' => $request->user()->id,
-            'entity_type' => 'Reservation',
-            'entity_id' => $reservation->id,
-            'action' => 'UPDATED',
-            'meta' => $reservation->getChanges(),
+        if ($request->hasFile('nota_dinas')) {
+            $fileInfo = $this->fileUploadService->storeNotaDinas($request->file('nota_dinas'));
+            $newNotaDinasPath = $fileInfo['path'];
+            $oldNotaDinasPath = $reservation->nota_dinas_path;
+            $data['nota_dinas_path'] = $newNotaDinasPath;
+        }
+
+        try {
+            DB::transaction(function () use ($reservation, $data) {
+                Reservation::whereIn('status', Reservation::capacityStatuses())
+                    ->lockForUpdate()
+                    ->get();
+
+                $finalStatus = $data['status'] ?? $reservation->status;
+                $finalStart = $data['start_time'] ?? $reservation->start_time;
+                $finalEnd = $data['end_time'] ?? $reservation->end_time;
+
+                if (in_array($finalStatus, Reservation::capacityStatuses(), true)
+                    && Reservation::hasCapacityConflict($finalStart, $finalEnd, $reservation->id)) {
+                    throw ValidationException::withMessages([
+                        'start_time_local' => 'Slot Zoom untuk waktu tersebut sudah penuh. Silakan pilih waktu lain.',
+                    ]);
+                }
+
+                $reservation->update($data);
+            });
+        } catch (\Throwable $exception) {
+            if ($newNotaDinasPath) {
+                $this->deleteStoredFile($newNotaDinasPath);
+            }
+            throw $exception;
+        }
+
+        if ($oldNotaDinasPath && $oldNotaDinasPath !== $newNotaDinasPath) {
+            $this->deleteStoredFile($oldNotaDinasPath);
+        }
+
+        $this->auditTrailService->record($request, $request->user()->id, 'Reservation', $reservation->id, 'UPDATED', [
+            'changes' => $reservation->getChanges(),
         ]);
 
-        return response()->json($reservation->fresh(['requester', 'approver']));
+        return new ReservationResource($reservation->fresh(['requester', 'approver']));
     }
 
     public function destroy(Request $request, Reservation $reservation)
     {
+        if (! $request->user()->hasRole('Admin')) {
+            abort(403, 'Hanya Admin yang dapat menghapus pengajuan Zoom.');
+        }
+
+        $this->deleteStoredFile($reservation->nota_dinas_path);
         $reservation->delete();
-        Log::create([
-            'actor_id' => $request->user()->id,
-            'entity_type' => 'Reservation',
-            'entity_id' => $reservation->id,
-            'action' => 'DELETED',
-            'meta' => [],
-        ]);
+        $this->auditTrailService->record($request, $request->user()->id, 'Reservation', $reservation->id, 'DELETED');
         return response()->noContent();
+    }
+
+    private function deleteStoredFile(?string $path): void
+    {
+        if (! $path) {
+            return;
+        }
+
+        foreach (['local', 'public'] as $diskName) {
+            if (Storage::disk($diskName)->exists($path)) {
+                Storage::disk($diskName)->delete($path);
+            }
+        }
     }
 }

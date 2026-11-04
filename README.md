@@ -274,7 +274,7 @@ MAIL_PORT=587
 MAIL_USERNAME=admin@yourdomain.com
 MAIL_PASSWORD=your_password
 MAIL_ENCRYPTION=tls
-MAIL_FROM_ADDRESS=noreply@yourdomain.com
+MAIL_FROM_ADDRESS=smtp_user@example.com
 
 # WhatsApp
 WHATSAPP_ENABLED=true

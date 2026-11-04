@@ -13,7 +13,7 @@ class ContentSecurityPolicy
         $response = $next($request);
 
         if ($response instanceof Response) {
-            $response->headers->set('Content-Security-Policy', 'form-action *;');
+            $response->headers->set('Content-Security-Policy', "form-action 'self' *;");
         }
 
         return $response;

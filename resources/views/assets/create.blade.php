@@ -127,6 +127,20 @@
                     </div>
                 </div>
 
+                <!-- Photo: Nomor BMN -->
+                <div>
+                    <label for="photo_bmn" class="block text-sm font-medium text-gray-900 dark:text-white mb-2">Foto Nomor BMN (Upload)</label>
+                    <input id="photo_bmn" type="file" name="photo_bmn" accept="image/*" class="w-full" />
+                    <p class="mt-1 text-sm text-gray-500">Atau masukkan link drive pada kolom berikut.</p>
+                    <input id="photo_bmn_url" type="url" name="photo_bmn_url" value="{{old('photo_bmn_url')}}" placeholder="https://drive.google.com/..." class="w-full mt-2 rounded-lg border border-gray-300 px-3 py-2" />
+                    @error('photo_bmn')
+                        <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{$message}}</p>
+                    @enderror
+                    @error('photo_bmn_url')
+                        <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{$message}}</p>
+                    @enderror
+                </div>
+
                 <!-- Location -->
                 <div>
                     <label for="location" class="block text-sm font-medium text-gray-900 dark:text-white mb-2">

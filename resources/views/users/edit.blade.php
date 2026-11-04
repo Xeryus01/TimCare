@@ -18,7 +18,7 @@
 
                 <!-- Edit Form -->
                 <div class="bg-white dark:bg-dark-800 overflow-hidden shadow-sm rounded-lg">
-                    <form method="POST" action="{{ route('users.update', $user) }}" class="p-6">
+                    <form data-tc-native method="POST" action="{{ route('users.update', $user) }}" class="p-6">
                         @csrf
                         @method('PUT')
 
@@ -68,6 +68,8 @@
                                 <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                             @enderror
                         </div>
+
+                        @include('users.partials.teams')
 
                         <!-- Actions -->
                         <div class="flex items-center justify-end">

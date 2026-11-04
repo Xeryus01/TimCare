@@ -58,10 +58,15 @@ Route::get('/dashboard', function () {
     Route::get('/exports/reservations', [ExportController::class, 'reservations'])->name('exports.reservations');
 
     // simple blade views for our features
+    Route::middleware('role:Admin')->group(function () {
+        Route::post('tickets/bulk-assign', [\App\Http\Controllers\TicketViewController::class, 'bulkAssign'])->name('tickets.bulk-assign');
+        Route::post('reservations/bulk-assign', [\App\Http\Controllers\ReservationViewController::class, 'bulkAssign'])->name('reservations.bulk-assign');
+    });
     Route::resource('tickets', \App\Http\Controllers\TicketViewController::class);
     Route::post('tickets/{ticket}/comments', [\App\Http\Controllers\TicketViewController::class, 'comment'])->name('tickets.comment');
     Route::post('tickets/{ticket}/attachments', [\App\Http\Controllers\TicketViewController::class, 'uploadAttachment'])->name('tickets.attachments.store');
     Route::get('tickets/{ticket}/attachments/{attachment}', [\App\Http\Controllers\TicketViewController::class, 'showAttachment'])->name('tickets.attachments.show');
+    Route::post('tickets/{ticket}/rating', [\App\Http\Controllers\ServiceRatingController::class, 'rateTicket'])->name('tickets.rating.store');
 
     // Asset CSV/XLS download/import routes must be registered before the resource route to avoid conflict with assets/{asset}
     Route::get('assets/template', [\App\Http\Controllers\AssetViewController::class, 'downloadTemplate'])->name('assets.template');
@@ -79,6 +84,7 @@ Route::get('/dashboard', function () {
 
     Route::resource('reservations', \App\Http\Controllers\ReservationViewController::class);
     Route::get('reservations/{reservation}/nota-dinas', [\App\Http\Controllers\ReservationViewController::class, 'showNotaDinas'])->name('reservations.nota-dinas');
+    Route::post('reservations/{reservation}/rating', [\App\Http\Controllers\ServiceRatingController::class, 'rateReservation'])->name('reservations.rating.store');
 
     // notifications UI
     Route::get('/notifications', [\App\Http\Controllers\NotificationViewController::class, 'index'])->name('notifications.index');
@@ -101,14 +107,22 @@ Route::get('/dashboard', function () {
         Route::resource('users', \App\Http\Controllers\UserController::class);
         Route::get('users/{user}/change-password', [\App\Http\Controllers\UserController::class, 'editPassword'])->name('users.editPassword');
         Route::patch('users/{user}/change-password', [\App\Http\Controllers\UserController::class, 'updatePassword'])->name('users.updatePassword');
+        // File Manager & Backup PDF (Admin)
+        Route::get('admin/file-manager', [\App\Http\Controllers\FileManagerController::class, 'index'])->name('file-manager.index');
+        Route::post('admin/file-manager/backup/tickets', [\App\Http\Controllers\FileManagerController::class, 'backupTickets'])->name('file-manager.backup.tickets');
+        Route::post('admin/file-manager/backup/reservations', [\App\Http\Controllers\FileManagerController::class, 'backupReservations'])->name('file-manager.backup.reservations');
+        Route::get('admin/file-manager/tickets/{ticket}/backup', [\App\Http\Controllers\FileManagerController::class, 'downloadTicketBackup'])->name('file-manager.ticket.backup.download');
+        Route::get('admin/file-manager/reservations/{reservation}/backup', [\App\Http\Controllers\FileManagerController::class, 'downloadReservationBackup'])->name('file-manager.reservation.backup.download');
+        Route::post('admin/file-manager/tickets/files/delete', [\App\Http\Controllers\FileManagerController::class, 'deleteTicketFiles'])->name('file-manager.tickets.files.delete');
+        Route::post('admin/file-manager/reservations/files/delete', [\App\Http\Controllers\FileManagerController::class, 'deleteReservationFiles'])->name('file-manager.reservations.files.delete');
 
         // Piket schedule management - Admin only
         Route::get('admin/piket', [\App\Http\Controllers\PiketScheduleController::class, 'index'])->name('piket.index');
         Route::get('admin/piket/create', [\App\Http\Controllers\PiketScheduleController::class, 'create'])->name('piket.create');
         Route::post('admin/piket', [\App\Http\Controllers\PiketScheduleController::class, 'store'])->name('piket.store');
-        Route::get('admin/piket/{weekStart}/edit', [\App\Http\Controllers\PiketScheduleController::class, 'edit'])->name('piket.edit');
-        Route::put('admin/piket/{weekStart}', [\App\Http\Controllers\PiketScheduleController::class, 'update'])->name('piket.update');
-        Route::delete('admin/piket/{weekStart}', [\App\Http\Controllers\PiketScheduleController::class, 'destroy'])->name('piket.destroy');
+        Route::get('admin/piket/{schedule}/edit', [\App\Http\Controllers\PiketScheduleController::class, 'edit'])->name('piket.edit');
+        Route::put('admin/piket/{schedule}', [\App\Http\Controllers\PiketScheduleController::class, 'update'])->name('piket.update');
+        Route::delete('admin/piket/{schedule}', [\App\Http\Controllers\PiketScheduleController::class, 'destroy'])->name('piket.destroy');
     });
 
     // Get current piket schedule (public API)
@@ -116,6 +130,16 @@ Route::get('/dashboard', function () {
 
     // Piket schedule view for technicians (read-only)
     Route::get('piket', [\App\Http\Controllers\PiketScheduleController::class, 'view'])->name('piket.view')->middleware('role:Teknisi');
+
+    // Maintenance - Admin, Teknisi, ULP access
+    Route::middleware(['auth', 'role:Admin|Teknisi|ULP'])->group(function () {
+        Route::get('maintenance', [\App\Http\Controllers\MaintenanceController::class, 'index'])->name('maintenance.index');
+        Route::post('maintenance/{ticket}/process', [\App\Http\Controllers\MaintenanceController::class, 'process'])->name('maintenance.process');
+        Route::post('maintenance/{ticket}/complete', [\App\Http\Controllers\MaintenanceController::class, 'complete'])->name('maintenance.complete');
+    });
 });
 
     require __DIR__.'/auth.php';
+
+// Timcare Monitoring TI
+require __DIR__.'/ti.php';

@@ -1,0 +1,22 @@
+{
+  "utilization": [
+    "1. Menurun signifikan dibanding pola biasa",
+    "2. Menurun dibanding bulan sebelumnya",
+    "3. Stabil / sesuai pola biasa",
+    "4. Meningkat dibanding bulan sebelumnya",
+    "5. Meningkat signifikan / pemanfaatan optimal"
+  ],
+  "obstacle": [
+    "1. Kendala besar (operasional terhenti)",
+    "2. Kendala sedang (cukup menghambat operasional aplikasi)",
+    "3. Kendala kecil (minor, operasional tetap berjalan)",
+    "4. Tidak ada kendala"
+  ],
+  "effectiveness": [
+    "1. Kendala tidak dapat diatasi / lebih dari 30 hari",
+    "2. Kendala diatasi dalam waktu <30 hari dengan hasil kurang memuaskan",
+    "3. Kendala diatasi dalam waktu <7 hari dengan hasil yang cukup baik",
+    "4. Kendala diatasi dalam waktu <3 hari dengan hasil baik",
+    "5. Kendala diatasi dalam waktu <24 jam dengan hasil yang memuaskan"
+  ]
+}

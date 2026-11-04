@@ -165,20 +165,31 @@ class Ticket extends Model
         'priority',
         'status',
         'resolved_at',
+        'service_rating',
+        'service_speed_rating',
+        'service_quality_rating',
+        'service_communication_rating',
+        'service_feedback',
+        'rated_at',
     ];
 
     protected $casts = [
         'resolved_at' => 'datetime',
+        'rated_at' => 'datetime',
+        'service_rating' => 'integer',
+        'service_speed_rating' => 'integer',
+        'service_quality_rating' => 'integer',
+        'service_communication_rating' => 'integer',
     ];
 
     public function requester()
     {
-        return $this->belongsTo(User::class, 'requester_id');
+        return $this->belongsTo(User::class, 'requester_id')->withTrashed();
     }
 
     public function assignee()
     {
-        return $this->belongsTo(User::class, 'assignee_id');
+        return $this->belongsTo(User::class, 'assignee_id')->withTrashed();
     }
 
     public function asset()
@@ -206,36 +217,26 @@ class Ticket extends Model
         $prefix = 'TKT';
         $date = now()->format('Ymd');
 
-        DB::beginTransaction();
+        return DB::transaction(function () use ($date, $prefix) {
+            DB::table('code_sequences')->insertOrIgnore([
+                'date' => $date,
+                'ticket_count' => 0,
+                'reservation_count' => 0,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
 
-        try {
             $sequence = DB::table('code_sequences')
                 ->where('date', $date)
                 ->lockForUpdate()
                 ->first();
 
-            if (!$sequence) {
-                DB::table('code_sequences')->insert([
-                    'date' => $date,
-                    'ticket_count' => 1,
-                    'reservation_count' => 0,
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
-                $nextSequence = 1;
-            } else {
-                $nextSequence = $sequence->ticket_count + 1;
-                DB::table('code_sequences')
-                    ->where('date', $date)
-                    ->update(['ticket_count' => $nextSequence, 'updated_at' => now()]);
-            }
-
-            DB::commit();
+            $nextSequence = ((int) $sequence->ticket_count) + 1;
+            DB::table('code_sequences')
+                ->where('date', $date)
+                ->update(['ticket_count' => $nextSequence, 'updated_at' => now()]);
 
             return sprintf('%s-%s-%05d', $prefix, $date, $nextSequence);
-        } catch (\Exception $e) {
-            DB::rollBack();
-            throw $e;
-        }
+        });
     }
 }

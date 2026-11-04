@@ -18,12 +18,14 @@ class TicketWorkflowTest extends TestCase
     {
         $user = User::factory()->create();
         $this->actingAs($user);
+        Storage::fake('local');
 
         $response = $this->postJson('/api/tickets', [
             'category' => 'HARDWARE_SUPPORT',
             'title' => 'My printer is broken',
             'description' => 'It will not print',
             'priority' => 'HIGH',
+            'attachment' => \Illuminate\Http\UploadedFile::fake()->create('bukti.pdf', 100, 'application/pdf'),
         ]);
 
         $response->assertStatus(201)
@@ -71,7 +73,10 @@ class TicketWorkflowTest extends TestCase
     {
         $tech = User::factory()->create();
         $tech->assignRole('Teknisi');
-        $ticket = Ticket::factory()->create(['status' => Ticket::STATUS_ASSIGNED_DETECT]);
+        $ticket = Ticket::factory()->create([
+            'status' => Ticket::STATUS_ASSIGNED_DETECT,
+            'assignee_id' => $tech->id,
+        ]);
 
         $this->actingAs($tech);
         $this->postJson("/api/tickets/{$ticket->id}/comments", [
@@ -121,7 +126,7 @@ class TicketWorkflowTest extends TestCase
     {
         $tech = User::factory()->create();
         $tech->assignRole('Teknisi');
-        $ticket = Ticket::factory()->create();
+        $ticket = Ticket::factory()->create(['assignee_id' => $tech->id]);
         $this->actingAs($tech);
         \Illuminate\Support\Facades\Storage::fake('local');
 
@@ -146,7 +151,7 @@ class TicketWorkflowTest extends TestCase
     {
         $tech = User::factory()->create();
         $tech->assignRole('Teknisi');
-        $ticket = Ticket::factory()->create();
+        $ticket = Ticket::factory()->create(['assignee_id' => $tech->id]);
         $this->actingAs($tech);
         \Illuminate\Support\Facades\Storage::fake('local');
 
@@ -167,7 +172,7 @@ class TicketWorkflowTest extends TestCase
     {
         $tech = User::factory()->create();
         $tech->assignRole('Teknisi');
-        $ticket = Ticket::factory()->create();
+        $ticket = Ticket::factory()->create(['assignee_id' => $tech->id]);
         $this->actingAs($tech);
         \Illuminate\Support\Facades\Storage::fake('local');
 
@@ -328,7 +333,7 @@ class TicketWorkflowTest extends TestCase
     /** @test */
     public function web_ticket_attachment_upload_redirects_back_and_saves_file()
     {
-        Storage::fake('public');
+        Storage::fake('local');
 
         $requester = User::factory()->create();
         $ticket = Ticket::factory()->create([
@@ -346,13 +351,13 @@ class TicketWorkflowTest extends TestCase
         $attachment = Attachment::query()->where('ticket_id', $ticket->id)->latest('id')->first();
 
         $this->assertNotNull($attachment);
-        Storage::disk('public')->assertExists($attachment->file_path);
+        Storage::disk('local')->assertExists($attachment->file_path);
     }
 
     /** @test */
     public function any_user_can_open_uploaded_ticket_attachment_preview()
     {
-        Storage::fake('public');
+        Storage::fake('local');
 
         $requester = User::factory()->create();
         $otherUser = User::factory()->create();

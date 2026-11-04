@@ -10,6 +10,7 @@ class WhatsAppService
     private string $apiUrl;
     private ?string $apiKey;
     private bool $enabled;
+    private bool $verifySsl;
 
     public function __construct()
     {
@@ -17,6 +18,7 @@ class WhatsAppService
         $this->apiUrl = config('services.whatsapp.fonnte_url', 'https://api.fonnte.com/send');
         $this->apiKey = config('services.whatsapp.fonnte_key') ?? '';
         $this->enabled = config('services.whatsapp.enabled', false);
+        $this->verifySsl = (bool) config('services.whatsapp.verify_ssl', true);
     }
 
     /**
@@ -59,25 +61,33 @@ class WhatsAppService
             // Format message dengan title jika ada
             $fullMessage = $title ? "*$title*\n\n$message" : $message;
 
-            // Normalize phone number - remove + if present
-            $normalizedPhone = str_replace('+', '', $phoneNumber);
-            if (substr($normalizedPhone, 0, 1) !== '0' && substr($normalizedPhone, 0, 2) !== '62') {
-                // Add country code if not present
-                if (strlen($normalizedPhone) === 10) {
-                    $normalizedPhone = '62' . substr($normalizedPhone, 1);
-                }
+            // Normalisasi nomor ke format internasional Indonesia (62xxx) untuk Fonnte.
+            // Buang semua karakter selain angka (spasi, +, -, dll).
+            $normalizedPhone = preg_replace('/[^0-9]/', '', $phoneNumber);
+            if (str_starts_with($normalizedPhone, '0')) {
+                // 08xxx -> 628xxx
+                $normalizedPhone = '62' . substr($normalizedPhone, 1);
+            } elseif (str_starts_with($normalizedPhone, '8')) {
+                // 8xxx (tanpa 0 di depan) -> 628xxx
+                $normalizedPhone = '62' . $normalizedPhone;
             }
+            // Jika sudah diawali 62, biarkan apa adanya.
 
-            // Send via Fonnte API
-            $response = Http::withHeaders([
-                'Authorization' => $this->apiKey,
-                'Content-Type' => 'application/json',
-            ])->post($this->apiUrl, [
-                'target' => $normalizedPhone,
-                'message' => $fullMessage,
-            ]);
+            // Kirim ke Fonnte API memakai form-data (asForm), karena Fonnte membaca
+            // 'target' & 'message' sebagai form field, bukan JSON.
+            $response = Http::withOptions(['verify' => $this->verifySsl])
+                ->withHeaders([
+                    'Authorization' => $this->apiKey,
+                ])->asForm()->post($this->apiUrl, [
+                    'target' => $normalizedPhone,
+                    'message' => $fullMessage,
+                ]);
 
             $data = $response->json();
+            // Lindungi dari respons non-JSON (null) agar tidak fatal saat akses array.
+            if (! is_array($data)) {
+                $data = [];
+            }
 
             Log::info('Fonnte API response', [
                 'phone' => $phoneNumber,
@@ -87,7 +97,8 @@ class WhatsAppService
             ]);
 
             // Check if response indicates success
-            if ($response->successful() && ($data['status'] === true || $data['status'] === 'success' || isset($data['data']['id']))) {
+            $status = $data['status'] ?? null;
+            if ($response->successful() && ($status === true || $status === 'success' || isset($data['data']['id']))) {
                 Log::info('WhatsApp message sent via Fonnte', [
                     'phone' => $phoneNumber,
                     'response' => $data,

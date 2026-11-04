@@ -8,7 +8,23 @@ class UpdateAssetRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()?->hasAnyRole(['Admin', 'Teknisi']) ?? false;
+        $user = $this->user();
+        if (! $user) {
+            return false;
+        }
+
+        if ($user->hasAnyRole(['Admin', 'Teknisi'])) {
+            return true;
+        }
+
+        // Pemegang aset boleh mengedit asetnya sendiri (dibatasi hanya foto di controller).
+        $asset = $this->route('asset');
+        if (! $asset) {
+            return false;
+        }
+
+        return $asset->user_id === $user->id
+            || mb_strtolower(trim((string) $asset->holder)) === mb_strtolower(trim((string) $user->name));
     }
 
     public function rules(): array
@@ -32,6 +48,8 @@ class UpdateAssetRequest extends FormRequest
             'photo_serial_url' => 'nullable|url',
             'photo_asset' => 'nullable|image|max:5120',
             'photo_asset_url' => 'nullable|url',
+            'photo_bmn' => 'nullable|image|max:5120',
+            'photo_bmn_url' => 'nullable|url',
         ];
     }
 }

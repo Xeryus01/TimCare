@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\Reservation;
+use App\Models\Ticket;
+use App\Observers\ReservationObserver;
+use App\Observers\TicketObserver;
 use Illuminate\Database\Events\MigrationsEnded;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Schema;
@@ -28,6 +32,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Ticket::observe(TicketObserver::class);
+        Reservation::observe(ReservationObserver::class);
+
         if (config('app.env') === 'production') {
             URL::forceScheme('https');
         }

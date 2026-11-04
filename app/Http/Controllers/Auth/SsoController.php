@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Services\AuditTrailService;
+use App\Services\SsoTokenService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http as HttpClient;
@@ -11,6 +13,10 @@ use Illuminate\Support\Str;
 
 class SsoController extends Controller
 {
+    public function __construct(
+        private SsoTokenService $ssoTokenService,
+        private AuditTrailService $auditTrailService
+    ) {}
     public function redirect(Request $request)
     {
         $config = config('sso', []);
@@ -108,10 +114,12 @@ class SsoController extends Controller
 
         Auth::login($user, true);
 
-        // store tokens for later refresh/logout
-        $request->session()->put('sso_access_token', $accessToken);
-        $request->session()->put('sso_refresh_token', $data['refresh_token'] ?? null);
-        $request->session()->put('sso_id_token', $data['id_token'] ?? null);
+        // Store tokens encrypted in one session payload. Refresh token is rotated by refresh().
+        $this->ssoTokenService->store($request, $data);
+        $this->auditTrailService->record($request, $user->id, 'USER', $user->id, 'SSO_LOGIN', [
+            'email' => $email,
+            'has_refresh_token' => ! empty($data['refresh_token']),
+        ]);
 
         return redirect()->intended('/dashboard');
     }
@@ -133,7 +141,7 @@ class SsoController extends Controller
 
         // clear local session/auth
         Auth::logout();
-        $request->session()->forget(['sso_access_token', 'sso_refresh_token', 'sso_id_token', 'sso_state']);
+        $this->ssoTokenService->clear($request);
 
         // redirect to Keycloak logout if configured
         if (!empty($config['url']) && !empty($config['realm'])) {
@@ -155,39 +163,12 @@ class SsoController extends Controller
     public function refresh(Request $request)
     {
         $config = config('sso', []);
-        $refreshToken = $request->session()->get('sso_refresh_token');
 
-        if (empty($refreshToken)) {
-            return redirect()->route('login')->withErrors(['sso' => 'No refresh token available']);
+        if (! $this->ssoTokenService->refresh($request, $config)) {
+            return redirect()->route('login')->withErrors(['sso' => 'Token refresh failed atau refresh token tidak tersedia']);
         }
 
-        $tokenUrl = $this->getBaseUrlWithAuth($config) . '/realms/' . ($config['realm'] ?? '') . '/protocol/openid-connect/token';
-
-        $response = HttpClient::asForm()->post($tokenUrl, [
-            'grant_type' => 'refresh_token',
-            'refresh_token' => $refreshToken,
-            'client_id' => $config['client_id'] ?? null,
-            'client_secret' => $config['client_secret'] ?? null,
-        ]);
-
-        if ($response->failed()) {
-            return redirect()->route('login')->withErrors(['sso' => 'Token refresh failed']);
-        }
-
-        $data = $response->json();
-        $accessToken = $data['access_token'] ?? null;
-        if (!$accessToken) {
-            return redirect()->route('login')->withErrors(['sso' => 'No access token received']);
-        }
-
-        // update session tokens
-        $request->session()->put('sso_access_token', $accessToken);
-        if (!empty($data['refresh_token'])) {
-            $request->session()->put('sso_refresh_token', $data['refresh_token']);
-        }
-        if (!empty($data['id_token'])) {
-            $request->session()->put('sso_id_token', $data['id_token']);
-        }
+        $this->auditTrailService->record($request, $request->user()?->id, 'USER', $request->user()?->id, 'SSO_TOKEN_REFRESHED');
 
         return redirect()->intended('/dashboard');
     }

@@ -10,45 +10,41 @@ use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
-    public function summary()
+    public function summary(Request $request)
     {
-        // Single query for asset counts
-        $assetCounts = \DB::table('assets')
-            ->selectRaw("
-                COUNT(*) as total,
-                SUM(CASE WHEN status = 'ACTIVE' THEN 1 ELSE 0 END) as active,
-                SUM(CASE WHEN status = 'INACTIVE' THEN 1 ELSE 0 END) as inactive,
-                SUM(CASE WHEN condition = 'HEAVY' THEN 1 ELSE 0 END) as damaged,
-                SUM(CASE WHEN condition = 'LIGHT' THEN 1 ELSE 0 END) as light_damage
-            ")
-            ->first();
+        $user = $request->user();
+        $isStaff = $user->hasAnyRole(['Admin', 'Teknisi']);
 
-        // Single query for ticket counts
-        $ticketCounts = \DB::table('tickets')
-            ->selectRaw("
-                SUM(CASE WHEN status = 'OPEN' THEN 1 ELSE 0 END) as open,
-                SUM(CASE WHEN status = 'ASSIGNED_DETECT' THEN 1 ELSE 0 END) as assigned_detect,
-                SUM(CASE WHEN status = 'SOLVED_WITH_NOTES' THEN 1 ELSE 0 END) as solved_with_notes,
-                SUM(CASE WHEN status = 'SOLVED' THEN 1 ELSE 0 END) as solved,
-                SUM(CASE WHEN status = 'REJECTED' THEN 1 ELSE 0 END) as rejected
-            ")
-            ->first();
+        $assetQuery = Asset::query();
+        if (! $isStaff) {
+            $assetQuery->where(function ($query) use ($user) {
+                $query->where('user_id', $user->id);
+                $name = trim((string) $user->name);
+                if ($name !== '') {
+                    $query->orWhereRaw('LOWER(holder) = ?', [mb_strtolower($name)]);
+                }
+            });
+        }
+
+        $ticketQuery = $isStaff
+            ? Ticket::query()
+            : Ticket::where('requester_id', $user->id);
 
         return response()->json([
             'assets' => [
-                'total' => $assetCounts->total,
-                'active' => $assetCounts->active,
-                'inactive' => $assetCounts->inactive,
-                'damaged' => $assetCounts->damaged,
+                'total' => (clone $assetQuery)->count(),
+                'active' => (clone $assetQuery)->where('status', 'ACTIVE')->count(),
+                'inactive' => (clone $assetQuery)->where('status', 'INACTIVE')->count(),
+                'damaged' => (clone $assetQuery)->where('condition', 'HEAVY')->count(),
             ],
             'tickets' => [
-                'open' => $ticketCounts->open,
-                'assigned_detect' => $ticketCounts->assigned_detect,
-                'solved_with_notes' => $ticketCounts->solved_with_notes,
-                'solved' => $ticketCounts->solved,
-                'rejected' => $ticketCounts->rejected,
+                'open' => (clone $ticketQuery)->where('status', Ticket::STATUS_OPEN)->count(),
+                'assigned_detect' => (clone $ticketQuery)->where('status', Ticket::STATUS_ASSIGNED_DETECT)->count(),
+                'solved_with_notes' => (clone $ticketQuery)->where('status', Ticket::STATUS_SOLVED_WITH_NOTES)->count(),
+                'solved' => (clone $ticketQuery)->where('status', Ticket::STATUS_SOLVED)->count(),
+                'rejected' => (clone $ticketQuery)->where('status', Ticket::STATUS_REJECTED)->count(),
             ],
-            'latest_tickets' => Ticket::latest()->take(10)->get([
+            'latest_tickets' => (clone $ticketQuery)->latest()->take(10)->get([
                 'id', 'code', 'title', 'status', 'priority', 'created_at',
             ]),
         ]);

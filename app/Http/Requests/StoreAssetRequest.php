@@ -32,6 +32,8 @@ class StoreAssetRequest extends FormRequest
             'photo_serial_url' => 'nullable|url',
             'photo_asset' => 'nullable|image|max:5120',
             'photo_asset_url' => 'nullable|url',
+            'photo_bmn' => 'nullable|image|max:5120',
+            'photo_bmn_url' => 'nullable|url',
         ];
     }
 }

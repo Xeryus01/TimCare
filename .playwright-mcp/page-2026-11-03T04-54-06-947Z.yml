@@ -1,0 +1,16 @@
+- generic [ref=f23e4]:
+  - generic [ref=f23e5]: Error 403
+  - generic [ref=f23e11]:
+    - heading "Akses Ditolak" [level=2] [ref=f23e12]
+    - generic [ref=f23e13]: Anda tidak memiliki izin untuk melihat halaman ini. Pastikan Anda menggunakan peran atau izin yang sesuai.
+    - generic [ref=f23e14]:
+      - link "Kembali ke Dashboard" [ref=f23e15] [cursor=pointer]:
+        - /url: http://localhost:8000/dashboard
+      - link "Kembali" [ref=f23e18] [cursor=pointer]:
+        - /url: http://localhost:8000/monitoring-ti
+      - button "Muat Ulang" [ref=f23e21] [cursor=pointer]
+    - paragraph [ref=f23e25]:
+      - text: Jika ini bukan kesalahan Anda, silakan
+      - link "hubungi administrator sistem" [ref=f23e26] [cursor=pointer]:
+        - /url: "#"
+      - text: .

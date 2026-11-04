@@ -3,10 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 
 class Reservation extends Model
 {
+    public const MAX_CONCURRENT = 4;
+
     public const STATUS_PENDING = 'PENDING';
     public const STATUS_APPROVED = 'APPROVED';
     public const STATUS_WAITING_MONITORING = 'WAITING_MONITORING';
@@ -31,6 +34,12 @@ class Reservation extends Model
         'zoom_link',
         'zoom_record_link',
         'nota_dinas_path',
+        'service_rating',
+        'service_speed_rating',
+        'service_quality_rating',
+        'service_communication_rating',
+        'service_feedback',
+        'rated_at',
     ];
 
     protected $casts = [
@@ -39,6 +48,11 @@ class Reservation extends Model
         'operator_needed' => 'boolean',
         'breakroom_needed' => 'boolean',
         'participants_count' => 'integer',
+        'service_rating' => 'integer',
+        'service_speed_rating' => 'integer',
+        'service_quality_rating' => 'integer',
+        'service_communication_rating' => 'integer',
+        'rated_at' => 'datetime',
     ];
 
     public static function statusLabels(): array
@@ -99,6 +113,31 @@ class Reservation extends Model
         ];
     }
 
+    public static function capacityStatuses(): array
+    {
+        return [
+            self::STATUS_PENDING,
+            self::STATUS_APPROVED,
+            self::STATUS_WAITING_MONITORING,
+        ];
+    }
+
+    public function scopeOverlappingTime(Builder $query, $startTime, $endTime): Builder
+    {
+        return $query
+            ->where('start_time', '<', $endTime)
+            ->where('end_time', '>', $startTime);
+    }
+
+    public static function hasCapacityConflict($startTime, $endTime, ?int $exceptId = null): bool
+    {
+        return self::query()
+            ->whereIn('status', self::capacityStatuses())
+            ->overlappingTime($startTime, $endTime)
+            ->when($exceptId, fn (Builder $query) => $query->where('id', '!=', $exceptId))
+            ->count() >= self::MAX_CONCURRENT;
+    }
+
     public function getStatusLabelAttribute(): string
     {
         return self::statusLabels()[$this->status] ?? $this->status;
@@ -106,12 +145,12 @@ class Reservation extends Model
 
     public function requester()
     {
-        return $this->belongsTo(User::class, 'requester_id');
+        return $this->belongsTo(User::class, 'requester_id')->withTrashed();
     }
 
     public function approver()
     {
-        return $this->belongsTo(User::class, 'approver_id');
+        return $this->belongsTo(User::class, 'approver_id')->withTrashed();
     }
 
     public function logs()
@@ -124,36 +163,26 @@ class Reservation extends Model
         $prefix = 'RES';
         $date = now()->format('Ymd');
 
-        DB::beginTransaction();
+        return DB::transaction(function () use ($date, $prefix) {
+            DB::table('code_sequences')->insertOrIgnore([
+                'date' => $date,
+                'ticket_count' => 0,
+                'reservation_count' => 0,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
 
-        try {
             $sequence = DB::table('code_sequences')
                 ->where('date', $date)
                 ->lockForUpdate()
                 ->first();
 
-            if (!$sequence) {
-                DB::table('code_sequences')->insert([
-                    'date' => $date,
-                    'ticket_count' => 0,
-                    'reservation_count' => 1,
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
-                $nextSequence = 1;
-            } else {
-                $nextSequence = $sequence->reservation_count + 1;
-                DB::table('code_sequences')
-                    ->where('date', $date)
-                    ->update(['reservation_count' => $nextSequence, 'updated_at' => now()]);
-            }
-
-            DB::commit();
+            $nextSequence = ((int) $sequence->reservation_count) + 1;
+            DB::table('code_sequences')
+                ->where('date', $date)
+                ->update(['reservation_count' => $nextSequence, 'updated_at' => now()]);
 
             return sprintf('%s-%s-%05d', $prefix, $date, $nextSequence);
-        } catch (\Exception $e) {
-            DB::rollBack();
-            throw $e;
-        }
+        });
     }
 }

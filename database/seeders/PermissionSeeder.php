@@ -22,7 +22,10 @@ class PermissionSeeder extends Seeder
             'view reservations',
             'create reservations',
             'manage reservations',
+            'approve reservations',
             'view dashboard',
+            'view maintenance',
+            'manage maintenance',
         ];
 
         foreach ($perms as $perm) {
@@ -41,7 +44,24 @@ class PermissionSeeder extends Seeder
             'comment tickets',
             'view assets',
             'manage assets',
+            'view reservations',
+            'manage reservations',
+            'approve reservations',
             'view dashboard',
+            'view maintenance',
+        ]);
+
+        $ulp = Role::firstOrCreate(['name' => 'ULP']);
+        $ulp->syncPermissions([
+            'view tickets',
+            'create tickets',
+            'comment tickets',
+            'view dashboard',
+            'view assets',
+            'view reservations',
+            'create reservations',
+            'view maintenance',
+            'manage maintenance',
         ]);
 
         $user = Role::firstOrCreate(['name' => 'User']);

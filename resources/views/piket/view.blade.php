@@ -20,7 +20,7 @@
                 $start = \Carbon\Carbon::parse($schedule->week_start_date)->startOfDay();
                 $end = $schedule->week_end_date
                     ? \Carbon\Carbon::parse($schedule->week_end_date)->endOfDay()
-                    : $start->copy()->endOfDay();
+                    : $start->copy()->addDays(6)->endOfDay();
                 return $today->between($start, $end);
             });
 

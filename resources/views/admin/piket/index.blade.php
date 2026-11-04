@@ -11,6 +11,11 @@
                 {{ session('success') }}
             </div>
         @endif
+        @if (session('error'))
+            <div class="mb-4 rounded-lg border border-amber-400 bg-amber-100 p-4 text-amber-800 dark:border-amber-500/30 dark:bg-amber-500/15 dark:text-amber-300">
+                {{ session('error') }}
+            </div>
+        @endif
 
         @if (count($schedules) === 0)
             <div class="mb-4 rounded-lg border border-yellow-400 bg-yellow-100 p-4 text-yellow-700 dark:border-yellow-500/30 dark:bg-yellow-500/15 dark:text-yellow-400">
@@ -25,14 +30,15 @@
                 $end = $schedule->week_end_date
                     ? \Carbon\Carbon::parse($schedule->week_end_date)
                     : $start->copy()->addDays(6);
+                $isPast = $schedule->hasPassed();
                 return [
                     'title' => "Piket: {$start->format('d/m')} - {$end->format('d/m')}",
                     'start' => $start->toDateString(),
                     'end' => $end->copy()->addDay()->toDateString(), // FullCalendar end is exclusive
-                    'url' => route('piket.edit', $start->toDateString()),
+                    'url' => $isPast ? null : route('piket.edit', $schedule),
                     'allDay' => true,
-                    'backgroundColor' => '#8b5cf6',
-                    'borderColor' => '#8b5cf6',
+                    'backgroundColor' => $isPast ? '#94a3b8' : '#8b5cf6',
+                    'borderColor' => $isPast ? '#94a3b8' : '#8b5cf6',
                     'textColor' => '#ffffff',
                     'extendedProps' => [
                         'id' => $schedule->id,
@@ -110,6 +116,19 @@
                 <span class="inline-flex items-center rounded-full bg-brand-50 px-3 py-1 text-sm font-semibold text-brand-700">{{ $schedules->count() }} jadwal</span>
             </div>
 
+            <div class="mb-5 flex flex-wrap items-center justify-end gap-2">
+                <form method="GET" class="flex items-center gap-2">
+                    <label for="rangeSelect" class="text-sm text-gray-500 dark:text-gray-400">Tampilkan</label>
+                    <select id="rangeSelect" name="range" onchange="this.form.submit()" class="rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-sm text-gray-700 focus:border-brand-500 focus:ring-brand-500 dark:border-gray-700 dark:bg-dark-900 dark:text-gray-200">
+                        <option value="1" @selected($range === '1')>Per bulan</option>
+                        <option value="2" @selected($range === '2')>Per 2 bulan</option>
+                        <option value="3" @selected($range === '3')>Per 3 bulan</option>
+                        <option value="all" @selected($range === 'all')>Semua</option>
+                    </select>
+                    <noscript><button type="submit" class="rounded-lg bg-brand-600 px-3 py-1.5 text-sm font-semibold text-white">Terapkan</button></noscript>
+                </form>
+            </div>
+
             <div class="overflow-x-auto rounded-3xl border border-gray-100 bg-white shadow-sm dark:border-gray-800 dark:bg-dark-900">
                 <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                     <thead class="bg-gray-50 dark:bg-gray-900">
@@ -123,13 +142,14 @@
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-100 bg-white dark:divide-gray-800 dark:bg-dark-900">
-                        @foreach ($schedules as $schedule)
+                        @forelse ($scheduleList as $schedule)
                             @php
                                 $start = \Carbon\Carbon::parse($schedule->week_start_date);
                                 $end = $schedule->week_end_date
                                     ? \Carbon\Carbon::parse($schedule->week_end_date)
                                     : $start->copy()->addDays(6);
                                 $isCurrent = now()->between($start->startOfDay(), $end->endOfDay());
+                                $isPast = $schedule->hasPassed();
                             @endphp
                             <tr class="hover:bg-gray-50 dark:hover:bg-gray-900 {{ $isCurrent ? 'bg-brand-50 dark:bg-brand-500/10' : '' }}">
                                 <td class="px-4 py-4 align-top">
@@ -148,14 +168,20 @@
                                 <td class="px-4 py-4 align-top">
                                     @if ($isCurrent)
                                         <span class="inline-flex items-center rounded-full bg-brand-100 px-3 py-1 text-xs font-semibold text-brand-700">Minggu ini</span>
+                                    @elseif ($isPast)
+                                        <span class="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-500 dark:bg-gray-800 dark:text-gray-400">Terlewat</span>
                                     @else
                                         <span class="text-sm text-gray-500 dark:text-gray-400">Terjadwal</span>
                                     @endif
                                 </td>
                                 <td class="px-4 py-4 align-top">
                                     <div class="flex flex-wrap gap-2">
-                                        <a href="{{ route('piket.edit', $schedule->week_start_date) }}" class="inline-flex items-center rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-xs font-semibold text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-dark-800 dark:text-gray-200 dark:hover:bg-gray-900">Edit</a>
-                                        <form method="POST" action="{{ route('piket.destroy', $schedule->week_start_date) }}" onsubmit="return confirm('Hapus jadwal piket ini? Tindakan ini tidak dapat dibatalkan.')">
+                                        @if ($isPast)
+                                            <span class="inline-flex items-center rounded-lg bg-gray-100 px-3 py-1.5 text-xs font-semibold text-gray-500 dark:bg-gray-800 dark:text-gray-400" title="Jadwal yang sudah terlewat tidak dapat diedit">Terkunci</span>
+                                        @else
+                                            <a href="{{ route('piket.edit', $schedule) }}" class="inline-flex items-center rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-xs font-semibold text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-dark-800 dark:text-gray-200 dark:hover:bg-gray-900">Edit</a>
+                                        @endif
+                                        <form method="POST" action="{{ route('piket.destroy', $schedule) }}" onsubmit="return confirm('Hapus jadwal piket ini? Tindakan ini tidak dapat dibatalkan.')">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="inline-flex items-center rounded-lg bg-red-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-red-700">Hapus</button>
@@ -163,10 +189,20 @@
                                     </div>
                                 </td>
                             </tr>
-                        @endforeach
+                        @empty
+                            <tr>
+                                <td colspan="6" class="px-4 py-8 text-center text-sm text-gray-500 dark:text-gray-400">Tidak ada jadwal piket pada rentang ini.</td>
+                            </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
+
+            @if ($scheduleList instanceof \Illuminate\Contracts\Pagination\Paginator)
+                <div class="mt-4">
+                    <x-pagination :paginator="$scheduleList" />
+                </div>
+            @endif
         </div>
 
         <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
@@ -225,7 +261,7 @@
                     eventDidMount: function(info) {
                         info.el.style.padding = '0.45rem';
                         info.el.style.borderRadius = '0.85rem';
-                        info.el.style.cursor = 'pointer';
+                        info.el.style.cursor = info.event.url ? 'pointer' : 'default';
                     },
                     eventClick: function(info) {
                         if (info.event.url) {

@@ -4,16 +4,24 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreTicketRequest;
+use App\Http\Resources\TicketResource;
+use App\Models\Attachment;
 use App\Models\Ticket;
-use App\Models\Log;
+use App\Services\AuditTrailService;
 use App\Services\NotificationService;
+use App\Services\SecureFileUploadService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class TicketController extends Controller
 {
     protected NotificationService $notificationService;
 
-    public function __construct(NotificationService $notificationService)
+    public function __construct(
+        NotificationService $notificationService,
+        private SecureFileUploadService $fileUploadService,
+        private AuditTrailService $auditTrailService
+    )
     {
         $this->notificationService = $notificationService;
     }
@@ -40,7 +48,7 @@ class TicketController extends Controller
             $q->where('requester_id', $user->id);
         }
 
-        return $q->paginate(15);
+        return TicketResource::collection($q->paginate(15));
     }
 
     public function show(Request $request, Ticket $ticket)
@@ -51,33 +59,67 @@ class TicketController extends Controller
             abort(403);
         }
 
-        return $ticket->load(['requester', 'assignee', 'asset', 'comments.user', 'comments.attachments', 'attachments.uploader']);
+        $canSeeInternalComments = $user->hasAnyRole(['Admin', 'Teknisi']);
+
+        $ticket->load([
+            'requester',
+            'assignee',
+            'asset',
+            'comments' => function ($query) use ($canSeeInternalComments) {
+                $query
+                    ->when(! $canSeeInternalComments, fn ($comments) => $comments->where('is_internal', false))
+                    ->with(['user', 'attachments']);
+            },
+            'attachments.uploader',
+        ]);
+
+        return new TicketResource($ticket);
     }
 
     public function store(StoreTicketRequest $request)
     {
         $user = $request->user();
 
-        $ticket = Ticket::create([
-            'code' => Ticket::generateCode(),
-            'requester_id' => $user->id,
-            'asset_id' => $request->asset_id,
-            'category' => $request->category,
-            'title' => $request->title,
-            'description' => $request->description,
-            'priority' => $request->priority,
-            'status' => Ticket::STATUS_OPEN,
-        ]);
+        $ticket = DB::transaction(function () use ($request, $user) {
+            $ticket = Ticket::create([
+                'code' => Ticket::generateCode(),
+                'requester_id' => $user->id,
+                'asset_id' => $request->asset_id,
+                'category' => $request->category,
+                'title' => $request->title,
+                'description' => $request->description,
+                'priority' => $request->priority,
+                'status' => Ticket::STATUS_OPEN,
+            ]);
 
-        Log::create([
-            'actor_id' => $user->id,
-            'entity_type' => 'TICKET',
-            'entity_id' => $ticket->id,
-            'action' => 'CREATED',
-            'meta' => ['code' => $ticket->code],
-        ]);
+            if ($request->hasFile('attachment')) {
+                $fileInfo = $this->fileUploadService->storeTicketAttachment(
+                    $request->file('attachment'),
+                    'attachments',
+                    SecureFileUploadService::MAX_INITIAL_ATTACHMENT_KB
+                );
 
-        return response()->json($ticket->load(['requester', 'assignee', 'asset']), 201);
+                Attachment::create([
+                    'ticket_id' => $ticket->id,
+                    'uploader_id' => $user->id,
+                    'file_path' => $fileInfo['path'],
+                    'file_name' => $fileInfo['original_name'],
+                    'mime_type' => $fileInfo['mime_type'],
+                    'size_bytes' => $fileInfo['size_bytes'],
+                ]);
+            }
+
+            $this->auditTrailService->record($request, $user->id, 'TICKET', $ticket->id, 'CREATED', [
+                'code' => $ticket->code,
+                'category' => $ticket->category,
+                'priority' => $ticket->priority,
+                'asset_id' => $ticket->asset_id,
+            ]);
+
+            return $ticket;
+        });
+
+        return (new TicketResource($ticket->load(['requester', 'assignee', 'asset', 'attachments.uploader'])))->response()->setStatusCode(201);
     }
 
     public function updateStatus(Request $request, Ticket $ticket)
@@ -101,7 +143,16 @@ class TicketController extends Controller
         $oldStatus = $ticket->status;
 
         $ticket->status = $validated['status'];
-        $ticket->assignee_id = $validated['assignee_id'] ?? $ticket->assignee_id;
+
+        // Tiket yang dibatalkan tidak boleh memiliki penugasan teknisi.
+        // Jika status diubah menjadi "Batal", hapus penugasan yang ada dan
+        // abaikan upaya penugasan teknisi pada request ini.
+        if ($ticket->status === Ticket::STATUS_CANCELLED) {
+            $validated['assignee_id'] = null;
+            $ticket->assignee_id = null;
+        } else {
+            $ticket->assignee_id = $validated['assignee_id'] ?? $ticket->assignee_id;
+        }
         
         // Automatic status change when assigning petugas
         if (isset($validated['assignee_id']) && $validated['assignee_id'] !== null) {
@@ -114,17 +165,11 @@ class TicketController extends Controller
         if (in_array($ticket->status, [Ticket::STATUS_SOLVED, Ticket::STATUS_SOLVED_WITH_NOTES], true)) {
             $ticket->resolved_at = now();
         }
-        $ticket->save();
+        DB::transaction(fn () => $ticket->save());
 
-        Log::create([
-            'actor_id' => $user->id,
-            'entity_type' => 'TICKET',
-            'entity_id' => $ticket->id,
-            'action' => 'STATUS_CHANGED',
-            'meta' => [
-                'status' => $ticket->status,
-                'assignee_id' => $ticket->assignee_id,
-            ],
+        $this->auditTrailService->record($request, $user->id, 'TICKET', $ticket->id, 'STATUS_CHANGED', [
+            'before' => ['status' => $oldStatus],
+            'after' => ['status' => $ticket->status, 'assignee_id' => $ticket->assignee_id],
         ]);
 
         // send notifications
@@ -136,8 +181,7 @@ class TicketController extends Controller
             $this->notificationService->notifyTicketUpdated($ticket->assignee, $ticket, $old, false, false);
         }
 
-        return response()->json($ticket->fresh()->load(['requester', 'assignee', 'asset']));
+        return new TicketResource($ticket->fresh()->load(['requester', 'assignee', 'asset']));
     }
 
 }
-

@@ -228,6 +228,11 @@
                     @endif
                 </div>
 
+
+                @if($reservation->status === \App\Models\Reservation::STATUS_COMPLETED)
+                    <x-service-rating-card :model="$reservation" route-name="reservations.rating.store" title="Penilaian Layanan" subtitle="Nilai pengalaman pelayanan pengajuan Zoom Anda." />
+                @endif
+
                 <div class="rounded-xl border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-dark-800">
                     <h3 class="mb-3 text-sm font-bold uppercase text-gray-500 dark:text-gray-400">Ringkasan</h3>
                     <div class="space-y-3 text-sm text-gray-700 dark:text-gray-300">

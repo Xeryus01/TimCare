@@ -1,0 +1,97 @@
+# UI Fix V2 — Ringkasan pengujian
+
+36 tes PHPUnit / 172 assertion: lulus.
+
+## Browser monitoring (36 pemeriksaan)
+- Embedded stylesheet present without public CSS
+- Monitoring styles applied when external stylesheet is unavailable
+- Quick start lists the two assigned objects
+- Quick-start GET bypasses legacy AJAX interception
+- Update notes become required when feature update is Ya
+- Incomplete utilization form is blocked without losing input
+- Utilization saved and shown in detail
+- Utilization edits persist
+- Long scale selection is readable below the control
+- Monitoring form saves with optional effectiveness empty
+- Monitoring edits persist
+- Follow-up form offers only semesters I and II
+- Semester follow-up saves including date and proof URL
+- Semester follow-up edits persist
+- Duplicate-period error is visible after native POST redirect
+- Previously entered numbers survive server-side validation
+- Error summary receives focus for correction
+- Filter switches immediately to two semesters
+- Invalid month selection is cleared on semester switch
+- Report filter applies selected semester
+- CSV export is downloadable from filtered results
+- Ordinary team member sees no editable quick-start objects
+- Ordinary team member cannot open edit URL
+- Related team leader can open and fill report editor
+- Object administration saves and reloads field values
+- Team administration form saves successfully
+- reports 1440px: no page overflow or duplicate IDs
+- utilization 1440px: no page overflow or duplicate IDs
+- monitoring 1440px: no page overflow or duplicate IDs
+- followup 1440px: no page overflow or duplicate IDs
+- objects 1440px: no page overflow or duplicate IDs
+- reports 390px: no page overflow or duplicate IDs
+- utilization 390px: no page overflow or duplicate IDs
+- monitoring 390px: no page overflow or duplicate IDs
+- followup 390px: no page overflow or duplicate IDs
+- objects 390px: no page overflow or duplicate IDs
+
+## Browser admin/pengguna (52 pemeriksaan)
+- Page loads: /__qa/login/1
+- Page loads: /users/create
+- Create user without any team succeeds
+- Page loads: /users/6
+- User detail opens and clearly shows optional empty teams
+- Page loads: /users/6/edit
+- Page loads: /users/6/edit
+- User team checkbox selection persists after save
+- User contact edit persists
+- Page loads: /users/6
+- All optional team memberships can be cleared
+- Page loads: /users/6/change-password
+- Password form redirects to working user detail with success feedback
+- Page loads: /users
+- User search filters using native GET
+- Page loads: /monitoring-ti/objects/create
+- Create object persists identity and assignment
+- Page loads: /monitoring-ti/teams
+- Duplicate team name produces a clear validation summary
+- Only the edited team field is marked invalid, not all other team forms
+- Failed edit does not populate unrelated new-team form
+- Team validation can be corrected and resubmitted
+- Page loads: /monitoring-ti/teams
+- teams 1440px: no body overflow or duplicate IDs
+- Page loads: /monitoring-ti/objects/1/edit
+- object 1440px: no body overflow or duplicate IDs
+- Page loads: /users
+- userlist 1440px: no body overflow or duplicate IDs
+- Page loads: /users/create
+- usercreate 1440px: no body overflow or duplicate IDs
+- Page loads: /users/6/edit
+- useredit 1440px: no body overflow or duplicate IDs
+- Page loads: /users/6
+- userdetail 1440px: no body overflow or duplicate IDs
+- Page loads: /users/6/change-password
+- password 1440px: no body overflow or duplicate IDs
+- Page loads: /monitoring-ti/teams
+- teams 390px: no body overflow or duplicate IDs
+- Page loads: /monitoring-ti/objects/1/edit
+- object 390px: no body overflow or duplicate IDs
+- Page loads: /users
+- userlist 390px: no body overflow or duplicate IDs
+- Page loads: /users/create
+- usercreate 390px: no body overflow or duplicate IDs
+- Page loads: /users/6/edit
+- useredit 390px: no body overflow or duplicate IDs
+- Page loads: /users/6
+- userdetail 390px: no body overflow or duplicate IDs
+- Page loads: /users/6/change-password
+- password 390px: no body overflow or duplicate IDs
+- Page loads: /monitoring-ti
+- Dark theme uses the shared monitoring color tokens
+
+Seluruh tes memakai data sintetis pada aplikasi lokal. Tidak mengakses server produksi.

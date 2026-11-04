@@ -44,7 +44,6 @@ window.addEventListener('DOMContentLoaded', () => {
     const appEl = document.getElementById('app');
     if (appEl) {
         vueApp.mount('#app');
-        console.log('Vue mounted on #app, page:', appEl.dataset.page);
     }
 });
 
@@ -53,7 +52,6 @@ window.Alpine = Alpine;
 if (window.Echo && window.Auth && window.Auth.user) {
     window.Echo.private(`App.Models.User.${window.Auth.user.id}`)
         .notification((notif) => {
-            console.log('notification', notif);
             alert(notif.type + ': ' + (notif.data.message || JSON.stringify(notif.data)));
         });
 }

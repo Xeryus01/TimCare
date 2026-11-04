@@ -1,0 +1,396 @@
+- generic [ref=f52e2]:
+  - complementary [ref=f52e3]:
+    - link [ref=f52e5] [cursor=pointer]:
+      - /url: http://localhost:8000/dashboard
+      - img "TimCare ITSM Dashboard" [ref=f52e6]
+    - navigation [ref=f52e7]:
+      - list [ref=f52e8]:
+        - listitem [ref=f52e9]:
+          - link "Beranda" [ref=f52e10] [cursor=pointer]:
+            - /url: http://localhost:8000/dashboard
+        - listitem [ref=f52e17]:
+          - link "Tiket Masalah TI" [ref=f52e18] [cursor=pointer]:
+            - /url: http://localhost:8000/tickets
+        - listitem [ref=f52e24]:
+          - link "Tiket ID Zoom" [ref=f52e25] [cursor=pointer]:
+            - /url: http://localhost:8000/reservations
+        - listitem [ref=f52e30]:
+          - link "Data Aset" [ref=f52e31] [cursor=pointer]:
+            - /url: http://localhost:8000/assets
+        - listitem [ref=f52e36]:
+          - link "Pemeliharaan" [ref=f52e37] [cursor=pointer]:
+            - /url: http://localhost:8000/maintenance
+        - listitem [ref=f52e44]:
+          - link "Monitoring TI" [ref=f52e45] [cursor=pointer]:
+            - /url: http://localhost:8000/monitoring-ti
+        - listitem [ref=f52e50]:
+          - link "Manajemen User" [ref=f52e51] [cursor=pointer]:
+            - /url: http://localhost:8000/users
+        - listitem [ref=f52e55]:
+          - link "Jadwal Piket" [ref=f52e56] [cursor=pointer]:
+            - /url: http://localhost:8000/admin/piket
+        - listitem [ref=f52e60]:
+          - link "Backup & Berkas" [ref=f52e61] [cursor=pointer]:
+            - /url: http://localhost:8000/admin/file-manager
+    - navigation [ref=f52e66]:
+      - list [ref=f52e67]:
+        - listitem [ref=f52e68]:
+          - link "Profil" [ref=f52e69] [cursor=pointer]:
+            - /url: http://localhost:8000/profile
+        - listitem [ref=f52e73]:
+          - button "Keluar" [ref=f52e75] [cursor=pointer]
+  - generic [ref=f52e80]:
+    - banner [ref=f52e81]:
+      - button "Toggle sidebar" [ref=f52e83] [cursor=pointer]
+      - generic [ref=f52e86]:
+        - button "Toggle dark mode" [ref=f52e87] [cursor=pointer]
+        - button "370" [ref=f52e91] [cursor=pointer]
+        - button "A" [ref=f52e97] [cursor=pointer]
+    - main [ref=f52e101]:
+      - generic [ref=f52e103]:
+        - generic [ref=f52e104]:
+          - generic [ref=f52e105]:
+            - heading "Pengajuan Zoom" [level=1] [ref=f52e106]
+            - paragraph [ref=f52e107]: User mengajukan kebutuhan Zoom, lalu teknisi atau admin melakukan follow up dan menambahkan link meeting.
+          - generic [ref=f52e108]:
+            - link "Ajukan Zoom" [ref=f52e109] [cursor=pointer]:
+              - /url: http://localhost:8000/reservations/create
+            - link "Ekspor CSV" [ref=f52e110] [cursor=pointer]:
+              - /url: http://localhost:8000/exports/reservations
+        - generic [ref=f52e111]:
+          - heading "Alur Pengajuan Zoom" [level=2] [ref=f52e112]
+          - generic [ref=f52e113]:
+            - generic [ref=f52e114]:
+              - generic [ref=f52e115]:
+                - generic [ref=f52e116]: "1."
+                - paragraph [ref=f52e117]: Ajukan
+              - paragraph [ref=f52e118]: Isi kebutuhan Zoom dan upload nota dinas.
+            - generic [ref=f52e119]:
+              - generic [ref=f52e120]:
+                - generic [ref=f52e121]: "2."
+                - paragraph [ref=f52e122]: Assign
+              - paragraph [ref=f52e123]: Admin/teknisi menindaklanjuti permohonan.
+            - generic [ref=f52e124]:
+              - generic [ref=f52e125]:
+                - generic [ref=f52e126]: "3."
+                - paragraph [ref=f52e127]: Cek ID Meeting
+              - paragraph [ref=f52e128]: Jika ruang id meeting zoom masih tersedia, lanjutkan. Jika tidak, konfirmasi.
+            - generic [ref=f52e129]:
+              - generic [ref=f52e130]:
+                - generic [ref=f52e131]: "4."
+                - paragraph [ref=f52e132]: Selesai
+              - paragraph [ref=f52e133]: Link Zoom ditambahkan jika disetujui.
+        - generic [ref=f52e134]:
+          - combobox [ref=f52e135]:
+            - option "Semua status" [selected]
+            - option "Dibuka"
+            - option "Diproses Teknisi"
+            - option "Zoom Siap"
+            - option "Selesai"
+            - option "Selesai Ditolak"
+            - option "Batal"
+          - combobox [ref=f52e136]:
+            - option "Semua pemohon" [selected]
+            - option "Ari Ardiansyah S.E, M.H."
+            - option "Bagastama Iqbalil Fathir S.Tr.Stat."
+            - option "Desiana Arbani Safari SST, M.A.P."
+            - option "Desiana Rahayu Susianti SST"
+            - option "Dwi Nova Prihatmoko S.Tr.Stat"
+            - option "Dwi Unzila Putri A.Md.Stat."
+            - option "Eka Virja SE"
+            - option "Fadhila Ajeng Damaris S.Tr.Stat."
+            - option "Fahrunnisa Maharani S.Tr.Stat."
+            - option "Fitria Kurniawati S.ST"
+            - option "Gestari SST"
+            - option "Kristin Verahditiya S.Si."
+            - option "Listia Nugraheni S.Si."
+            - option "Mardha Tilla Septiani SST, M.A."
+            - option "Marko Januarta Putra Mulyowidodo S.Tr.Stat."
+            - option "Muhammad Miftakhul Romadlon SST"
+            - option "Nadya Fitri Chairani S.Tr.Stat."
+            - option "Narezi Febriansa SST"
+            - option "Nur Jannah Mega Anindita SST"
+            - option "Nurulhuda S.Sos"
+            - option "Nurzikri Saputra S.Tr.Stat."
+            - option "Oktarizal SST., M.S.E"
+            - option "Raden Mohamad Pramadhira S.Tr.Stat."
+            - option "Rengga Firmandika SST"
+            - option "Ridho Akbar SST, M.T"
+            - option "Rommel Yonatan Sianipar S.Tr.Stat."
+            - 'option "Ryan Giggs Khikta`Awan Utomo S.Tr.Stat."'
+            - option "Sabilla Hamda Syahputri S.Tr.Stat."
+            - option "Santy Fajaria SST, MT."
+            - option "Shinta Regina Nursedima Marpaung S.E., M.Ak."
+            - option "Siti Ashhabul Jannah SST"
+            - option "Sohidin SST, M.E.K.K."
+            - option "Syahrul Toha Saputra S.Tr.Stat."
+            - option "Vivi Yesica Sidabutar S.Tr.Stat."
+            - option "Yogi Oltas S.E."
+          - combobox [ref=f52e137]:
+            - option "Semua petugas" [selected]
+            - option "Akhmad Fadil Mubarok S.Tr.Stat."
+            - option "Marko Januarta Putra Mulyowidodo S.Tr.Stat."
+            - option "Narezi Febriansa SST"
+            - option "Rommel Yonatan Sianipar S.Tr.Stat."
+            - option "Sabilla Hamda Syahputri S.Tr.Stat."
+            - option "Sari Sisilianingsih SST, M.Kom."
+            - option "Syahrul Toha Saputra S.Tr.Stat."
+          - button "Terapkan" [ref=f52e138] [cursor=pointer]
+        - generic [ref=f52e139]:
+          - generic [ref=f52e140]:
+            - generic [ref=f52e141]:
+              - generic [ref=f52e142]: Aksi massal
+              - combobox "Aksi massal" [ref=f52e143]:
+                - option "Tugaskan teknisi"
+                - option "Ubah status" [selected]
+            - generic [ref=f52e144]:
+              - generic [ref=f52e145]: Status baru
+              - combobox "Status baru" [ref=f52e146]:
+                - option "Pilih status" [selected]
+                - option "Diproses Teknisi"
+                - option "Zoom Siap"
+                - option "Selesai"
+                - option "Selesai Ditolak"
+                - option "Batal"
+            - paragraph [ref=f52e147]: Pilih pengajuan aktif pada halaman ini, maksimal 50 per proses.
+          - generic [ref=f52e148]:
+            - generic [ref=f52e149]: 0 pengajuan dipilih
+            - button "Ubah status" [ref=f52e150] [cursor=pointer]
+        - generic [ref=f52e151]:
+          - table [ref=f52e153]:
+            - rowgroup [ref=f52e154]:
+              - row [ref=f52e155]:
+                - columnheader [ref=f52e156]:
+                  - checkbox "Pilih semua pengajuan aktif pada halaman ini" [ref=f52e157]
+                - columnheader [ref=f52e158]:
+                  - link "Kode" [ref=f52e159] [cursor=pointer]:
+                    - /url: http://localhost:8000/reservations?sort=code&direction=asc
+                - columnheader [ref=f52e160]:
+                  - link "Kegiatan / Ruang" [ref=f52e161] [cursor=pointer]:
+                    - /url: http://localhost:8000/reservations?sort=room_name&direction=asc
+                - columnheader [ref=f52e162]:
+                  - link "Jadwal" [ref=f52e163] [cursor=pointer]:
+                    - /url: http://localhost:8000/reservations?sort=start_time&direction=asc
+                - columnheader [ref=f52e164]:
+                  - link "Pemohon" [ref=f52e165] [cursor=pointer]:
+                    - /url: http://localhost:8000/reservations?sort=requester&direction=asc
+                - columnheader [ref=f52e166]:
+                  - link "Status" [ref=f52e167] [cursor=pointer]:
+                    - /url: http://localhost:8000/reservations?sort=status&direction=asc
+                - columnheader "Link Zoom" [ref=f52e168]
+                - columnheader [ref=f52e169]:
+                  - link "Petugas" [ref=f52e170] [cursor=pointer]:
+                    - /url: http://localhost:8000/reservations?sort=approver&direction=asc
+                - columnheader "Aksi" [ref=f52e171]
+            - rowgroup [ref=f52e172]:
+              - row [ref=f52e173]:
+                - cell [ref=f52e174]:
+                  - checkbox "Pilih pengajuan Zoom RES-20261027-00003" [ref=f52e175]
+                - cell "RES-20261027-00003" [ref=f52e176]
+                - cell [ref=f52e177]:
+                  - paragraph [ref=f52e178]: Rapat Kepegawaian
+                  - paragraph [ref=f52e179]: "Pemeriksaan ( cat: agar dapat diberikan seger..."
+                - cell "05/11/2026 08:00 s/d 05/11/2026 16:00" [ref=f52e180]
+                - cell "Ari Ardiansyah S.E, M.H." [ref=f52e181]
+                - cell "Zoom Siap" [ref=f52e182]
+                - cell [ref=f52e184]:
+                  - link "Buka link" [ref=f52e185] [cursor=pointer]:
+                    - /url: https://us02web.zoom.us/j/81539237071?pwd=vuaGAWNiLDYfQul1aRRbQpjNoRiOW8.1
+                - cell "Sabilla Hamda Syahputri S.Tr.Stat." [ref=f52e186]
+                - cell [ref=f52e187]:
+                  - generic [ref=f52e188]:
+                    - link "Detail" [ref=f52e189] [cursor=pointer]:
+                      - /url: http://localhost:8000/reservations/131
+                    - button "Hapus" [ref=f52e194] [cursor=pointer]
+              - row [ref=f52e197]:
+                - cell [ref=f52e198]:
+                  - checkbox "Pilih pengajuan Zoom RES-20261027-00002" [disabled] [ref=f52e199]
+                - cell "RES-20261027-00002" [ref=f52e200]
+                - cell [ref=f52e201]:
+                  - paragraph [ref=f52e202]: Sosialisasi Counseling Center BPS
+                  - paragraph [ref=f52e203]: Zoom Meeting Kegiatan Sosialisasi Counseling...
+                - cell "29/10/2026 08:00 s/d 29/10/2026 12:00" [ref=f52e204]
+                - cell "Eka Virja SE" [ref=f52e205]
+                - cell "Selesai" [ref=f52e206]
+                - cell [ref=f52e208]:
+                  - link "Buka link" [ref=f52e209] [cursor=pointer]:
+                    - /url: https://us02web.zoom.us/j/84138329384?pwd=2AMfFQEEdIaKGUpirmhsQj2Lvw9bKW.1
+                - cell "Sari Sisilianingsih SST, M.Kom." [ref=f52e210]
+                - cell [ref=f52e211]:
+                  - generic [ref=f52e212]:
+                    - link "Detail" [ref=f52e213] [cursor=pointer]:
+                      - /url: http://localhost:8000/reservations/130
+                    - button "Hapus" [ref=f52e218] [cursor=pointer]
+              - row [ref=f52e221]:
+                - cell [ref=f52e222]:
+                  - checkbox "Pilih pengajuan Zoom RES-20261027-00001" [disabled] [ref=f52e223]
+                - cell "RES-20261027-00001" [ref=f52e224]
+                - cell [ref=f52e225]:
+                  - paragraph [ref=f52e226]: Gladi Seminar Join Research Mahasiswa Magang BPS Provinsi Kep. Bangka Belitung 2026
+                  - paragraph [ref=f52e227]: Gladi
+                - cell "28/10/2026 13:00 s/d 28/10/2026 16:00" [ref=f52e228]
+                - cell "Oktarizal SST., M.S.E" [ref=f52e229]
+                - cell "Selesai" [ref=f52e230]
+                - cell [ref=f52e232]:
+                  - link "Buka link" [ref=f52e233] [cursor=pointer]:
+                    - /url: https://us02web.zoom.us/j/87160998402?pwd=iRDQsXVsnF1XavOaCQgfoRRMAHGSXq.1
+                - cell "Sari Sisilianingsih SST, M.Kom." [ref=f52e234]
+                - cell [ref=f52e235]:
+                  - generic [ref=f52e236]:
+                    - link "Detail" [ref=f52e237] [cursor=pointer]:
+                      - /url: http://localhost:8000/reservations/129
+                    - button "Hapus" [ref=f52e242] [cursor=pointer]
+              - row [ref=f52e245]:
+                - cell [ref=f52e246]:
+                  - checkbox "Pilih pengajuan Zoom RES-20261026-00001" [disabled] [ref=f52e247]
+                - cell "RES-20261026-00001" [ref=f52e248]
+                - cell [ref=f52e249]:
+                  - paragraph [ref=f52e250]: Rapat Evaluasi Statistik Produksi Tahun 2026
+                  - paragraph [ref=f52e251]: Rapat Evaluasi Statistik Produksi Tahun 2026
+                - cell "29/10/2026 08:30 s/d 29/10/2026 16:00" [ref=f52e252]
+                - cell "Dwi Unzila Putri A.Md.Stat." [ref=f52e253]
+                - cell "Selesai" [ref=f52e254]
+                - cell [ref=f52e256]:
+                  - link "Buka link" [ref=f52e257] [cursor=pointer]:
+                    - /url: https://us02web.zoom.us/j/88617578415?pwd=ZecXfU1aXj03SBuVQTaK5UgYv8c59B.1
+                - cell "Sabilla Hamda Syahputri S.Tr.Stat." [ref=f52e258]
+                - cell [ref=f52e259]:
+                  - generic [ref=f52e260]:
+                    - link "Detail" [ref=f52e261] [cursor=pointer]:
+                      - /url: http://localhost:8000/reservations/128
+                    - button "Hapus" [ref=f52e266] [cursor=pointer]
+              - row [ref=f52e269]:
+                - cell [ref=f52e270]:
+                  - checkbox "Pilih pengajuan Zoom RES-20261023-00001" [ref=f52e271]
+                - cell "RES-20261023-00001" [ref=f52e272]
+                - cell [ref=f52e273]:
+                  - paragraph [ref=f52e274]: Internalisasi Aliran Data Statistik Sektoral
+                  - paragraph [ref=f52e275]: Internalisasi Aliran Data Statistik Sektoral
+                - cell "26/10/2026 08:00 s/d 26/10/2026 12:30" [ref=f52e276]
+                - cell "Rommel Yonatan Sianipar S.Tr.Stat." [ref=f52e277]
+                - cell "Zoom Siap" [ref=f52e278]
+                - cell [ref=f52e280]:
+                  - link "Buka link" [ref=f52e281] [cursor=pointer]:
+                    - /url: https://us02web.zoom.us/j/81182102732?pwd=wribu0OK4swkRwubXqqhgaShC7xo1i.1
+                - cell "Rommel Yonatan Sianipar S.Tr.Stat." [ref=f52e282]
+                - cell [ref=f52e283]:
+                  - generic [ref=f52e284]:
+                    - link "Detail" [ref=f52e285] [cursor=pointer]:
+                      - /url: http://localhost:8000/reservations/127
+                    - button "Hapus" [ref=f52e290] [cursor=pointer]
+              - row [ref=f52e293]:
+                - cell [ref=f52e294]:
+                  - checkbox "Pilih pengajuan Zoom RES-20261022-00002" [ref=f52e295]
+                - cell "RES-20261022-00002" [ref=f52e296]
+                - cell [ref=f52e297]:
+                  - paragraph [ref=f52e298]: Zoom Rekonsiliasi PDRB Tw III-2026 Part 2
+                  - paragraph [ref=f52e299]: Zoom Rekonsiliasi PDRB Tw III-2026 Part 2
+                - cell "09/11/2026 08:00 s/d 12/11/2026 16:00" [ref=f52e300]
+                - cell "Desiana Rahayu Susianti SST" [ref=f52e301]
+                - cell "Zoom Siap" [ref=f52e302]
+                - cell [ref=f52e304]:
+                  - link "Buka link" [ref=f52e305] [cursor=pointer]:
+                    - /url: https://us02web.zoom.us/j/89734212795?pwd=OsYIi4M2dDhLoYvuHSayMRstQZMIHd.1
+                - cell "Sabilla Hamda Syahputri S.Tr.Stat." [ref=f52e306]
+                - cell [ref=f52e307]:
+                  - generic [ref=f52e308]:
+                    - link "Detail" [ref=f52e309] [cursor=pointer]:
+                      - /url: http://localhost:8000/reservations/126
+                    - button "Hapus" [ref=f52e314] [cursor=pointer]
+              - row [ref=f52e317]:
+                - cell [ref=f52e318]:
+                  - checkbox "Pilih pengajuan Zoom RES-20261022-00001" [ref=f52e319]
+                - cell "RES-20261022-00001" [ref=f52e320]
+                - cell [ref=f52e321]:
+                  - paragraph [ref=f52e322]: Zoom Rekonsiliasi PDRB Tw III-2026
+                  - paragraph [ref=f52e323]: Zoom Rekonsiliasi PDRB Tw III-2026
+                - cell "06/11/2026 08:00 s/d 06/11/2026 16:30" [ref=f52e324]
+                - cell "Desiana Rahayu Susianti SST" [ref=f52e325]
+                - cell "Zoom Siap" [ref=f52e326]
+                - cell [ref=f52e328]:
+                  - link "Buka link" [ref=f52e329] [cursor=pointer]:
+                    - /url: https://us02web.zoom.us/j/86863867338?pwd=JB3c7l5ayAwsGZPAXKylaajzH3Vyot.1
+                - cell "Rommel Yonatan Sianipar S.Tr.Stat." [ref=f52e330]
+                - cell [ref=f52e331]:
+                  - generic [ref=f52e332]:
+                    - link "Detail" [ref=f52e333] [cursor=pointer]:
+                      - /url: http://localhost:8000/reservations/125
+                    - button "Hapus" [ref=f52e338] [cursor=pointer]
+              - row [ref=f52e341]:
+                - cell [ref=f52e342]:
+                  - checkbox "Pilih pengajuan Zoom RES-20261019-00003" [ref=f52e343]
+                - cell "RES-20261019-00003" [ref=f52e344]
+                - cell [ref=f52e345]:
+                  - paragraph [ref=f52e346]: Rapat Kepegawaian
+                  - paragraph [ref=f52e347]: presentasi dan wawancara
+                - cell "27/10/2026 09:00 s/d 28/10/2026 17:00" [ref=f52e348]
+                - cell "Ari Ardiansyah S.E, M.H." [ref=f52e349]
+                - cell "Zoom Siap" [ref=f52e350]
+                - cell [ref=f52e352]:
+                  - link "Buka link" [ref=f52e353] [cursor=pointer]:
+                    - /url: https://us02web.zoom.us/j/88396713531?pwd=3kGvjEsOekk0GvvungR93lUfuOfeaZ.1
+                - cell "Rommel Yonatan Sianipar S.Tr.Stat." [ref=f52e354]
+                - cell [ref=f52e355]:
+                  - generic [ref=f52e356]:
+                    - link "Detail" [ref=f52e357] [cursor=pointer]:
+                      - /url: http://localhost:8000/reservations/124
+                    - button "Hapus" [ref=f52e362] [cursor=pointer]
+              - row [ref=f52e365]:
+                - cell [ref=f52e366]:
+                  - checkbox "Pilih pengajuan Zoom RES-20261019-00002" [disabled] [ref=f52e367]
+                - cell "RES-20261019-00002" [ref=f52e368]
+                - cell [ref=f52e369]:
+                  - paragraph [ref=f52e370]: Briefing Persiapan Pelaksanaan Sakernas November 2026
+                  - paragraph [ref=f52e371]: Briefing Internal besama PJK SAKERNAS Novembe...
+                - cell "21/10/2026 13:00 s/d 21/10/2026 16:30" [ref=f52e372]
+                - cell "Raden Mohamad Pramadhira S.Tr.Stat." [ref=f52e373]
+                - cell "Selesai" [ref=f52e374]
+                - cell [ref=f52e376]:
+                  - link "Buka link" [ref=f52e377] [cursor=pointer]:
+                    - /url: https://us02web.zoom.us/j/88166249483?pwd=4fkN0wC22VBKfAwzlfWNb9KtqZpqkv.1
+                - cell "Marko Januarta Putra Mulyowidodo S.Tr.Stat." [ref=f52e378]
+                - cell [ref=f52e379]:
+                  - generic [ref=f52e380]:
+                    - link "Detail" [ref=f52e381] [cursor=pointer]:
+                      - /url: http://localhost:8000/reservations/123
+                    - button "Hapus" [ref=f52e386] [cursor=pointer]
+              - row [ref=f52e389]:
+                - cell [ref=f52e390]:
+                  - checkbox "Pilih pengajuan Zoom RES-20261019-00001" [disabled] [ref=f52e391]
+                - cell "RES-20261019-00001" [ref=f52e392]
+                - cell [ref=f52e393]:
+                  - paragraph [ref=f52e394]: Rekonsiliasi Data BRS Bulan Oktober 2026
+                  - paragraph [ref=f52e395]: Rekonsiliasi Data BRS Bulanan
+                - cell "21/10/2026 08:00 s/d 21/10/2026 12:00" [ref=f52e396]
+                - cell "Siti Ashhabul Jannah SST" [ref=f52e397]
+                - cell "Selesai" [ref=f52e398]
+                - cell [ref=f52e400]:
+                  - link "Buka link" [ref=f52e401] [cursor=pointer]:
+                    - /url: https://us02web.zoom.us/j/82905492797?pwd=u0etHoLrAvzDkXwIFpDObOfaNoQGWC.1
+                - cell "Sabilla Hamda Syahputri S.Tr.Stat." [ref=f52e402]
+                - cell [ref=f52e403]:
+                  - generic [ref=f52e404]:
+                    - link "Detail" [ref=f52e405] [cursor=pointer]:
+                      - /url: http://localhost:8000/reservations/122
+                    - button "Hapus" [ref=f52e410] [cursor=pointer]
+          - generic [ref=f52e413]:
+            - generic [ref=f52e414]:
+              - generic [ref=f52e415]: Menampilkan 1 hingga 10 dari 123 hasil
+              - generic [ref=f52e416]:
+                - generic [ref=f52e417]: "Per Halaman:"
+                - combobox "Per Halaman:" [ref=f52e418]:
+                  - option "10" [selected]
+                  - option "20"
+                  - option "50"
+            - navigation "Navigasi halaman" [ref=f52e419]:
+              - generic "Halaman sebelumnya" [ref=f52e420]
+              - generic [ref=f52e423]: "1"
+              - link "2" [ref=f52e424] [cursor=pointer]:
+                - /url: http://localhost:8000/reservations?page=2
+              - link "3" [ref=f52e425] [cursor=pointer]:
+                - /url: http://localhost:8000/reservations?page=3
+              - generic [ref=f52e426]: ...
+              - link "13" [ref=f52e427] [cursor=pointer]:
+                - /url: http://localhost:8000/reservations?page=13
+              - link "Halaman berikutnya" [ref=f52e428] [cursor=pointer]:
+                - /url: http://localhost:8000/reservations?page=2

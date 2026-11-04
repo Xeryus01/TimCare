@@ -18,7 +18,7 @@
 
                 <!-- Create Form -->
                 <div class="bg-white dark:bg-dark-800 overflow-hidden shadow-sm rounded-lg">
-                    <form method="POST" action="{{ route('users.store') }}" class="p-6">
+                    <form data-tc-native method="POST" action="{{ route('users.store') }}" class="p-6">
                         @csrf
 
                         <!-- Name -->
@@ -87,6 +87,8 @@
                                 <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                             @enderror
                         </div>
+
+                        @include('users.partials.teams')
 
                         <!-- Submit Button -->
                         <div class="flex items-center justify-end">

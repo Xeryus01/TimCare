@@ -9,7 +9,7 @@
         </div>
 
         <!-- Form Card -->
-        <div class="max-w-2xl rounded-xl border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-dark-800 sm:p-8">
+        <div class="max-w-4xl rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-dark-800 sm:p-8">
             <!-- Error Messages -->
             @if($errors->any())
                 <div class="mb-6 rounded-lg bg-red-50 p-4 dark:bg-red-500/10">
@@ -33,8 +33,20 @@
                 @csrf
                 @method('PATCH')
 
+                @if($canEditAll ?? true)
+                <div class="rounded-2xl border border-gray-200 bg-gray-50/60 p-5 dark:border-gray-700 dark:bg-white/5 sm:p-6">
+                    <div class="mb-5 flex items-center gap-3">
+                        <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-50 text-brand-600 dark:bg-brand-500/10 dark:text-brand-400">
+                            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-14L4 7m8 4v10m0-10L4 7v10l8 4"/></svg>
+                        </div>
+                        <div>
+                            <h3 class="text-base font-semibold text-gray-900 dark:text-white">Informasi Aset</h3>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">Identitas dan spesifikasi perangkat</p>
+                        </div>
+                    </div>
+                    <div class="grid gap-5 sm:grid-cols-2">
                 <!-- Asset Code -->
-                <div>
+                <div class="sm:col-span-2">
                     <label for="asset_code" class="block text-sm font-medium text-gray-900 dark:text-white mb-2">
                         NO BMN
                     </label>
@@ -45,7 +57,7 @@
                 </div>
 
                 <!-- Name -->
-                <div>
+                <div class="sm:col-span-2">
                     <label for="name" class="block text-sm font-medium text-gray-900 dark:text-white mb-2">
                         Nama
                     </label>
@@ -99,6 +111,11 @@
                     @enderror
                 </div>
 
+                    </div>
+                </div>
+
+                @endif
+
                 @php
                     $photoSerialUrlValue = old('photo_serial_url');
                     if ($photoSerialUrlValue === null && $asset->photo_serial) {
@@ -117,10 +134,29 @@
                             $photoAssetUrlValue = $asset->photo_asset;
                         }
                     }
+
+                    $photoBmnUrlValue = old('photo_bmn_url');
+                    if ($photoBmnUrlValue === null && $asset->photo_bmn) {
+                        if (str_starts_with($asset->photo_bmn, 'drive:')) {
+                            $photoBmnUrlValue = \App\Models\Asset::googleDriveFileLink(substr($asset->photo_bmn, 6));
+                        } elseif (preg_match('/^https?:\/\//', $asset->photo_bmn)) {
+                            $photoBmnUrlValue = $asset->photo_bmn;
+                        }
+                    }
                 @endphp
 
-                <!-- Photos: Serial and Asset -->
-                <div class="grid gap-6 sm:grid-cols-2">
+                <div class="rounded-2xl border border-gray-200 bg-gray-50/60 p-5 dark:border-gray-700 dark:bg-white/5 sm:p-6">
+                    <div class="mb-5 flex items-center gap-3">
+                        <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-50 text-brand-600 dark:bg-brand-500/10 dark:text-brand-400">
+                            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 19.5h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5z"/></svg>
+                        </div>
+                        <div>
+                            <h3 class="text-base font-semibold text-gray-900 dark:text-white">Foto &amp; Dokumentasi</h3>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">Unggah file gambar atau tempel tautan Google Drive</p>
+                        </div>
+                    </div>
+                <!-- Photos: Serial, Asset, Nomor BMN -->
+                <div class="grid gap-6 sm:grid-cols-3">
                     <div>
                         <label for="photo_serial" class="block text-sm font-medium text-gray-900 dark:text-white mb-2">Foto Serial Number (Upload)</label>
                         <input id="photo_serial" type="file" name="photo_serial" accept="image/*" class="w-full" />
@@ -170,10 +206,48 @@
                             </div>
                         @endif
                     </div>
-                </div>
 
+                    <div>
+                        <label for="photo_bmn" class="block text-sm font-medium text-gray-900 dark:text-white mb-2">Foto Nomor BMN (Upload)</label>
+                        <input id="photo_bmn" type="file" name="photo_bmn" accept="image/*" class="w-full" />
+                        <p class="mt-1 text-sm text-gray-500">Atau masukkan link drive pada kolom berikut.</p>
+                        <input id="photo_bmn_url" type="url" name="photo_bmn_url" value="{{$photoBmnUrlValue}}" placeholder="https://drive.google.com/..." class="w-full mt-2 rounded-lg border border-gray-300 px-3 py-2" />
+                        @error('photo_bmn')
+                            <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{$message}}</p>
+                        @enderror
+                        @error('photo_bmn_url')
+                            <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{$message}}</p>
+                        @enderror
+                        @if($asset->photo_bmn)
+                            <div class="mt-3">
+                                <p class="text-sm text-gray-500">Preview saat ini:</p>
+                                @if(str_starts_with($asset->photo_bmn, 'drive:'))
+                                    <iframe src="{{\App\Models\Asset::googleDrivePreviewUrl(substr($asset->photo_bmn, 6))}}" class="mt-2 h-40 w-full rounded-lg border" frameborder="0" allowfullscreen></iframe>
+                                @elseif(preg_match('/^https?:\/\//', $asset->photo_bmn))
+                                    <img src="{{$asset->photo_bmn}}" class="mt-2 max-h-40 rounded-lg border" alt="Foto Nomor BMN" />
+                                @else
+                                    <img src="{{\Illuminate\Support\Facades\Storage::url($asset->photo_bmn)}}" class="mt-2 max-h-40 rounded-lg border" alt="Foto Nomor BMN" />
+                                @endif
+                            </div>
+                        @endif
+                    </div>
+                </div>
+            </div>
+
+                @if($canEditAll ?? true)
+                <div class="rounded-2xl border border-gray-200 bg-gray-50/60 p-5 dark:border-gray-700 dark:bg-white/5 sm:p-6">
+                    <div class="mb-5 flex items-center gap-3">
+                        <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-50 text-brand-600 dark:bg-brand-500/10 dark:text-brand-400">
+                            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg>
+                        </div>
+                        <div>
+                            <h3 class="text-base font-semibold text-gray-900 dark:text-white">Penempatan, Perolehan &amp; Status</h3>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">Lokasi, pemegang, nilai, kondisi, dan status aset</p>
+                        </div>
+                    </div>
+                    <div class="grid gap-5 sm:grid-cols-2">
                 <!-- Location -->
-                <div>
+                <div class="sm:col-span-2">
                     <label for="location" class="block text-sm font-medium text-gray-900 dark:text-white mb-2">
                         Lokasi Aset
                     </label>
@@ -268,8 +342,13 @@
                     @enderror
                 </div>
 
+                    </div>
+                </div>
+
+                @endif
+
                 <!-- Form Actions -->
-                <div class="flex gap-3 pt-6">
+                <div class="flex flex-col-reverse gap-3 border-t border-gray-200 pt-6 dark:border-gray-700 sm:flex-row">
                     <a href="{{ url()->to(route('assets.index')) }}" class="flex-1 rounded-lg border border-gray-300 px-4 py-2.5 text-center font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-white/5">
                         Batal
                     </a>

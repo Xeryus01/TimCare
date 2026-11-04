@@ -1,0 +1,1581 @@
+- generic [ref=f25e2]:
+  - navigation [ref=f25e3]:
+    - generic [ref=f25e4]:
+      - generic [ref=f25e6]:
+        - list [ref=f25e7]:
+          - listitem [ref=f25e8]:
+            - link [ref=f25e9] [cursor=pointer]:
+              - /url: "#stack"
+              - button "Stack" [ref=f25e10]
+          - listitem [ref=f25e14]:
+            - link [ref=f25e15] [cursor=pointer]:
+              - /url: "#context"
+              - button "Context" [ref=f25e16]
+          - listitem [ref=f25e20]:
+            - link [ref=f25e21] [cursor=pointer]:
+              - /url: "#debug"
+              - button "Debug" [ref=f25e22]
+          - listitem [ref=f25e26]:
+            - link [ref=f25e27] [cursor=pointer]:
+              - /url: https://flareapp.io/?utm_campaign=ignition&utm_source=ignition
+              - button "Flare" [ref=f25e28]
+        - list [ref=f25e35]:
+          - listitem [ref=f25e36]:
+            - link [ref=f25e37] [cursor=pointer]:
+              - /url: "#share"
+              - button "Share" [ref=f25e38]
+            - generic:
+              - generic:
+                - generic:
+                  - heading "Share with Flare" [level=4]
+                  - link "Docs":
+                    - /url: https://flareapp.io/docs/ignition/introducing-ignition/sharing-errors?utm_campaign=ignition&utm_source=ignition
+                - list:
+                  - listitem:
+                    - generic:
+                      - checkbox "Stack" [checked]
+                      - generic: Stack
+                  - listitem:
+                    - generic:
+                      - checkbox "Context" [checked]
+                      - generic: Context
+                  - listitem:
+                    - generic:
+                      - checkbox "Debug" [checked]
+                      - generic: Debug
+                - generic:
+                  - button "Create Share"
+          - listitem [ref=f25e42]:
+            - link [ref=f25e43] [cursor=pointer]:
+              - /url: https://laravel.com/docs/
+              - button "Docs" [ref=f25e44]
+          - listitem [ref=f25e48]:
+            - link [ref=f25e49] [cursor=pointer]:
+              - /url: "#settings"
+              - button [ref=f25e50]
+            - generic:
+              - generic:
+                - generic:
+                  - heading "Ignition Settings" [level=4]
+                  - link "Docs":
+                    - /url: https://flareapp.io/ignition?utm_campaign=ignition&utm_source=ignition
+                - generic:
+                  - text: Editor
+                  - generic:
+                    - combobox "Editor":
+                      - option "Clipboard"
+                      - option "Sublime"
+                      - option "TextMate"
+                      - option "Emacs"
+                      - option "MacVim"
+                      - option "PhpStorm" [selected]
+                      - option "PHPStorm Remote"
+                      - option "Idea"
+                      - option "VS Code"
+                      - option "VS Code Insiders"
+                      - option "VS Code Remote"
+                      - option "VS Code Insiders Remote"
+                      - option "VS Codium"
+                      - option "Cursor"
+                      - option "Atom"
+                      - option "Nova"
+                      - option "NetBeans"
+                      - option "Xdebug"
+                - generic:
+                  - text: Theme
+                  - button "auto"
+                - generic:
+                  - button "Save settings"
+                - paragraph:
+                  - text: Settings will be saved locally in
+                  - code: ~/.ignition.json
+                  - text: .
+      - link "Undefined variable $start" [ref=f25e56] [cursor=pointer]:
+        - /url: "#top"
+  - main [ref=f25e58]:
+    - main [ref=f25e62]:
+      - generic [ref=f25e64]:
+        - generic [ref=f25e65]:
+          - generic [ref=f25e66]: ErrorException
+          - generic [ref=f25e69]:
+            - generic [ref=f25e70]: PHP 8.3.32
+            - generic [ref=f25e71]: 11.55.0
+        - generic [ref=f25e74]: Undefined variable $start
+    - generic [ref=f25e78]:
+      - complementary [ref=f25e79]:
+        - generic [ref=f25e80]:
+          - button "Expand vendor frames" [ref=f25e82] [cursor=pointer]
+          - list [ref=f25e89]:
+            - listitem [ref=f25e90]:
+              - generic [ref=f25e92]:
+                - generic [ref=f25e93]: C:\Users\BPS\Documents\timcare-dev\resources\views\components\pagination.blade
+                - generic [ref=f25e94]: .php
+                - generic [ref=f25e95]: ": 58"
+              - generic [ref=f25e96]: require
+            - listitem [ref=f25e97]
+            - listitem [ref=f25e98] [cursor=pointer]: 8 vendor frames
+            - listitem [ref=f25e101] [cursor=pointer]:
+              - generic [ref=f25e103]:
+                - generic [ref=f25e104]: C:\Users\BPS\Documents\timcare-dev\resources\views\ti\objects\index.blade
+                - generic [ref=f25e105]: .php
+                - generic [ref=f25e106]: ": 64"
+              - generic [ref=f25e107]: require
+            - listitem [ref=f25e108] [cursor=pointer]: 55 vendor frames
+            - listitem [ref=f25e111] [cursor=pointer]:
+              - generic [ref=f25e113]:
+                - generic [ref=f25e114]: C:\Users\BPS\Documents\timcare-dev\public\index
+                - generic [ref=f25e115]: .php
+                - generic [ref=f25e116]: ": 17"
+              - generic [ref=f25e117]: require_once
+            - listitem [ref=f25e118] [cursor=pointer]: 1 vendor frame
+      - generic [ref=f25e121]:
+        - 'link "C:\\Users\\BPS\\Documents\\timcare-dev\\resources\\views\\components\\pagination.blade .php : 58" [ref=f25e123] [cursor=pointer]':
+          - /url: phpstorm://open?file=C%3A%5CUsers%5CBPS%5CDocuments%5Ctimcare-dev%5Cresources%5Cviews%5Ccomponents%5Cpagination.blade.php&line=58
+          - generic [ref=f25e124]:
+            - generic [ref=f25e125]: C:\Users\BPS\Documents\timcare-dev\resources\views\components\pagination.blade
+            - generic [ref=f25e126]: .php
+            - generic [ref=f25e127]: ": 58"
+        - main [ref=f25e128]:
+          - navigation [ref=f25e129]:
+            - generic [ref=f25e130]:
+              - paragraph [ref=f25e131]: "43"
+              - paragraph [ref=f25e132]: "44"
+              - paragraph [ref=f25e133]: "45"
+              - paragraph [ref=f25e134]: "46"
+              - paragraph [ref=f25e135]: "47"
+              - paragraph [ref=f25e136]: "48"
+              - paragraph [ref=f25e137]: "49"
+              - paragraph [ref=f25e138]: "50"
+              - paragraph [ref=f25e139]: "51"
+              - paragraph [ref=f25e140]: "52"
+              - paragraph [ref=f25e141]: "53"
+              - paragraph [ref=f25e142]: "54"
+              - paragraph [ref=f25e143]: "55"
+              - paragraph [ref=f25e144]: "56"
+              - paragraph [ref=f25e145]: "57"
+              - paragraph [ref=f25e146]: "58"
+              - paragraph [ref=f25e147]: "59"
+              - paragraph [ref=f25e148]: "60"
+              - paragraph [ref=f25e149]: "61"
+              - paragraph [ref=f25e150]: "62"
+              - paragraph [ref=f25e151]: "63"
+              - paragraph [ref=f25e152]: "64"
+              - paragraph [ref=f25e153]: "65"
+              - paragraph [ref=f25e154]: "66"
+              - paragraph [ref=f25e155]: "67"
+              - paragraph [ref=f25e156]: "68"
+              - paragraph [ref=f25e157]: "69"
+              - paragraph [ref=f25e158]: "70"
+              - paragraph [ref=f25e159]: "71"
+              - paragraph [ref=f25e160]: "72"
+          - code [ref=f25e163]:
+            - generic [ref=f25e164]:
+              - link [ref=f25e165] [cursor=pointer]:
+                - /url: phpstorm://open?file=C%3A%5CUsers%5CBPS%5CDocuments%5Ctimcare-dev%5Cresources%5Cviews%5Ccomponents%5Cpagination.blade.php&line=43
+                - button [ref=f25e166]
+              - generic [ref=f25e169]: "@else"
+            - generic [ref=f25e171]:
+              - link [ref=f25e172] [cursor=pointer]:
+                - /url: phpstorm://open?file=C%3A%5CUsers%5CBPS%5CDocuments%5Ctimcare-dev%5Cresources%5Cviews%5Ccomponents%5Cpagination.blade.php&line=44
+                - button [ref=f25e173]
+              - generic [ref=f25e176]: "<a href=\"{{ $paginator->previousPageUrl() }}\""
+            - generic [ref=f25e178]:
+              - link [ref=f25e179] [cursor=pointer]:
+                - /url: phpstorm://open?file=C%3A%5CUsers%5CBPS%5CDocuments%5Ctimcare-dev%5Cresources%5Cviews%5Ccomponents%5Cpagination.blade.php&line=45
+                - button [ref=f25e180]
+              - generic [ref=f25e183]: class="relative inline-flex items-center rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:bg-dark-800 dark:text-gray-300 dark:hover:bg-white/10 trans
+            - generic [ref=f25e184]:
+              - link [ref=f25e185] [cursor=pointer]:
+                - /url: phpstorm://open?file=C%3A%5CUsers%5CBPS%5CDocuments%5Ctimcare-dev%5Cresources%5Cviews%5Ccomponents%5Cpagination.blade.php&line=46
+                - button [ref=f25e186]
+              - generic [ref=f25e189]: <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            - generic [ref=f25e191]:
+              - link [ref=f25e192] [cursor=pointer]:
+                - /url: phpstorm://open?file=C%3A%5CUsers%5CBPS%5CDocuments%5Ctimcare-dev%5Cresources%5Cviews%5Ccomponents%5Cpagination.blade.php&line=47
+                - button [ref=f25e193]
+              - generic [ref=f25e196]: <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            - generic [ref=f25e198]:
+              - link [ref=f25e199] [cursor=pointer]:
+                - /url: phpstorm://open?file=C%3A%5CUsers%5CBPS%5CDocuments%5Ctimcare-dev%5Cresources%5Cviews%5Ccomponents%5Cpagination.blade.php&line=48
+                - button [ref=f25e200]
+              - generic [ref=f25e203]: </svg>
+            - generic [ref=f25e205]:
+              - link [ref=f25e206] [cursor=pointer]:
+                - /url: phpstorm://open?file=C%3A%5CUsers%5CBPS%5CDocuments%5Ctimcare-dev%5Cresources%5Cviews%5Ccomponents%5Cpagination.blade.php&line=49
+                - button [ref=f25e207]
+              - generic [ref=f25e210]: </a>
+            - generic [ref=f25e212]:
+              - link [ref=f25e213] [cursor=pointer]:
+                - /url: phpstorm://open?file=C%3A%5CUsers%5CBPS%5CDocuments%5Ctimcare-dev%5Cresources%5Cviews%5Ccomponents%5Cpagination.blade.php&line=50
+                - button [ref=f25e214]
+              - generic [ref=f25e217]: "@endif"
+            - link [ref=f25e220] [cursor=pointer]:
+              - /url: phpstorm://open?file=C%3A%5CUsers%5CBPS%5CDocuments%5Ctimcare-dev%5Cresources%5Cviews%5Ccomponents%5Cpagination.blade.php&line=51
+              - button [ref=f25e221]
+            - generic [ref=f25e225]:
+              - link [ref=f25e226] [cursor=pointer]:
+                - /url: phpstorm://open?file=C%3A%5CUsers%5CBPS%5CDocuments%5Ctimcare-dev%5Cresources%5Cviews%5Ccomponents%5Cpagination.blade.php&line=52
+                - button [ref=f25e227]
+              - generic [ref=f25e230]: "{{-- Pagination Page Numbers --}}"
+            - generic [ref=f25e232]:
+              - link [ref=f25e233] [cursor=pointer]:
+                - /url: phpstorm://open?file=C%3A%5CUsers%5CBPS%5CDocuments%5Ctimcare-dev%5Cresources%5Cviews%5Ccomponents%5Cpagination.blade.php&line=53
+                - button [ref=f25e234]
+              - generic [ref=f25e237]: "@php"
+            - generic [ref=f25e239]:
+              - link [ref=f25e240] [cursor=pointer]:
+                - /url: phpstorm://open?file=C%3A%5CUsers%5CBPS%5CDocuments%5Ctimcare-dev%5Cresources%5Cviews%5Ccomponents%5Cpagination.blade.php&line=54
+                - button [ref=f25e241]
+              - generic [ref=f25e244]: $start = max(1, $paginator->currentPage() - 2);
+            - generic [ref=f25e246]:
+              - link [ref=f25e247] [cursor=pointer]:
+                - /url: phpstorm://open?file=C%3A%5CUsers%5CBPS%5CDocuments%5Ctimcare-dev%5Cresources%5Cviews%5Ccomponents%5Cpagination.blade.php&line=55
+                - button [ref=f25e248]
+              - generic [ref=f25e251]: $end = min($paginator->lastPage(), $paginator->currentPage() + 2);
+            - generic [ref=f25e253]:
+              - link [ref=f25e254] [cursor=pointer]:
+                - /url: phpstorm://open?file=C%3A%5CUsers%5CBPS%5CDocuments%5Ctimcare-dev%5Cresources%5Cviews%5Ccomponents%5Cpagination.blade.php&line=56
+                - button [ref=f25e255]
+              - generic [ref=f25e258]: "@endphp"
+            - link [ref=f25e261] [cursor=pointer]:
+              - /url: phpstorm://open?file=C%3A%5CUsers%5CBPS%5CDocuments%5Ctimcare-dev%5Cresources%5Cviews%5Ccomponents%5Cpagination.blade.php&line=57
+              - button [ref=f25e262]
+            - generic [ref=f25e266]:
+              - link [ref=f25e267] [cursor=pointer]:
+                - /url: phpstorm://open?file=C%3A%5CUsers%5CBPS%5CDocuments%5Ctimcare-dev%5Cresources%5Cviews%5Ccomponents%5Cpagination.blade.php&line=58
+                - button [ref=f25e268]
+              - generic [ref=f25e271]: "@if ($start > 1)"
+            - generic [ref=f25e273]:
+              - link [ref=f25e274] [cursor=pointer]:
+                - /url: phpstorm://open?file=C%3A%5CUsers%5CBPS%5CDocuments%5Ctimcare-dev%5Cresources%5Cviews%5Ccomponents%5Cpagination.blade.php&line=59
+                - button [ref=f25e275]
+              - generic [ref=f25e278]: "<a href=\"{{ $paginator->url(1) }}\""
+            - generic [ref=f25e280]:
+              - link [ref=f25e281] [cursor=pointer]:
+                - /url: phpstorm://open?file=C%3A%5CUsers%5CBPS%5CDocuments%5Ctimcare-dev%5Cresources%5Cviews%5Ccomponents%5Cpagination.blade.php&line=60
+                - button [ref=f25e282]
+              - generic [ref=f25e285]: class="relative inline-flex items-center rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:bg-dark-800 dark:text-gray-300 dark:hover:bg-white/10 trans
+            - generic [ref=f25e286]:
+              - link [ref=f25e287] [cursor=pointer]:
+                - /url: phpstorm://open?file=C%3A%5CUsers%5CBPS%5CDocuments%5Ctimcare-dev%5Cresources%5Cviews%5Ccomponents%5Cpagination.blade.php&line=61
+                - button [ref=f25e288]
+              - generic [ref=f25e291]: "1"
+            - generic [ref=f25e292]:
+              - link [ref=f25e293] [cursor=pointer]:
+                - /url: phpstorm://open?file=C%3A%5CUsers%5CBPS%5CDocuments%5Ctimcare-dev%5Cresources%5Cviews%5Ccomponents%5Cpagination.blade.php&line=62
+                - button [ref=f25e294]
+              - generic [ref=f25e297]: </a>
+            - generic [ref=f25e299]:
+              - link [ref=f25e300] [cursor=pointer]:
+                - /url: phpstorm://open?file=C%3A%5CUsers%5CBPS%5CDocuments%5Ctimcare-dev%5Cresources%5Cviews%5Ccomponents%5Cpagination.blade.php&line=63
+                - button [ref=f25e301]
+              - generic [ref=f25e304]: "@if ($start > 2)"
+            - generic [ref=f25e306]:
+              - link [ref=f25e307] [cursor=pointer]:
+                - /url: phpstorm://open?file=C%3A%5CUsers%5CBPS%5CDocuments%5Ctimcare-dev%5Cresources%5Cviews%5Ccomponents%5Cpagination.blade.php&line=64
+                - button [ref=f25e308]
+              - generic [ref=f25e311]: <span class="px-1 text-gray-500">...</span>
+            - generic [ref=f25e313]:
+              - link [ref=f25e314] [cursor=pointer]:
+                - /url: phpstorm://open?file=C%3A%5CUsers%5CBPS%5CDocuments%5Ctimcare-dev%5Cresources%5Cviews%5Ccomponents%5Cpagination.blade.php&line=65
+                - button [ref=f25e315]
+              - generic [ref=f25e318]: "@endif"
+            - generic [ref=f25e320]:
+              - link [ref=f25e321] [cursor=pointer]:
+                - /url: phpstorm://open?file=C%3A%5CUsers%5CBPS%5CDocuments%5Ctimcare-dev%5Cresources%5Cviews%5Ccomponents%5Cpagination.blade.php&line=66
+                - button [ref=f25e322]
+              - generic [ref=f25e325]: "@endif"
+            - link [ref=f25e328] [cursor=pointer]:
+              - /url: phpstorm://open?file=C%3A%5CUsers%5CBPS%5CDocuments%5Ctimcare-dev%5Cresources%5Cviews%5Ccomponents%5Cpagination.blade.php&line=67
+              - button [ref=f25e329]
+            - generic [ref=f25e333]:
+              - link [ref=f25e334] [cursor=pointer]:
+                - /url: phpstorm://open?file=C%3A%5CUsers%5CBPS%5CDocuments%5Ctimcare-dev%5Cresources%5Cviews%5Ccomponents%5Cpagination.blade.php&line=68
+                - button [ref=f25e335]
+              - generic [ref=f25e338]: "@for ($i = $start; $i <= $end; $i++)"
+            - generic [ref=f25e340]:
+              - link [ref=f25e341] [cursor=pointer]:
+                - /url: phpstorm://open?file=C%3A%5CUsers%5CBPS%5CDocuments%5Ctimcare-dev%5Cresources%5Cviews%5Ccomponents%5Cpagination.blade.php&line=69
+                - button [ref=f25e342]
+              - generic [ref=f25e345]: "@if ($i == $paginator->currentPage())"
+            - generic [ref=f25e347]:
+              - link [ref=f25e348] [cursor=pointer]:
+                - /url: phpstorm://open?file=C%3A%5CUsers%5CBPS%5CDocuments%5Ctimcare-dev%5Cresources%5Cviews%5Ccomponents%5Cpagination.blade.php&line=70
+                - button [ref=f25e349]
+              - generic [ref=f25e352]: <span class="relative inline-flex items-center rounded-lg border border-brand-300 bg-brand-50 px-3 py-2 text-sm font-medium text-brand-600 dark:border-brand-500/30 dark:bg-brand-500/15 dark:text-brand-400">
+            - generic [ref=f25e354]:
+              - link [ref=f25e355] [cursor=pointer]:
+                - /url: phpstorm://open?file=C%3A%5CUsers%5CBPS%5CDocuments%5Ctimcare-dev%5Cresources%5Cviews%5Ccomponents%5Cpagination.blade.php&line=71
+                - button [ref=f25e356]
+              - generic [ref=f25e359]: "{{ $i }}"
+            - generic [ref=f25e361]:
+              - link [ref=f25e362] [cursor=pointer]:
+                - /url: phpstorm://open?file=C%3A%5CUsers%5CBPS%5CDocuments%5Ctimcare-dev%5Cresources%5Cviews%5Ccomponents%5Cpagination.blade.php&line=72
+                - button [ref=f25e363]
+              - generic [ref=f25e366]: </span>
+    - generic [ref=f25e369]:
+      - navigation [ref=f25e370]:
+        - list [ref=f25e372]:
+          - listitem [ref=f25e373]:
+            - link "App" [ref=f25e374] [cursor=pointer]:
+              - /url: "#context-app"
+            - list [ref=f25e375]:
+              - listitem [ref=f25e376]:
+                - link "Routing" [ref=f25e377] [cursor=pointer]:
+                  - /url: "#context-app-routing"
+              - listitem [ref=f25e382]:
+                - link "Views" [ref=f25e383] [cursor=pointer]:
+                  - /url: "#context-app-views"
+          - listitem [ref=f25e388]:
+            - link "Request" [ref=f25e389] [cursor=pointer]:
+              - /url: "#context-request"
+            - list [ref=f25e390]:
+              - listitem [ref=f25e391]:
+                - link "Browser" [ref=f25e392] [cursor=pointer]:
+                  - /url: "#context-request-browser"
+              - listitem [ref=f25e397]:
+                - link "Headers" [ref=f25e398] [cursor=pointer]:
+                  - /url: "#context-request-headers"
+              - listitem [ref=f25e403]:
+                - link "Query String" [ref=f25e404] [cursor=pointer]:
+                  - /url: "#context-request-query-string"
+              - listitem [ref=f25e409]:
+                - link "Body" [ref=f25e410] [cursor=pointer]:
+                  - /url: "#context-request-body"
+          - listitem [ref=f25e415]:
+            - link "Context" [ref=f25e416] [cursor=pointer]:
+              - /url: "#context-context"
+            - list [ref=f25e417]:
+              - listitem [ref=f25e418]:
+                - link "User" [ref=f25e419] [cursor=pointer]:
+                  - /url: "#context-user-user"
+              - listitem [ref=f25e424]:
+                - link "Versions" [ref=f25e425] [cursor=pointer]:
+                  - /url: "#context-context-versions"
+      - generic [ref=f25e430]:
+        - generic [ref=f25e431]:
+          - heading "App" [level=2] [ref=f25e432]
+          - generic [ref=f25e433]:
+            - generic [ref=f25e434]:
+              - heading "Routing" [level=1] [ref=f25e435]
+              - generic [ref=f25e439]:
+                - generic [ref=f25e440]:
+                  - term [ref=f25e441]: Controller
+                  - definition [ref=f25e442]:
+                    - generic [ref=f25e443]:
+                      - code [ref=f25e446]: App\Http\Controllers\TiObjectController@index
+                      - button "Copy to clipboard" [ref=f25e448] [cursor=pointer]
+                - generic [ref=f25e451]:
+                  - term [ref=f25e452]: Route name
+                  - definition [ref=f25e453]:
+                    - generic [ref=f25e454]:
+                      - code [ref=f25e457]: ti.objects.index
+                      - button "Copy to clipboard" [ref=f25e459] [cursor=pointer]
+                - generic [ref=f25e462]:
+                  - term [ref=f25e463]: Middleware
+                  - definition [ref=f25e464]:
+                    - list [ref=f25e465]:
+                      - listitem [ref=f25e466]:
+                        - generic [ref=f25e467]:
+                          - code [ref=f25e470]: web
+                          - button "Copy to clipboard" [ref=f25e472] [cursor=pointer]
+                      - listitem [ref=f25e475]:
+                        - generic [ref=f25e476]:
+                          - code [ref=f25e479]: auth
+                          - button "Copy to clipboard" [ref=f25e481] [cursor=pointer]
+            - generic [ref=f25e484]:
+              - heading "Views" [level=1] [ref=f25e485]
+              - generic [ref=f25e489]:
+                - generic [ref=f25e490]:
+                  - term [ref=f25e491]: View
+                  - definition [ref=f25e492]:
+                    - link "C:\\Users\\BPS\\Documents\\timcare-dev\\resources\\views\\components\\pagination.blade .php" [ref=f25e493] [cursor=pointer]:
+                      - /url: phpstorm://open?file=C%3A%5CUsers%5CBPS%5CDocuments%5Ctimcare-dev%5Cresources%5Cviews%5Ccomponents%5Cpagination.blade.php&line=1
+                      - generic [ref=f25e494]:
+                        - generic [ref=f25e495]: C:\Users\BPS\Documents\timcare-dev\resources\views\components\pagination.blade
+                        - generic [ref=f25e496]: .php
+                - generic [ref=f25e497]:
+                  - term [ref=f25e498]: Data
+                  - definition [ref=f25e499]:
+                    - generic [ref=f25e500]:
+                      - generic [ref=f25e501]:
+                        - term [ref=f25e502]: errors
+                        - definition [ref=f25e503]:
+                          - generic [ref=f25e505]:
+                            - text: "Illuminate\\Support\\ViewErrorBag {"
+                            - generic "[Ctrl+click] Expand all children" [ref=f25e506] [cursor=pointer]:
+                              - text: "#1300"
+                              - generic [ref=f25e507]: ▼
+                            - generic [ref=f25e508]: "#bags: []"
+                            - text: "}"
+                      - generic [ref=f25e509]:
+                        - term [ref=f25e510]: paginator
+                        - definition [ref=f25e511]:
+                          - generic [ref=f25e513]:
+                            - text: "Illuminate\\Pagination\\LengthAwarePaginator {"
+                            - generic "[Ctrl+click] Expand all children" [ref=f25e514] [cursor=pointer]:
+                              - text: "#1423"
+                              - generic [ref=f25e515]: ▼
+                            - generic [ref=f25e516]:
+                              - text: "#items:"
+                              - generic "Illuminate\\Database\\Eloquent\\Collection" [ref=f25e517]:
+                                - generic [ref=f25e518]: Illuminate\Database\Eloquent
+                                - generic [ref=f25e519]: \
+                                - text: Collection
+                              - text: "{"
+                              - generic "[Ctrl+click] Expand all children" [ref=f25e520] [cursor=pointer]:
+                                - text: "#1383"
+                                - generic [ref=f25e521]: ▶
+                              - text: "} #perPage: 20 #currentPage: 2 #path: \"http://localhost:8000/monitoring-ti/objects\" #query: array:1 ["
+                              - generic "[Ctrl+click] Expand all children" [ref=f25e522] [cursor=pointer]: ▶
+                              - text: "] #fragment: null #pageName: \"page\" +onEachSide: 3 #options: array:2 ["
+                              - generic "[Ctrl+click] Expand all children" [ref=f25e524] [cursor=pointer]: ▶
+                              - text: "] #total: 43 #lastPage: 3"
+                            - text: "}"
+                      - generic [ref=f25e526]:
+                        - term [ref=f25e527]: attributes
+                        - definition [ref=f25e528]:
+                          - generic [ref=f25e530]:
+                            - text: "Illuminate\\View\\ComponentAttributeBag {"
+                            - generic "[Ctrl+click] Expand all children" [ref=f25e531] [cursor=pointer]:
+                              - text: "#1459"
+                              - generic [ref=f25e532]: ▼
+                            - generic [ref=f25e533]:
+                              - text: "#attributes: array:1 ["
+                              - generic "[Ctrl+click] Expand all children" [ref=f25e534] [cursor=pointer]: ▶
+                              - text: "]"
+                            - text: "}"
+                      - generic [ref=f25e536]:
+                        - term [ref=f25e537]: slot
+                        - definition [ref=f25e538]:
+                          - generic [ref=f25e540]:
+                            - text: "Illuminate\\View\\ComponentSlot {"
+                            - generic "[Ctrl+click] Expand all children" [ref=f25e541] [cursor=pointer]:
+                              - text: "#1472"
+                              - generic [ref=f25e542]: ▼
+                            - generic [ref=f25e543]:
+                              - text: "+attributes:"
+                              - generic "Illuminate\\View\\ComponentAttributeBag" [ref=f25e544]:
+                                - generic [ref=f25e545]: Illuminate\View
+                                - generic [ref=f25e546]: \
+                                - text: ComponentAttributeBag
+                              - text: "{"
+                              - generic "[Ctrl+click] Expand all children" [ref=f25e547] [cursor=pointer]:
+                                - text: "#1461"
+                                - generic [ref=f25e548]: ▶
+                              - text: "} #contents: \"\""
+                            - text: "}"
+                      - generic [ref=f25e549]:
+                        - term [ref=f25e550]: __laravel_slots
+                        - definition [ref=f25e551]:
+                          - generic [ref=f25e553]:
+                            - text: array:1 [
+                            - generic "[Ctrl+click] Expand all children" [ref=f25e554] [cursor=pointer]: ▼
+                            - generic [ref=f25e556]:
+                              - text: "\"__default\" =>"
+                              - generic "Illuminate\\View\\ComponentSlot" [ref=f25e557]:
+                                - generic [ref=f25e558]: Illuminate\View
+                                - generic [ref=f25e559]: \
+                                - text: ComponentSlot
+                              - text: "{"
+                              - generic "[Ctrl+click] Expand all children" [ref=f25e560] [cursor=pointer]:
+                                - text: "#1472"
+                                - generic [ref=f25e561]: ▶
+                              - text: "}"
+                            - text: "]"
+        - generic [ref=f25e562]:
+          - heading "Request" [level=2] [ref=f25e563]
+          - generic [ref=f25e564]:
+            - generic [ref=f25e565]:
+              - generic [ref=f25e566]:
+                - generic [ref=f25e567]: http://localhost:8000/monitoring-ti/objects?page=2&status=active
+                - generic [ref=f25e568]: GET
+              - generic [ref=f25e570] [cursor=pointer]:
+                - code [ref=f25e573]:
+                  - code [ref=f25e575]: "curl \"http://localhost:8000/monitoring-ti/objects?page=2&status=active\" \\ -X GET \\ -H 'host: localhost:8000' \\ -H 'connection: keep-alive' \\ -H 'sec-ch-ua: \"Not:A-Brand\";v=\"8\", \"Chromium\";v=\"156\", \"Google Chrome\";v=\"156\"' \\ -H 'sec-ch-ua-mobile: ?0' \\ -H 'sec-ch-ua-platform: \"Windows\"' \\ -H 'upgrade-insecure-requests: 1' \\ -H 'user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36' \\ -H 'accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/jxl,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7' \\ -H 'sec-fetch-site: none' \\ -H 'sec-fetch-mode: navigate' \\ -H 'sec-fetch-user: ?1' \\ -H 'sec-fetch-dest: document' \\ -H 'accept-encoding: gzip, deflate, br, zstd' \\ -H 'accept-language: en-US,en;q=0.9' \\ -H 'cookie: <CENSORED>' \\ -F 'page=2' -F 'status=active'"
+                - button "Copy to clipboard" [ref=f25e577]
+                - button [ref=f25e580]
+            - generic [ref=f25e583]:
+              - heading "Browser" [level=1] [ref=f25e584]
+              - generic [ref=f25e588]:
+                - code [ref=f25e591]: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36
+                - button "Copy to clipboard" [ref=f25e593] [cursor=pointer]
+            - generic [ref=f25e596]:
+              - heading "Headers" [level=1] [ref=f25e597]
+              - generic [ref=f25e601]:
+                - generic [ref=f25e602]:
+                  - term [ref=f25e603]: host
+                  - definition [ref=f25e604]:
+                    - generic [ref=f25e605]:
+                      - code [ref=f25e608]: localhost:8000
+                      - button "Copy to clipboard" [ref=f25e610] [cursor=pointer]
+                - generic [ref=f25e613]:
+                  - term [ref=f25e614]: connection
+                  - definition [ref=f25e615]:
+                    - generic [ref=f25e616]:
+                      - code [ref=f25e619]: keep-alive
+                      - button "Copy to clipboard" [ref=f25e621] [cursor=pointer]
+                - generic [ref=f25e624]:
+                  - term [ref=f25e625]: sec-ch-ua
+                  - definition [ref=f25e626]:
+                    - generic [ref=f25e627]:
+                      - code [ref=f25e630]: "\"Not:A-Brand\";v=\"8\", \"Chromium\";v=\"156\", \"Google Chrome\";v=\"156\""
+                      - button "Copy to clipboard" [ref=f25e632] [cursor=pointer]
+                - generic [ref=f25e635]:
+                  - term [ref=f25e636]: sec-ch-ua-mobile
+                  - definition [ref=f25e637]:
+                    - generic [ref=f25e638]:
+                      - code [ref=f25e641]: "?0"
+                      - button "Copy to clipboard" [ref=f25e643] [cursor=pointer]
+                - generic [ref=f25e646]:
+                  - term [ref=f25e647]: sec-ch-ua-platform
+                  - definition [ref=f25e648]:
+                    - generic [ref=f25e649]:
+                      - code [ref=f25e652]: "\"Windows\""
+                      - button "Copy to clipboard" [ref=f25e654] [cursor=pointer]
+                - generic [ref=f25e657]:
+                  - term [ref=f25e658]: upgrade-insecure-requests
+                  - definition [ref=f25e659]:
+                    - generic [ref=f25e660]:
+                      - code [ref=f25e663]: "1"
+                      - button "Copy to clipboard" [ref=f25e665] [cursor=pointer]
+                - generic [ref=f25e668]:
+                  - term [ref=f25e669]: user-agent
+                  - definition [ref=f25e670]:
+                    - generic [ref=f25e671]:
+                      - code [ref=f25e674]: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36
+                      - button "Copy to clipboard" [ref=f25e676] [cursor=pointer]
+                - generic [ref=f25e679]:
+                  - term [ref=f25e680]: accept
+                  - definition [ref=f25e681]:
+                    - generic [ref=f25e682]:
+                      - code [ref=f25e685]: text/html,application/xhtml+xml,application/xml;q=0.9,image/jxl,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+                      - button "Copy to clipboard" [ref=f25e687] [cursor=pointer]
+                - generic [ref=f25e690]:
+                  - term [ref=f25e691]: sec-fetch-site
+                  - definition [ref=f25e692]:
+                    - generic [ref=f25e693]:
+                      - code [ref=f25e696]: none
+                      - button "Copy to clipboard" [ref=f25e698] [cursor=pointer]
+                - generic [ref=f25e701]:
+                  - term [ref=f25e702]: sec-fetch-mode
+                  - definition [ref=f25e703]:
+                    - generic [ref=f25e704]:
+                      - code [ref=f25e707]: navigate
+                      - button "Copy to clipboard" [ref=f25e709] [cursor=pointer]
+                - generic [ref=f25e712]:
+                  - term [ref=f25e713]: sec-fetch-user
+                  - definition [ref=f25e714]:
+                    - generic [ref=f25e715]:
+                      - code [ref=f25e718]: "?1"
+                      - button "Copy to clipboard" [ref=f25e720] [cursor=pointer]
+                - generic [ref=f25e723]:
+                  - term [ref=f25e724]: sec-fetch-dest
+                  - definition [ref=f25e725]:
+                    - generic [ref=f25e726]:
+                      - code [ref=f25e729]: document
+                      - button "Copy to clipboard" [ref=f25e731] [cursor=pointer]
+                - generic [ref=f25e734]:
+                  - term [ref=f25e735]: accept-encoding
+                  - definition [ref=f25e736]:
+                    - generic [ref=f25e737]:
+                      - code [ref=f25e740]: gzip, deflate, br, zstd
+                      - button "Copy to clipboard" [ref=f25e742] [cursor=pointer]
+                - generic [ref=f25e745]:
+                  - term [ref=f25e746]: accept-language
+                  - definition [ref=f25e747]:
+                    - generic [ref=f25e748]:
+                      - code [ref=f25e751]: en-US,en;q=0.9
+                      - button "Copy to clipboard" [ref=f25e753] [cursor=pointer]
+                - generic [ref=f25e756]:
+                  - term [ref=f25e757]: cookie
+                  - definition [ref=f25e758]:
+                    - generic [ref=f25e759]:
+                      - code [ref=f25e762]: <CENSORED>
+                      - button "Copy to clipboard" [ref=f25e764] [cursor=pointer]
+            - generic [ref=f25e767]:
+              - heading "Query String" [level=1] [ref=f25e768]
+              - generic [ref=f25e772]:
+                - generic [ref=f25e773]:
+                  - term [ref=f25e774]: page
+                  - definition [ref=f25e775]:
+                    - generic [ref=f25e776]:
+                      - code [ref=f25e779]: "2"
+                      - button "Copy to clipboard" [ref=f25e781] [cursor=pointer]
+                - generic [ref=f25e784]:
+                  - term [ref=f25e785]: status
+                  - definition [ref=f25e786]:
+                    - generic [ref=f25e787]:
+                      - code [ref=f25e790]: active
+                      - button "Copy to clipboard" [ref=f25e792] [cursor=pointer]
+            - generic [ref=f25e795]:
+              - heading "Body" [level=1] [ref=f25e796]
+              - generic [ref=f25e800]:
+                - code [ref=f25e803]: "{ \"page\": \"2\", \"status\": \"active\" }"
+                - button "Copy to clipboard" [ref=f25e805] [cursor=pointer]
+        - generic [ref=f25e808]:
+          - heading "Context" [level=2] [ref=f25e809]
+          - generic [ref=f25e810]:
+            - generic [ref=f25e811]:
+              - heading "User" [level=1] [ref=f25e812]
+              - generic [ref=f25e816]:
+                - img "admin@example.com" [ref=f25e818]
+                - generic [ref=f25e819]:
+                  - paragraph [ref=f25e820]: Administrator
+                  - paragraph [ref=f25e821]: admin@example.com
+              - generic [ref=f25e822] [cursor=pointer]:
+                - code [ref=f25e825]:
+                  - code [ref=f25e827]: "{ \"id\": 1, \"name\": \"Administrator\", \"email\": \"admin@example.com\", \"phone_number\": \"6282177201914\", \"email_verified_at\": \"2026-05-25T06:30:28.000000Z\", \"created_at\": \"2026-05-25T06:30:28.000000Z\", \"updated_at\": \"2026-07-01T01:55:36.000000Z\", \"deleted_at\": null, \"roles\": [ { \"id\": 1, \"name\": \"Admin\", \"guard_name\": \"web\", \"created_at\": \"2026-05-25T06:30:28.000000Z\", \"updated_at\": \"2026-05-25T06:30:28.000000Z\", \"pivot\": { \"model_type\": \"App\\\\Models\\\\User\", \"model_id\": 1, \"role_id\": 1 } } ] }"
+                - button "Copy to clipboard" [ref=f25e829]
+                - button [ref=f25e832]
+            - generic [ref=f25e835]:
+              - heading "Versions" [level=1] [ref=f25e836]
+              - generic [ref=f25e840]:
+                - generic [ref=f25e841]:
+                  - term [ref=f25e842]: Php Version
+                  - definition [ref=f25e843]:
+                    - generic [ref=f25e844]:
+                      - code [ref=f25e847]: 8.3.32
+                      - button "Copy to clipboard" [ref=f25e849] [cursor=pointer]
+                - generic [ref=f25e852]:
+                  - term [ref=f25e853]: Laravel Version
+                  - definition [ref=f25e854]:
+                    - generic [ref=f25e855]:
+                      - code [ref=f25e858]: 11.55.0
+                      - button "Copy to clipboard" [ref=f25e860] [cursor=pointer]
+                - generic [ref=f25e863]:
+                  - term [ref=f25e864]: Laravel Locale
+                  - definition [ref=f25e865]:
+                    - generic [ref=f25e866]:
+                      - code [ref=f25e869]: id
+                      - button "Copy to clipboard" [ref=f25e871] [cursor=pointer]
+                - generic [ref=f25e874]:
+                  - term [ref=f25e875]: Laravel Config Cached
+                  - definition [ref=f25e876]:
+                    - generic [ref=f25e877]: "false"
+                - generic [ref=f25e881]:
+                  - term [ref=f25e882]: App Debug
+                  - definition [ref=f25e883]:
+                    - generic [ref=f25e884]: "true"
+                - generic [ref=f25e888]:
+                  - term [ref=f25e889]: App Env
+                  - definition [ref=f25e890]:
+                    - generic [ref=f25e891]:
+                      - code [ref=f25e894]: development
+                      - button "Copy to clipboard" [ref=f25e896] [cursor=pointer]
+    - generic [ref=f25e900]:
+      - navigation:
+        - list [ref=f25e901]:
+          - listitem [ref=f25e902]:
+            - button "57 Queries" [ref=f25e903] [cursor=pointer]:
+              - generic [ref=f25e904]: "57"
+              - generic [ref=f25e905]: Queries
+      - generic [ref=f25e906]:
+        - generic [ref=f25e907]:
+          - generic [ref=f25e908]:
+            - generic [ref=f25e909]: 11:01:35 AM
+            - generic [ref=f25e910]:
+              - img "Runtime" [ref=f25e911]
+              - text: 24.38ms
+            - generic [ref=f25e913]:
+              - img "Connection" [ref=f25e914]
+              - text: mysql
+          - generic [ref=f25e917] [cursor=pointer]:
+            - code [ref=f25e920]:
+              - code [ref=f25e922]: "select exists (select 1 from information_schema.tables where table_schema = 'digistat_timcare' and table_name = 'roles' and table_type in ('BASE TABLE', 'SYSTEM VERSIONED')) as `exists`"
+            - button "Copy to clipboard" [ref=f25e924]
+            - button [ref=f25e927]
+        - generic [ref=f25e930]:
+          - generic [ref=f25e931]:
+            - generic [ref=f25e932]: 11:01:35 AM
+            - generic [ref=f25e933]:
+              - img "Runtime" [ref=f25e934]
+              - text: 0.49ms
+            - generic [ref=f25e936]:
+              - img "Connection" [ref=f25e937]
+              - text: mysql
+          - generic [ref=f25e940]:
+            - generic [ref=f25e941] [cursor=pointer]:
+              - code [ref=f25e944]:
+                - code [ref=f25e946]: "delete from `cache` where `key` in (spatie.permission.cache, illuminate:cache:flexible:created:spatie.permission.cache)"
+              - button "Copy to clipboard" [ref=f25e948]
+              - button [ref=f25e951]
+            - button "2 query parameters" [ref=f25e955] [cursor=pointer]
+        - generic [ref=f25e958]:
+          - generic [ref=f25e959]:
+            - generic [ref=f25e960]: 11:01:35 AM
+            - generic [ref=f25e961]:
+              - img "Runtime" [ref=f25e962]
+              - text: 0.77ms
+            - generic [ref=f25e964]:
+              - img "Connection" [ref=f25e965]
+              - text: mysql
+          - generic [ref=f25e968]:
+            - generic [ref=f25e969] [cursor=pointer]:
+              - code [ref=f25e972]:
+                - code [ref=f25e974]: "select * from `roles` where `name` = Admin and `guard_name` = web limit 1"
+              - button "Copy to clipboard" [ref=f25e976]
+              - button [ref=f25e979]
+            - button "2 query parameters" [ref=f25e983] [cursor=pointer]
+        - generic [ref=f25e986]:
+          - generic [ref=f25e987]:
+            - generic [ref=f25e988]: 11:01:35 AM
+            - generic [ref=f25e989]:
+              - img "Runtime" [ref=f25e990]
+              - text: 0.84ms
+            - generic [ref=f25e992]:
+              - img "Connection" [ref=f25e993]
+              - text: mysql
+          - generic [ref=f25e996]:
+            - generic [ref=f25e997] [cursor=pointer]:
+              - code [ref=f25e1000]:
+                - code [ref=f25e1002]: "select * from `roles` where `name` = Teknisi and `guard_name` = web limit 1"
+              - button "Copy to clipboard" [ref=f25e1004]
+              - button [ref=f25e1007]
+            - button "2 query parameters" [ref=f25e1011] [cursor=pointer]
+        - generic [ref=f25e1014]:
+          - generic [ref=f25e1015]:
+            - generic [ref=f25e1016]: 11:01:35 AM
+            - generic [ref=f25e1017]:
+              - img "Runtime" [ref=f25e1018]
+              - text: 0.29ms
+            - generic [ref=f25e1020]:
+              - img "Connection" [ref=f25e1021]
+              - text: mysql
+          - generic [ref=f25e1024]:
+            - generic [ref=f25e1025] [cursor=pointer]:
+              - code [ref=f25e1028]:
+                - code [ref=f25e1030]: "select * from `roles` where `name` = User and `guard_name` = web limit 1"
+              - button "Copy to clipboard" [ref=f25e1032]
+              - button [ref=f25e1035]
+            - button "2 query parameters" [ref=f25e1039] [cursor=pointer]
+        - generic [ref=f25e1042]:
+          - generic [ref=f25e1043]:
+            - generic [ref=f25e1044]: 11:01:35 AM
+            - generic [ref=f25e1045]:
+              - img "Runtime" [ref=f25e1046]
+              - text: 1.01ms
+            - generic [ref=f25e1048]:
+              - img "Connection" [ref=f25e1049]
+              - text: mysql
+          - generic [ref=f25e1052] [cursor=pointer]:
+            - code [ref=f25e1055]:
+              - code [ref=f25e1057]: "select exists (select 1 from information_schema.tables where table_schema = 'digistat_timcare' and table_name = 'permissions' and table_type in ('BASE TABLE', 'SYSTEM VERSIONED')) as `exists`"
+            - button "Copy to clipboard" [ref=f25e1059]
+            - button [ref=f25e1062]
+        - generic [ref=f25e1065]:
+          - generic [ref=f25e1066]:
+            - generic [ref=f25e1067]: 11:01:35 AM
+            - generic [ref=f25e1068]:
+              - img "Runtime" [ref=f25e1069]
+              - text: 0.81ms
+            - generic [ref=f25e1071]:
+              - img "Connection" [ref=f25e1072]
+              - text: mysql
+          - generic [ref=f25e1075] [cursor=pointer]:
+            - code [ref=f25e1078]:
+              - code [ref=f25e1080]: "select exists (select 1 from information_schema.tables where table_schema = 'digistat_timcare' and table_name = 'role_has_permissions' and table_type in ('BASE TABLE', 'SYSTEM VERSIONED')) as `exists`"
+            - button "Copy to clipboard" [ref=f25e1082]
+            - button [ref=f25e1085]
+        - generic [ref=f25e1088]:
+          - generic [ref=f25e1089]:
+            - generic [ref=f25e1090]: 11:01:35 AM
+            - generic [ref=f25e1091]:
+              - img "Runtime" [ref=f25e1092]
+              - text: 0.25ms
+            - generic [ref=f25e1094]:
+              - img "Connection" [ref=f25e1095]
+              - text: mysql
+          - generic [ref=f25e1098]:
+            - generic [ref=f25e1099] [cursor=pointer]:
+              - code [ref=f25e1102]:
+                - code [ref=f25e1104]: "select * from `cache` where `key` in (spatie.permission.cache)"
+              - button "Copy to clipboard" [ref=f25e1106]
+              - button [ref=f25e1109]
+            - button "1 query parameter" [ref=f25e1113] [cursor=pointer]
+        - generic [ref=f25e1116]:
+          - generic [ref=f25e1117]:
+            - generic [ref=f25e1118]: 11:01:35 AM
+            - generic [ref=f25e1119]:
+              - img "Runtime" [ref=f25e1120]
+              - text: 0.45ms
+            - generic [ref=f25e1122]:
+              - img "Connection" [ref=f25e1123]
+              - text: mysql
+          - generic [ref=f25e1126] [cursor=pointer]:
+            - code [ref=f25e1129]:
+              - code [ref=f25e1131]: "select * from `permissions`"
+            - button "Copy to clipboard" [ref=f25e1133]
+            - button [ref=f25e1136]
+        - generic [ref=f25e1139]:
+          - generic [ref=f25e1140]:
+            - generic [ref=f25e1141]: 11:01:35 AM
+            - generic [ref=f25e1142]:
+              - img "Runtime" [ref=f25e1143]
+              - text: 2.3ms
+            - generic [ref=f25e1145]:
+              - img "Connection" [ref=f25e1146]
+              - text: mysql
+          - generic [ref=f25e1149] [cursor=pointer]:
+            - code [ref=f25e1152]:
+              - code [ref=f25e1154]: "select `roles`.*, `role_has_permissions`.`permission_id` as `pivot_permission_id`, `role_has_permissions`.`role_id` as `pivot_role_id` from `roles` inner join `role_has_permissions` on `roles`.`id` = `role_has_permissions`.`role_id` where `role_has_permissions`.`permission_id` in (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14)"
+            - button "Copy to clipboard" [ref=f25e1156]
+            - button [ref=f25e1159]
+        - generic [ref=f25e1162]:
+          - generic [ref=f25e1163]:
+            - generic [ref=f25e1164]: 11:01:35 AM
+            - generic [ref=f25e1165]:
+              - img "Runtime" [ref=f25e1166]
+              - text: 20.98ms
+            - generic [ref=f25e1168]:
+              - img "Connection" [ref=f25e1169]
+              - text: mysql
+          - generic [ref=f25e1172]:
+            - generic [ref=f25e1173] [cursor=pointer]:
+              - code [ref=f25e1176]:
+                - code [ref=f25e1178]: "insert into `cache` (`expiration`, `key`, `value`) values (1793764895, spatie.permission.cache, a:3:{s:5:\"alias\";a:4:{s:1:\"a\";s:2:\"id\";s:1:\"b\";s:4:\"name\";s:1:\"c\";s:10:\"guard_name\";s:1:\"r\";s:5:\"roles\";}s:11:\"permissions\";a:14:{i:0;a:4:{s:1:\"a\";i:1;s:1:\"b\";s:12:\"view tickets\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:4:{i:0;i:1;i:1;i:2;i:2;i:3;i:3;i:4;}}i:1;a:4:{s:1:\"a\";i:2;s:1:\"b\";s:14:\"create tickets\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:3:{i:0;i:1;i:1;i:3;i:2;i:4;}}i:2;a:4:{s:1:\"a\";i:3;s:1:\"b\";s:14:\"update tickets\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:2:{i:0;i:1;i:1;i:2;}}i:3;a:4:{s:1:\"a\";i:4;s:1:\"b\";s:14:\"assign tickets\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:4;a:4:{s:1:\"a\";i:5;s:1:\"b\";s:15:\"comment tickets\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:4:{i:0;i:1;i:1;i:2;i:2;i:3;i:3;i:4;}}i:5;a:4:{s:1:\"a\";i:6;s:1:\"b\";s:11:\"view assets\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:4:{i:0;i:1;i:1;i:2;i:2;i:3;i:3;i:4;}}i:6;a:4:{s:1:\"a\";i:7;s:1:\"b\";s:13:\"manage assets\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:2:{i:0;i:1;i:1;i:2;}}i:7;a:4:{s:1:\"a\";i:8;s:1:\"b\";s:17:\"view reservations\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:4:{i:0;i:1;i:1;i:2;i:2;i:3;i:3;i:4;}}i:8;a:4:{s:1:\"a\";i:9;s:1:\"b\";s:19:\"create reservations\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:3:{i:0;i:1;i:1;i:3;i:2;i:4;}}i:9;a:4:{s:1:\"a\";i:10;s:1:\"b\";s:19:\"manage reservations\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:10;a:4:{s:1:\"a\";i:11;s:1:\"b\";s:20:\"approve reservations\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:2:{i:0;i:1;i:1;i:2;}}i:11;a:4:{s:1:\"a\";i:12;s:1:\"b\";s:14:\"view dashboard\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:4:{i:0;i:1;i:1;i:2;i:2;i:3;i:3;i:4;}}i:12;a:4:{s:1:\"a\";i:13;s:1:\"b\";s:16:\"view maintenance\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:4;}}i:13;a:4:{s:1:\"a\";i:14;s:1:\"b\";s:18:\"manage maintenance\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:4;}}}s:5:\"roles\";a:4:{i:0;a:3:{s:1:\"a\";i:1;s:1:\"b\";s:5:\"Admin\";s:1:\"c\";s:3:\"web\";}i:1;a:3:{s:1:\"a\";i:2;s:1:\"b\";s:7:\"Teknisi\";s:1:\"c\";s:3:\"web\";}i:2;a:3:{s:1:\"a\";i:3;s:1:\"b\";s:4:\"User\";s:1:\"c\";s:3:\"web\";}i:3;a:3:{s:1:\"a\";i:4;s:1:\"b\";s:3:\"ULP\";s:1:\"c\";s:3:\"web\";}}}) on duplicate key update `expiration` = values(`expiration`), `key` = values(`key`), `value` = values(`value`)"
+              - button "Copy to clipboard" [ref=f25e1180]
+              - button [ref=f25e1183]
+            - button "3 query parameters" [ref=f25e1187] [cursor=pointer]
+        - generic [ref=f25e1190]:
+          - generic [ref=f25e1191]:
+            - generic [ref=f25e1192]: 11:01:35 AM
+            - generic [ref=f25e1193]:
+              - img "Runtime" [ref=f25e1194]
+              - text: 3.68ms
+            - generic [ref=f25e1196]:
+              - img "Connection" [ref=f25e1197]
+              - text: mysql
+          - generic [ref=f25e1200]:
+            - generic [ref=f25e1201] [cursor=pointer]:
+              - code [ref=f25e1204]:
+                - code [ref=f25e1206]: "delete from `role_has_permissions` where `role_has_permissions`.`role_id` = 1"
+              - button "Copy to clipboard" [ref=f25e1208]
+              - button [ref=f25e1211]
+            - button "1 query parameter" [ref=f25e1215] [cursor=pointer]
+        - generic [ref=f25e1218]:
+          - generic [ref=f25e1219]:
+            - generic [ref=f25e1220]: 11:01:35 AM
+            - generic [ref=f25e1221]:
+              - img "Runtime" [ref=f25e1222]
+              - text: 2.02ms
+            - generic [ref=f25e1224]:
+              - img "Connection" [ref=f25e1225]
+              - text: mysql
+          - generic [ref=f25e1228]:
+            - generic [ref=f25e1229] [cursor=pointer]:
+              - code [ref=f25e1232]:
+                - code [ref=f25e1234]: "insert into `role_has_permissions` (`permission_id`, `role_id`) values (1, 1), (2, 1), (3, 1), (4, 1), (5, 1), (6, 1), (7, 1), (8, 1), (9, 1), (10, 1), (11, 1), (12, 1)"
+              - button "Copy to clipboard" [ref=f25e1236]
+              - button [ref=f25e1239]
+            - button "24 query parameters" [ref=f25e1243] [cursor=pointer]
+        - generic [ref=f25e1246]:
+          - generic [ref=f25e1247]:
+            - generic [ref=f25e1248]: 11:01:35 AM
+            - generic [ref=f25e1249]:
+              - img "Runtime" [ref=f25e1250]
+              - text: 1.36ms
+            - generic [ref=f25e1252]:
+              - img "Connection" [ref=f25e1253]
+              - text: mysql
+          - generic [ref=f25e1256]:
+            - generic [ref=f25e1257] [cursor=pointer]:
+              - code [ref=f25e1260]:
+                - code [ref=f25e1262]: "delete from `cache` where `key` in (spatie.permission.cache, illuminate:cache:flexible:created:spatie.permission.cache)"
+              - button "Copy to clipboard" [ref=f25e1264]
+              - button [ref=f25e1267]
+            - button "2 query parameters" [ref=f25e1271] [cursor=pointer]
+        - generic [ref=f25e1274]:
+          - generic [ref=f25e1275]:
+            - generic [ref=f25e1276]: 11:01:35 AM
+            - generic [ref=f25e1277]:
+              - img "Runtime" [ref=f25e1278]
+              - text: 0.49ms
+            - generic [ref=f25e1280]:
+              - img "Connection" [ref=f25e1281]
+              - text: mysql
+          - generic [ref=f25e1284]:
+            - generic [ref=f25e1285] [cursor=pointer]:
+              - code [ref=f25e1288]:
+                - code [ref=f25e1290]: "select * from `cache` where `key` in (spatie.permission.cache)"
+              - button "Copy to clipboard" [ref=f25e1292]
+              - button [ref=f25e1295]
+            - button "1 query parameter" [ref=f25e1299] [cursor=pointer]
+        - generic [ref=f25e1302]:
+          - generic [ref=f25e1303]:
+            - generic [ref=f25e1304]: 11:01:35 AM
+            - generic [ref=f25e1305]:
+              - img "Runtime" [ref=f25e1306]
+              - text: 0.39ms
+            - generic [ref=f25e1308]:
+              - img "Connection" [ref=f25e1309]
+              - text: mysql
+          - generic [ref=f25e1312] [cursor=pointer]:
+            - code [ref=f25e1315]:
+              - code [ref=f25e1317]: "select * from `permissions`"
+            - button "Copy to clipboard" [ref=f25e1319]
+            - button [ref=f25e1322]
+        - generic [ref=f25e1325]:
+          - generic [ref=f25e1326]:
+            - generic [ref=f25e1327]: 11:01:35 AM
+            - generic [ref=f25e1328]:
+              - img "Runtime" [ref=f25e1329]
+              - text: 1.14ms
+            - generic [ref=f25e1331]:
+              - img "Connection" [ref=f25e1332]
+              - text: mysql
+          - generic [ref=f25e1335] [cursor=pointer]:
+            - code [ref=f25e1338]:
+              - code [ref=f25e1340]: "select `roles`.*, `role_has_permissions`.`permission_id` as `pivot_permission_id`, `role_has_permissions`.`role_id` as `pivot_role_id` from `roles` inner join `role_has_permissions` on `roles`.`id` = `role_has_permissions`.`role_id` where `role_has_permissions`.`permission_id` in (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14)"
+            - button "Copy to clipboard" [ref=f25e1342]
+            - button [ref=f25e1345]
+        - generic [ref=f25e1348]:
+          - generic [ref=f25e1349]:
+            - generic [ref=f25e1350]: 11:01:35 AM
+            - generic [ref=f25e1351]:
+              - img "Runtime" [ref=f25e1352]
+              - text: 2.32ms
+            - generic [ref=f25e1354]:
+              - img "Connection" [ref=f25e1355]
+              - text: mysql
+          - generic [ref=f25e1358]:
+            - generic [ref=f25e1359] [cursor=pointer]:
+              - code [ref=f25e1362]:
+                - code [ref=f25e1364]: "insert into `cache` (`expiration`, `key`, `value`) values (1793764895, spatie.permission.cache, a:3:{s:5:\"alias\";a:4:{s:1:\"a\";s:2:\"id\";s:1:\"b\";s:4:\"name\";s:1:\"c\";s:10:\"guard_name\";s:1:\"r\";s:5:\"roles\";}s:11:\"permissions\";a:14:{i:0;a:4:{s:1:\"a\";i:1;s:1:\"b\";s:12:\"view tickets\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:4:{i:0;i:1;i:1;i:2;i:2;i:3;i:3;i:4;}}i:1;a:4:{s:1:\"a\";i:2;s:1:\"b\";s:14:\"create tickets\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:3:{i:0;i:1;i:1;i:3;i:2;i:4;}}i:2;a:4:{s:1:\"a\";i:3;s:1:\"b\";s:14:\"update tickets\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:2:{i:0;i:1;i:1;i:2;}}i:3;a:4:{s:1:\"a\";i:4;s:1:\"b\";s:14:\"assign tickets\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:4;a:4:{s:1:\"a\";i:5;s:1:\"b\";s:15:\"comment tickets\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:4:{i:0;i:1;i:1;i:2;i:2;i:3;i:3;i:4;}}i:5;a:4:{s:1:\"a\";i:6;s:1:\"b\";s:11:\"view assets\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:4:{i:0;i:1;i:1;i:2;i:2;i:3;i:3;i:4;}}i:6;a:4:{s:1:\"a\";i:7;s:1:\"b\";s:13:\"manage assets\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:2:{i:0;i:1;i:1;i:2;}}i:7;a:4:{s:1:\"a\";i:8;s:1:\"b\";s:17:\"view reservations\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:4:{i:0;i:1;i:1;i:2;i:2;i:3;i:3;i:4;}}i:8;a:4:{s:1:\"a\";i:9;s:1:\"b\";s:19:\"create reservations\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:3:{i:0;i:1;i:1;i:3;i:2;i:4;}}i:9;a:4:{s:1:\"a\";i:10;s:1:\"b\";s:19:\"manage reservations\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:10;a:4:{s:1:\"a\";i:11;s:1:\"b\";s:20:\"approve reservations\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:2:{i:0;i:1;i:1;i:2;}}i:11;a:4:{s:1:\"a\";i:12;s:1:\"b\";s:14:\"view dashboard\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:4:{i:0;i:1;i:1;i:2;i:2;i:3;i:3;i:4;}}i:12;a:4:{s:1:\"a\";i:13;s:1:\"b\";s:16:\"view maintenance\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:4;}}i:13;a:4:{s:1:\"a\";i:14;s:1:\"b\";s:18:\"manage maintenance\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:4;}}}s:5:\"roles\";a:4:{i:0;a:3:{s:1:\"a\";i:1;s:1:\"b\";s:5:\"Admin\";s:1:\"c\";s:3:\"web\";}i:1;a:3:{s:1:\"a\";i:2;s:1:\"b\";s:7:\"Teknisi\";s:1:\"c\";s:3:\"web\";}i:2;a:3:{s:1:\"a\";i:3;s:1:\"b\";s:4:\"User\";s:1:\"c\";s:3:\"web\";}i:3;a:3:{s:1:\"a\";i:4;s:1:\"b\";s:3:\"ULP\";s:1:\"c\";s:3:\"web\";}}}) on duplicate key update `expiration` = values(`expiration`), `key` = values(`key`), `value` = values(`value`)"
+              - button "Copy to clipboard" [ref=f25e1366]
+              - button [ref=f25e1369]
+            - button "3 query parameters" [ref=f25e1373] [cursor=pointer]
+        - generic [ref=f25e1376]:
+          - generic [ref=f25e1377]:
+            - generic [ref=f25e1378]: 11:01:35 AM
+            - generic [ref=f25e1379]:
+              - img "Runtime" [ref=f25e1380]
+              - text: 1.72ms
+            - generic [ref=f25e1382]:
+              - img "Connection" [ref=f25e1383]
+              - text: mysql
+          - generic [ref=f25e1386]:
+            - generic [ref=f25e1387] [cursor=pointer]:
+              - code [ref=f25e1390]:
+                - code [ref=f25e1392]: "delete from `role_has_permissions` where `role_has_permissions`.`role_id` = 2"
+              - button "Copy to clipboard" [ref=f25e1394]
+              - button [ref=f25e1397]
+            - button "1 query parameter" [ref=f25e1401] [cursor=pointer]
+        - generic [ref=f25e1404]:
+          - generic [ref=f25e1405]:
+            - generic [ref=f25e1406]: 11:01:35 AM
+            - generic [ref=f25e1407]:
+              - img "Runtime" [ref=f25e1408]
+              - text: 1.95ms
+            - generic [ref=f25e1410]:
+              - img "Connection" [ref=f25e1411]
+              - text: mysql
+          - generic [ref=f25e1414]:
+            - generic [ref=f25e1415] [cursor=pointer]:
+              - code [ref=f25e1418]:
+                - code [ref=f25e1420]: "insert into `role_has_permissions` (`permission_id`, `role_id`) values (1, 2), (3, 2), (5, 2), (6, 2), (7, 2), (8, 2), (11, 2), (12, 2)"
+              - button "Copy to clipboard" [ref=f25e1422]
+              - button [ref=f25e1425]
+            - button "16 query parameters" [ref=f25e1429] [cursor=pointer]
+        - generic [ref=f25e1432]:
+          - generic [ref=f25e1433]:
+            - generic [ref=f25e1434]: 11:01:35 AM
+            - generic [ref=f25e1435]:
+              - img "Runtime" [ref=f25e1436]
+              - text: 1.81ms
+            - generic [ref=f25e1438]:
+              - img "Connection" [ref=f25e1439]
+              - text: mysql
+          - generic [ref=f25e1442]:
+            - generic [ref=f25e1443] [cursor=pointer]:
+              - code [ref=f25e1446]:
+                - code [ref=f25e1448]: "delete from `cache` where `key` in (spatie.permission.cache, illuminate:cache:flexible:created:spatie.permission.cache)"
+              - button "Copy to clipboard" [ref=f25e1450]
+              - button [ref=f25e1453]
+            - button "2 query parameters" [ref=f25e1457] [cursor=pointer]
+        - generic [ref=f25e1460]:
+          - generic [ref=f25e1461]:
+            - generic [ref=f25e1462]: 11:01:35 AM
+            - generic [ref=f25e1463]:
+              - img "Runtime" [ref=f25e1464]
+              - text: 1.87ms
+            - generic [ref=f25e1466]:
+              - img "Connection" [ref=f25e1467]
+              - text: mysql
+          - generic [ref=f25e1470]:
+            - generic [ref=f25e1471] [cursor=pointer]:
+              - code [ref=f25e1474]:
+                - code [ref=f25e1476]: "select * from `cache` where `key` in (spatie.permission.cache)"
+              - button "Copy to clipboard" [ref=f25e1478]
+              - button [ref=f25e1481]
+            - button "1 query parameter" [ref=f25e1485] [cursor=pointer]
+        - generic [ref=f25e1488]:
+          - generic [ref=f25e1489]:
+            - generic [ref=f25e1490]: 11:01:35 AM
+            - generic [ref=f25e1491]:
+              - img "Runtime" [ref=f25e1492]
+              - text: 0.77ms
+            - generic [ref=f25e1494]:
+              - img "Connection" [ref=f25e1495]
+              - text: mysql
+          - generic [ref=f25e1498] [cursor=pointer]:
+            - code [ref=f25e1501]:
+              - code [ref=f25e1503]: "select * from `permissions`"
+            - button "Copy to clipboard" [ref=f25e1505]
+            - button [ref=f25e1508]
+        - generic [ref=f25e1511]:
+          - generic [ref=f25e1512]:
+            - generic [ref=f25e1513]: 11:01:35 AM
+            - generic [ref=f25e1514]:
+              - img "Runtime" [ref=f25e1515]
+              - text: 1.42ms
+            - generic [ref=f25e1517]:
+              - img "Connection" [ref=f25e1518]
+              - text: mysql
+          - generic [ref=f25e1521] [cursor=pointer]:
+            - code [ref=f25e1524]:
+              - code [ref=f25e1526]: "select `roles`.*, `role_has_permissions`.`permission_id` as `pivot_permission_id`, `role_has_permissions`.`role_id` as `pivot_role_id` from `roles` inner join `role_has_permissions` on `roles`.`id` = `role_has_permissions`.`role_id` where `role_has_permissions`.`permission_id` in (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14)"
+            - button "Copy to clipboard" [ref=f25e1528]
+            - button [ref=f25e1531]
+        - generic [ref=f25e1534]:
+          - generic [ref=f25e1535]:
+            - generic [ref=f25e1536]: 11:01:35 AM
+            - generic [ref=f25e1537]:
+              - img "Runtime" [ref=f25e1538]
+              - text: 1.82ms
+            - generic [ref=f25e1540]:
+              - img "Connection" [ref=f25e1541]
+              - text: mysql
+          - generic [ref=f25e1544]:
+            - generic [ref=f25e1545] [cursor=pointer]:
+              - code [ref=f25e1548]:
+                - code [ref=f25e1550]: "insert into `cache` (`expiration`, `key`, `value`) values (1793764895, spatie.permission.cache, a:3:{s:5:\"alias\";a:4:{s:1:\"a\";s:2:\"id\";s:1:\"b\";s:4:\"name\";s:1:\"c\";s:10:\"guard_name\";s:1:\"r\";s:5:\"roles\";}s:11:\"permissions\";a:14:{i:0;a:4:{s:1:\"a\";i:1;s:1:\"b\";s:12:\"view tickets\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:4:{i:0;i:1;i:1;i:2;i:2;i:3;i:3;i:4;}}i:1;a:4:{s:1:\"a\";i:2;s:1:\"b\";s:14:\"create tickets\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:3:{i:0;i:1;i:1;i:3;i:2;i:4;}}i:2;a:4:{s:1:\"a\";i:3;s:1:\"b\";s:14:\"update tickets\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:2:{i:0;i:1;i:1;i:2;}}i:3;a:4:{s:1:\"a\";i:4;s:1:\"b\";s:14:\"assign tickets\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:4;a:4:{s:1:\"a\";i:5;s:1:\"b\";s:15:\"comment tickets\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:4:{i:0;i:1;i:1;i:2;i:2;i:3;i:3;i:4;}}i:5;a:4:{s:1:\"a\";i:6;s:1:\"b\";s:11:\"view assets\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:4:{i:0;i:1;i:1;i:2;i:2;i:3;i:3;i:4;}}i:6;a:4:{s:1:\"a\";i:7;s:1:\"b\";s:13:\"manage assets\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:2:{i:0;i:1;i:1;i:2;}}i:7;a:4:{s:1:\"a\";i:8;s:1:\"b\";s:17:\"view reservations\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:4:{i:0;i:1;i:1;i:2;i:2;i:3;i:3;i:4;}}i:8;a:4:{s:1:\"a\";i:9;s:1:\"b\";s:19:\"create reservations\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:3:{i:0;i:1;i:1;i:3;i:2;i:4;}}i:9;a:4:{s:1:\"a\";i:10;s:1:\"b\";s:19:\"manage reservations\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:1;}}i:10;a:4:{s:1:\"a\";i:11;s:1:\"b\";s:20:\"approve reservations\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:2:{i:0;i:1;i:1;i:2;}}i:11;a:4:{s:1:\"a\";i:12;s:1:\"b\";s:14:\"view dashboard\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:4:{i:0;i:1;i:1;i:2;i:2;i:3;i:3;i:4;}}i:12;a:4:{s:1:\"a\";i:13;s:1:\"b\";s:16:\"view maintenance\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:4;}}i:13;a:4:{s:1:\"a\";i:14;s:1:\"b\";s:18:\"manage maintenance\";s:1:\"c\";s:3:\"web\";s:1:\"r\";a:1:{i:0;i:4;}}}s:5:\"roles\";a:4:{i:0;a:3:{s:1:\"a\";i:1;s:1:\"b\";s:5:\"Admin\";s:1:\"c\";s:3:\"web\";}i:1;a:3:{s:1:\"a\";i:2;s:1:\"b\";s:7:\"Teknisi\";s:1:\"c\";s:3:\"web\";}i:2;a:3:{s:1:\"a\";i:3;s:1:\"b\";s:4:\"User\";s:1:\"c\";s:3:\"web\";}i:3;a:3:{s:1:\"a\";i:4;s:1:\"b\";s:3:\"ULP\";s:1:\"c\";s:3:\"web\";}}}) on duplicate key update `expiration` = values(`expiration`), `key` = values(`key`), `value` = values(`value`)"
+              - button "Copy to clipboard" [ref=f25e1552]
+              - button [ref=f25e1555]
+            - button "3 query parameters" [ref=f25e1559] [cursor=pointer]
+        - generic [ref=f25e1562]:
+          - generic [ref=f25e1563]:
+            - generic [ref=f25e1564]: 11:01:35 AM
+            - generic [ref=f25e1565]:
+              - img "Runtime" [ref=f25e1566]
+              - text: 2.55ms
+            - generic [ref=f25e1568]:
+              - img "Connection" [ref=f25e1569]
+              - text: mysql
+          - generic [ref=f25e1572]:
+            - generic [ref=f25e1573] [cursor=pointer]:
+              - code [ref=f25e1576]:
+                - code [ref=f25e1578]: "delete from `role_has_permissions` where `role_has_permissions`.`role_id` = 3"
+              - button "Copy to clipboard" [ref=f25e1580]
+              - button [ref=f25e1583]
+            - button "1 query parameter" [ref=f25e1587] [cursor=pointer]
+        - generic [ref=f25e1590]:
+          - generic [ref=f25e1591]:
+            - generic [ref=f25e1592]: 11:01:35 AM
+            - generic [ref=f25e1593]:
+              - img "Runtime" [ref=f25e1594]
+              - text: 3.23ms
+            - generic [ref=f25e1596]:
+              - img "Connection" [ref=f25e1597]
+              - text: mysql
+          - generic [ref=f25e1600]:
+            - generic [ref=f25e1601] [cursor=pointer]:
+              - code [ref=f25e1604]:
+                - code [ref=f25e1606]: "insert into `role_has_permissions` (`permission_id`, `role_id`) values (1, 3), (2, 3), (5, 3), (6, 3), (8, 3), (9, 3), (12, 3)"
+              - button "Copy to clipboard" [ref=f25e1608]
+              - button [ref=f25e1611]
+            - button "14 query parameters" [ref=f25e1615] [cursor=pointer]
+        - generic [ref=f25e1618]:
+          - generic [ref=f25e1619]:
+            - generic [ref=f25e1620]: 11:01:35 AM
+            - generic [ref=f25e1621]:
+              - img "Runtime" [ref=f25e1622]
+              - text: 2.82ms
+            - generic [ref=f25e1624]:
+              - img "Connection" [ref=f25e1625]
+              - text: mysql
+          - generic [ref=f25e1628]:
+            - generic [ref=f25e1629] [cursor=pointer]:
+              - code [ref=f25e1632]:
+                - code [ref=f25e1634]: "delete from `cache` where `key` in (spatie.permission.cache, illuminate:cache:flexible:created:spatie.permission.cache)"
+              - button "Copy to clipboard" [ref=f25e1636]
+              - button [ref=f25e1639]
+            - button "2 query parameters" [ref=f25e1643] [cursor=pointer]
+        - generic [ref=f25e1646]:
+          - generic [ref=f25e1647]:
+            - generic [ref=f25e1648]: 11:01:35 AM
+            - generic [ref=f25e1649]:
+              - img "Runtime" [ref=f25e1650]
+              - text: 1.14ms
+            - generic [ref=f25e1652]:
+              - img "Connection" [ref=f25e1653]
+              - text: mysql
+          - generic [ref=f25e1656]:
+            - generic [ref=f25e1657] [cursor=pointer]:
+              - code [ref=f25e1660]:
+                - code [ref=f25e1662]: "select * from `sessions` where `id` = LIeGl4B3zbzezRMuPLJS35i7mcDkFS6JPGfqQQHS limit 1"
+              - button "Copy to clipboard" [ref=f25e1664]
+              - button [ref=f25e1667]
+            - button "1 query parameter" [ref=f25e1671] [cursor=pointer]
+        - generic [ref=f25e1674]:
+          - generic [ref=f25e1675]:
+            - generic [ref=f25e1676]: 11:01:35 AM
+            - generic [ref=f25e1677]:
+              - img "Runtime" [ref=f25e1678]
+              - text: 0.92ms
+            - generic [ref=f25e1680]:
+              - img "Connection" [ref=f25e1681]
+              - text: mysql
+          - generic [ref=f25e1684]:
+            - generic [ref=f25e1685] [cursor=pointer]:
+              - code [ref=f25e1688]:
+                - code [ref=f25e1690]: "select * from `users` where `id` = 1 and `users`.`deleted_at` is null limit 1"
+              - button "Copy to clipboard" [ref=f25e1692]
+              - button [ref=f25e1695]
+            - button "1 query parameter" [ref=f25e1699] [cursor=pointer]
+        - generic [ref=f25e1702]:
+          - generic [ref=f25e1703]:
+            - generic [ref=f25e1704]: 11:01:35 AM
+            - generic [ref=f25e1705]:
+              - img "Runtime" [ref=f25e1706]
+              - text: 1.17ms
+            - generic [ref=f25e1708]:
+              - img "Connection" [ref=f25e1709]
+              - text: mysql
+          - generic [ref=f25e1712]:
+            - generic [ref=f25e1713] [cursor=pointer]:
+              - code [ref=f25e1716]:
+                - code [ref=f25e1718]: "select `roles`.*, `model_has_roles`.`model_id` as `pivot_model_id`, `model_has_roles`.`role_id` as `pivot_role_id`, `model_has_roles`.`model_type` as `pivot_model_type` from `roles` inner join `model_has_roles` on `roles`.`id` = `model_has_roles`.`role_id` where `model_has_roles`.`model_id` in (1) and `model_has_roles`.`model_type` = App\\Models\\User"
+              - button "Copy to clipboard" [ref=f25e1720]
+              - button [ref=f25e1723]
+            - button "1 query parameter" [ref=f25e1727] [cursor=pointer]
+        - generic [ref=f25e1730]:
+          - generic [ref=f25e1731]:
+            - generic [ref=f25e1732]: 11:01:35 AM
+            - generic [ref=f25e1733]:
+              - img "Runtime" [ref=f25e1734]
+              - text: 0.49ms
+            - generic [ref=f25e1736]:
+              - img "Connection" [ref=f25e1737]
+              - text: mysql
+          - generic [ref=f25e1740] [cursor=pointer]:
+            - code [ref=f25e1743]:
+              - code [ref=f25e1745]: "select count(*) as aggregate from `ti_objects`"
+            - button "Copy to clipboard" [ref=f25e1747]
+            - button [ref=f25e1750]
+        - generic [ref=f25e1753]:
+          - generic [ref=f25e1754]:
+            - generic [ref=f25e1755]: 11:01:35 AM
+            - generic [ref=f25e1756]:
+              - img "Runtime" [ref=f25e1757]
+              - text: 0.59ms
+            - generic [ref=f25e1759]:
+              - img "Connection" [ref=f25e1760]
+              - text: mysql
+          - generic [ref=f25e1763]:
+            - generic [ref=f25e1764] [cursor=pointer]:
+              - code [ref=f25e1767]:
+                - code [ref=f25e1769]: "select count(*) as aggregate from `ti_objects` where `is_active` = true"
+              - button "Copy to clipboard" [ref=f25e1771]
+              - button [ref=f25e1774]
+            - button "1 query parameter" [ref=f25e1778] [cursor=pointer]
+        - generic [ref=f25e1781]:
+          - generic [ref=f25e1782]:
+            - generic [ref=f25e1783]: 11:01:35 AM
+            - generic [ref=f25e1784]:
+              - img "Runtime" [ref=f25e1785]
+              - text: 1.17ms
+            - generic [ref=f25e1787]:
+              - img "Connection" [ref=f25e1788]
+              - text: mysql
+          - generic [ref=f25e1791] [cursor=pointer]:
+            - code [ref=f25e1794]:
+              - code [ref=f25e1796]: "select count(*) as aggregate from `ti_objects` where `pic_user_id` is null and not exists (select * from `ti_teams` inner join `ti_object_team` on `ti_teams`.`id` = `ti_object_team`.`team_id` where `ti_objects`.`id` = `ti_object_team`.`object_id`)"
+            - button "Copy to clipboard" [ref=f25e1798]
+            - button [ref=f25e1801]
+        - generic [ref=f25e1804]:
+          - generic [ref=f25e1805]:
+            - generic [ref=f25e1806]: 11:01:35 AM
+            - generic [ref=f25e1807]:
+              - img "Runtime" [ref=f25e1808]
+              - text: 0.76ms
+            - generic [ref=f25e1810]:
+              - img "Connection" [ref=f25e1811]
+              - text: mysql
+          - generic [ref=f25e1814]:
+            - generic [ref=f25e1815] [cursor=pointer]:
+              - code [ref=f25e1818]:
+                - code [ref=f25e1820]: "select count(*) as aggregate from `ti_objects` where `is_active` = true"
+              - button "Copy to clipboard" [ref=f25e1822]
+              - button [ref=f25e1825]
+            - button "1 query parameter" [ref=f25e1829] [cursor=pointer]
+        - generic [ref=f25e1832]:
+          - generic [ref=f25e1833]:
+            - generic [ref=f25e1834]: 11:01:35 AM
+            - generic [ref=f25e1835]:
+              - img "Runtime" [ref=f25e1836]
+              - text: 1.07ms
+            - generic [ref=f25e1838]:
+              - img "Connection" [ref=f25e1839]
+              - text: mysql
+          - generic [ref=f25e1842]:
+            - generic [ref=f25e1843] [cursor=pointer]:
+              - code [ref=f25e1846]:
+                - code [ref=f25e1848]: "select `ti_objects`.*, (select count(*) from `ti_reports` where `ti_objects`.`id` = `ti_reports`.`object_id`) as `reports_count` from `ti_objects` where `is_active` = true order by `name` asc limit 20 offset 20"
+              - button "Copy to clipboard" [ref=f25e1850]
+              - button [ref=f25e1853]
+            - button "1 query parameter" [ref=f25e1857] [cursor=pointer]
+        - generic [ref=f25e1860]:
+          - generic [ref=f25e1861]:
+            - generic [ref=f25e1862]: 11:01:35 AM
+            - generic [ref=f25e1863]:
+              - img "Runtime" [ref=f25e1864]
+              - text: 1.27ms
+            - generic [ref=f25e1866]:
+              - img "Connection" [ref=f25e1867]
+              - text: mysql
+          - generic [ref=f25e1870] [cursor=pointer]:
+            - code [ref=f25e1873]:
+              - code [ref=f25e1875]: "select `ti_teams`.*, `ti_object_team`.`object_id` as `pivot_object_id`, `ti_object_team`.`team_id` as `pivot_team_id` from `ti_teams` inner join `ti_object_team` on `ti_teams`.`id` = `ti_object_team`.`team_id` where `ti_object_team`.`object_id` in (2, 3, 5, 6, 7, 8, 9, 12, 13, 14, 15, 16, 17, 21, 23, 24, 25, 26, 27, 28)"
+            - button "Copy to clipboard" [ref=f25e1877]
+            - button [ref=f25e1880]
+        - generic [ref=f25e1883]:
+          - generic [ref=f25e1884]:
+            - generic [ref=f25e1885]: 11:01:35 AM
+            - generic [ref=f25e1886]:
+              - img "Runtime" [ref=f25e1887]
+              - text: 1.23ms
+            - generic [ref=f25e1889]:
+              - img "Connection" [ref=f25e1890]
+              - text: mysql
+          - generic [ref=f25e1893]:
+            - generic [ref=f25e1894] [cursor=pointer]:
+              - code [ref=f25e1897]:
+                - code [ref=f25e1899]: "select exists(select * from `ti_teams` inner join `ti_object_team` on `ti_teams`.`id` = `ti_object_team`.`team_id` where `ti_object_team`.`object_id` = 25 and `leader_user_id` = 1) as `exists`"
+              - button "Copy to clipboard" [ref=f25e1901]
+              - button [ref=f25e1904]
+            - button "2 query parameters" [ref=f25e1908] [cursor=pointer]
+        - generic [ref=f25e1911]:
+          - generic [ref=f25e1912]:
+            - generic [ref=f25e1913]: 11:01:35 AM
+            - generic [ref=f25e1914]:
+              - img "Runtime" [ref=f25e1915]
+              - text: 0.79ms
+            - generic [ref=f25e1917]:
+              - img "Connection" [ref=f25e1918]
+              - text: mysql
+          - generic [ref=f25e1921]:
+            - generic [ref=f25e1922] [cursor=pointer]:
+              - code [ref=f25e1925]:
+                - code [ref=f25e1927]: "select exists(select * from `ti_teams` inner join `ti_object_team` on `ti_teams`.`id` = `ti_object_team`.`team_id` where `ti_object_team`.`object_id` = 8 and `leader_user_id` = 1) as `exists`"
+              - button "Copy to clipboard" [ref=f25e1929]
+              - button [ref=f25e1932]
+            - button "2 query parameters" [ref=f25e1936] [cursor=pointer]
+        - generic [ref=f25e1939]:
+          - generic [ref=f25e1940]:
+            - generic [ref=f25e1941]: 11:01:35 AM
+            - generic [ref=f25e1942]:
+              - img "Runtime" [ref=f25e1943]
+              - text: 0.88ms
+            - generic [ref=f25e1945]:
+              - img "Connection" [ref=f25e1946]
+              - text: mysql
+          - generic [ref=f25e1949]:
+            - generic [ref=f25e1950] [cursor=pointer]:
+              - code [ref=f25e1953]:
+                - code [ref=f25e1955]: "select exists(select * from `ti_teams` inner join `ti_object_team` on `ti_teams`.`id` = `ti_object_team`.`team_id` where `ti_object_team`.`object_id` = 23 and `leader_user_id` = 1) as `exists`"
+              - button "Copy to clipboard" [ref=f25e1957]
+              - button [ref=f25e1960]
+            - button "2 query parameters" [ref=f25e1964] [cursor=pointer]
+        - generic [ref=f25e1967]:
+          - generic [ref=f25e1968]:
+            - generic [ref=f25e1969]: 11:01:35 AM
+            - generic [ref=f25e1970]:
+              - img "Runtime" [ref=f25e1971]
+              - text: 1.35ms
+            - generic [ref=f25e1973]:
+              - img "Connection" [ref=f25e1974]
+              - text: mysql
+          - generic [ref=f25e1977]:
+            - generic [ref=f25e1978] [cursor=pointer]:
+              - code [ref=f25e1981]:
+                - code [ref=f25e1983]: "select exists(select * from `ti_teams` inner join `ti_object_team` on `ti_teams`.`id` = `ti_object_team`.`team_id` where `ti_object_team`.`object_id` = 15 and `leader_user_id` = 1) as `exists`"
+              - button "Copy to clipboard" [ref=f25e1985]
+              - button [ref=f25e1988]
+            - button "2 query parameters" [ref=f25e1992] [cursor=pointer]
+        - generic [ref=f25e1995]:
+          - generic [ref=f25e1996]:
+            - generic [ref=f25e1997]: 11:01:35 AM
+            - generic [ref=f25e1998]:
+              - img "Runtime" [ref=f25e1999]
+              - text: 1.49ms
+            - generic [ref=f25e2001]:
+              - img "Connection" [ref=f25e2002]
+              - text: mysql
+          - generic [ref=f25e2005]:
+            - generic [ref=f25e2006] [cursor=pointer]:
+              - code [ref=f25e2009]:
+                - code [ref=f25e2011]: "select exists(select * from `ti_teams` inner join `ti_object_team` on `ti_teams`.`id` = `ti_object_team`.`team_id` where `ti_object_team`.`object_id` = 26 and `leader_user_id` = 1) as `exists`"
+              - button "Copy to clipboard" [ref=f25e2013]
+              - button [ref=f25e2016]
+            - button "2 query parameters" [ref=f25e2020] [cursor=pointer]
+        - generic [ref=f25e2023]:
+          - generic [ref=f25e2024]:
+            - generic [ref=f25e2025]: 11:01:35 AM
+            - generic [ref=f25e2026]:
+              - img "Runtime" [ref=f25e2027]
+              - text: 0.87ms
+            - generic [ref=f25e2029]:
+              - img "Connection" [ref=f25e2030]
+              - text: mysql
+          - generic [ref=f25e2033]:
+            - generic [ref=f25e2034] [cursor=pointer]:
+              - code [ref=f25e2037]:
+                - code [ref=f25e2039]: "select exists(select * from `ti_teams` inner join `ti_object_team` on `ti_teams`.`id` = `ti_object_team`.`team_id` where `ti_object_team`.`object_id` = 27 and `leader_user_id` = 1) as `exists`"
+              - button "Copy to clipboard" [ref=f25e2041]
+              - button [ref=f25e2044]
+            - button "2 query parameters" [ref=f25e2048] [cursor=pointer]
+        - generic [ref=f25e2051]:
+          - generic [ref=f25e2052]:
+            - generic [ref=f25e2053]: 11:01:35 AM
+            - generic [ref=f25e2054]:
+              - img "Runtime" [ref=f25e2055]
+              - text: 0.6ms
+            - generic [ref=f25e2057]:
+              - img "Connection" [ref=f25e2058]
+              - text: mysql
+          - generic [ref=f25e2061]:
+            - generic [ref=f25e2062] [cursor=pointer]:
+              - code [ref=f25e2065]:
+                - code [ref=f25e2067]: "select exists(select * from `ti_teams` inner join `ti_object_team` on `ti_teams`.`id` = `ti_object_team`.`team_id` where `ti_object_team`.`object_id` = 16 and `leader_user_id` = 1) as `exists`"
+              - button "Copy to clipboard" [ref=f25e2069]
+              - button [ref=f25e2072]
+            - button "2 query parameters" [ref=f25e2076] [cursor=pointer]
+        - generic [ref=f25e2079]:
+          - generic [ref=f25e2080]:
+            - generic [ref=f25e2081]: 11:01:35 AM
+            - generic [ref=f25e2082]:
+              - img "Runtime" [ref=f25e2083]
+              - text: 0.5ms
+            - generic [ref=f25e2085]:
+              - img "Connection" [ref=f25e2086]
+              - text: mysql
+          - generic [ref=f25e2089]:
+            - generic [ref=f25e2090] [cursor=pointer]:
+              - code [ref=f25e2093]:
+                - code [ref=f25e2095]: "select exists(select * from `ti_teams` inner join `ti_object_team` on `ti_teams`.`id` = `ti_object_team`.`team_id` where `ti_object_team`.`object_id` = 17 and `leader_user_id` = 1) as `exists`"
+              - button "Copy to clipboard" [ref=f25e2097]
+              - button [ref=f25e2100]
+            - button "2 query parameters" [ref=f25e2104] [cursor=pointer]
+        - generic [ref=f25e2107]:
+          - generic [ref=f25e2108]:
+            - generic [ref=f25e2109]: 11:01:35 AM
+            - generic [ref=f25e2110]:
+              - img "Runtime" [ref=f25e2111]
+              - text: 0.52ms
+            - generic [ref=f25e2113]:
+              - img "Connection" [ref=f25e2114]
+              - text: mysql
+          - generic [ref=f25e2117]:
+            - generic [ref=f25e2118] [cursor=pointer]:
+              - code [ref=f25e2121]:
+                - code [ref=f25e2123]: "select exists(select * from `ti_teams` inner join `ti_object_team` on `ti_teams`.`id` = `ti_object_team`.`team_id` where `ti_object_team`.`object_id` = 28 and `leader_user_id` = 1) as `exists`"
+              - button "Copy to clipboard" [ref=f25e2125]
+              - button [ref=f25e2128]
+            - button "2 query parameters" [ref=f25e2132] [cursor=pointer]
+        - generic [ref=f25e2135]:
+          - generic [ref=f25e2136]:
+            - generic [ref=f25e2137]: 11:01:35 AM
+            - generic [ref=f25e2138]:
+              - img "Runtime" [ref=f25e2139]
+              - text: 0.48ms
+            - generic [ref=f25e2141]:
+              - img "Connection" [ref=f25e2142]
+              - text: mysql
+          - generic [ref=f25e2145]:
+            - generic [ref=f25e2146] [cursor=pointer]:
+              - code [ref=f25e2149]:
+                - code [ref=f25e2151]: "select exists(select * from `ti_teams` inner join `ti_object_team` on `ti_teams`.`id` = `ti_object_team`.`team_id` where `ti_object_team`.`object_id` = 24 and `leader_user_id` = 1) as `exists`"
+              - button "Copy to clipboard" [ref=f25e2153]
+              - button [ref=f25e2156]
+            - button "2 query parameters" [ref=f25e2160] [cursor=pointer]
+        - generic [ref=f25e2163]:
+          - generic [ref=f25e2164]:
+            - generic [ref=f25e2165]: 11:01:35 AM
+            - generic [ref=f25e2166]:
+              - img "Runtime" [ref=f25e2167]
+              - text: 0.75ms
+            - generic [ref=f25e2169]:
+              - img "Connection" [ref=f25e2170]
+              - text: mysql
+          - generic [ref=f25e2173]:
+            - generic [ref=f25e2174] [cursor=pointer]:
+              - code [ref=f25e2177]:
+                - code [ref=f25e2179]: "select exists(select * from `ti_teams` inner join `ti_object_team` on `ti_teams`.`id` = `ti_object_team`.`team_id` where `ti_object_team`.`object_id` = 13 and `leader_user_id` = 1) as `exists`"
+              - button "Copy to clipboard" [ref=f25e2181]
+              - button [ref=f25e2184]
+            - button "2 query parameters" [ref=f25e2188] [cursor=pointer]
+        - generic [ref=f25e2191]:
+          - generic [ref=f25e2192]:
+            - generic [ref=f25e2193]: 11:01:35 AM
+            - generic [ref=f25e2194]:
+              - img "Runtime" [ref=f25e2195]
+              - text: 0.77ms
+            - generic [ref=f25e2197]:
+              - img "Connection" [ref=f25e2198]
+              - text: mysql
+          - generic [ref=f25e2201]:
+            - generic [ref=f25e2202] [cursor=pointer]:
+              - code [ref=f25e2205]:
+                - code [ref=f25e2207]: "select exists(select * from `ti_teams` inner join `ti_object_team` on `ti_teams`.`id` = `ti_object_team`.`team_id` where `ti_object_team`.`object_id` = 3 and `leader_user_id` = 1) as `exists`"
+              - button "Copy to clipboard" [ref=f25e2209]
+              - button [ref=f25e2212]
+            - button "2 query parameters" [ref=f25e2216] [cursor=pointer]
+        - generic [ref=f25e2219]:
+          - generic [ref=f25e2220]:
+            - generic [ref=f25e2221]: 11:01:35 AM
+            - generic [ref=f25e2222]:
+              - img "Runtime" [ref=f25e2223]
+              - text: 2.43ms
+            - generic [ref=f25e2225]:
+              - img "Connection" [ref=f25e2226]
+              - text: mysql
+          - generic [ref=f25e2229]:
+            - generic [ref=f25e2230] [cursor=pointer]:
+              - code [ref=f25e2233]:
+                - code [ref=f25e2235]: "select exists(select * from `ti_teams` inner join `ti_object_team` on `ti_teams`.`id` = `ti_object_team`.`team_id` where `ti_object_team`.`object_id` = 14 and `leader_user_id` = 1) as `exists`"
+              - button "Copy to clipboard" [ref=f25e2237]
+              - button [ref=f25e2240]
+            - button "2 query parameters" [ref=f25e2244] [cursor=pointer]
+        - generic [ref=f25e2247]:
+          - generic [ref=f25e2248]:
+            - generic [ref=f25e2249]: 11:01:35 AM
+            - generic [ref=f25e2250]:
+              - img "Runtime" [ref=f25e2251]
+              - text: 1.58ms
+            - generic [ref=f25e2253]:
+              - img "Connection" [ref=f25e2254]
+              - text: mysql
+          - generic [ref=f25e2257]:
+            - generic [ref=f25e2258] [cursor=pointer]:
+              - code [ref=f25e2261]:
+                - code [ref=f25e2263]: "select exists(select * from `ti_teams` inner join `ti_object_team` on `ti_teams`.`id` = `ti_object_team`.`team_id` where `ti_object_team`.`object_id` = 6 and `leader_user_id` = 1) as `exists`"
+              - button "Copy to clipboard" [ref=f25e2265]
+              - button [ref=f25e2268]
+            - button "2 query parameters" [ref=f25e2272] [cursor=pointer]
+        - generic [ref=f25e2275]:
+          - generic [ref=f25e2276]:
+            - generic [ref=f25e2277]: 11:01:35 AM
+            - generic [ref=f25e2278]:
+              - img "Runtime" [ref=f25e2279]
+              - text: 1.8ms
+            - generic [ref=f25e2281]:
+              - img "Connection" [ref=f25e2282]
+              - text: mysql
+          - generic [ref=f25e2285]:
+            - generic [ref=f25e2286] [cursor=pointer]:
+              - code [ref=f25e2289]:
+                - code [ref=f25e2291]: "select exists(select * from `ti_teams` inner join `ti_object_team` on `ti_teams`.`id` = `ti_object_team`.`team_id` where `ti_object_team`.`object_id` = 7 and `leader_user_id` = 1) as `exists`"
+              - button "Copy to clipboard" [ref=f25e2293]
+              - button [ref=f25e2296]
+            - button "2 query parameters" [ref=f25e2300] [cursor=pointer]
+        - generic [ref=f25e2303]:
+          - generic [ref=f25e2304]:
+            - generic [ref=f25e2305]: 11:01:35 AM
+            - generic [ref=f25e2306]:
+              - img "Runtime" [ref=f25e2307]
+              - text: 1.36ms
+            - generic [ref=f25e2309]:
+              - img "Connection" [ref=f25e2310]
+              - text: mysql
+          - generic [ref=f25e2313]:
+            - generic [ref=f25e2314] [cursor=pointer]:
+              - code [ref=f25e2317]:
+                - code [ref=f25e2319]: "select exists(select * from `ti_teams` inner join `ti_object_team` on `ti_teams`.`id` = `ti_object_team`.`team_id` where `ti_object_team`.`object_id` = 12 and `leader_user_id` = 1) as `exists`"
+              - button "Copy to clipboard" [ref=f25e2321]
+              - button [ref=f25e2324]
+            - button "2 query parameters" [ref=f25e2328] [cursor=pointer]
+        - generic [ref=f25e2331]:
+          - generic [ref=f25e2332]:
+            - generic [ref=f25e2333]: 11:01:35 AM
+            - generic [ref=f25e2334]:
+              - img "Runtime" [ref=f25e2335]
+              - text: 1.12ms
+            - generic [ref=f25e2337]:
+              - img "Connection" [ref=f25e2338]
+              - text: mysql
+          - generic [ref=f25e2341]:
+            - generic [ref=f25e2342] [cursor=pointer]:
+              - code [ref=f25e2345]:
+                - code [ref=f25e2347]: "select exists(select * from `ti_teams` inner join `ti_object_team` on `ti_teams`.`id` = `ti_object_team`.`team_id` where `ti_object_team`.`object_id` = 21 and `leader_user_id` = 1) as `exists`"
+              - button "Copy to clipboard" [ref=f25e2349]
+              - button [ref=f25e2352]
+            - button "2 query parameters" [ref=f25e2356] [cursor=pointer]
+        - generic [ref=f25e2359]:
+          - generic [ref=f25e2360]:
+            - generic [ref=f25e2361]: 11:01:35 AM
+            - generic [ref=f25e2362]:
+              - img "Runtime" [ref=f25e2363]
+              - text: 1.97ms
+            - generic [ref=f25e2365]:
+              - img "Connection" [ref=f25e2366]
+              - text: mysql
+          - generic [ref=f25e2369]:
+            - generic [ref=f25e2370] [cursor=pointer]:
+              - code [ref=f25e2373]:
+                - code [ref=f25e2375]: "select exists(select * from `ti_teams` inner join `ti_object_team` on `ti_teams`.`id` = `ti_object_team`.`team_id` where `ti_object_team`.`object_id` = 2 and `leader_user_id` = 1) as `exists`"
+              - button "Copy to clipboard" [ref=f25e2377]
+              - button [ref=f25e2380]
+            - button "2 query parameters" [ref=f25e2384] [cursor=pointer]
+        - generic [ref=f25e2387]:
+          - generic [ref=f25e2388]:
+            - generic [ref=f25e2389]: 11:01:35 AM
+            - generic [ref=f25e2390]:
+              - img "Runtime" [ref=f25e2391]
+              - text: 1.8ms
+            - generic [ref=f25e2393]:
+              - img "Connection" [ref=f25e2394]
+              - text: mysql
+          - generic [ref=f25e2397]:
+            - generic [ref=f25e2398] [cursor=pointer]:
+              - code [ref=f25e2401]:
+                - code [ref=f25e2403]: "select exists(select * from `ti_teams` inner join `ti_object_team` on `ti_teams`.`id` = `ti_object_team`.`team_id` where `ti_object_team`.`object_id` = 5 and `leader_user_id` = 1) as `exists`"
+              - button "Copy to clipboard" [ref=f25e2405]
+              - button [ref=f25e2408]
+            - button "2 query parameters" [ref=f25e2412] [cursor=pointer]
+        - generic [ref=f25e2415]:
+          - generic [ref=f25e2416]:
+            - generic [ref=f25e2417]: 11:01:35 AM
+            - generic [ref=f25e2418]:
+              - img "Runtime" [ref=f25e2419]
+              - text: 1.45ms
+            - generic [ref=f25e2421]:
+              - img "Connection" [ref=f25e2422]
+              - text: mysql
+          - generic [ref=f25e2425]:
+            - generic [ref=f25e2426] [cursor=pointer]:
+              - code [ref=f25e2429]:
+                - code [ref=f25e2431]: "select exists(select * from `ti_teams` inner join `ti_object_team` on `ti_teams`.`id` = `ti_object_team`.`team_id` where `ti_object_team`.`object_id` = 9 and `leader_user_id` = 1) as `exists`"
+              - button "Copy to clipboard" [ref=f25e2433]
+              - button [ref=f25e2436]
+            - button "2 query parameters" [ref=f25e2440] [cursor=pointer]
+    - generic [ref=f25e2444]:
+      - list [ref=f25e2445]:
+        - listitem [ref=f25e2446]
+        - listitem [ref=f25e2455]: ·
+        - listitem [ref=f25e2456]:
+          - link "Source" [ref=f25e2457] [cursor=pointer]:
+            - /url: https://github.com/spatie/laravel-ignition
+        - listitem [ref=f25e2458]: ·
+        - listitem [ref=f25e2459]:
+          - link "Docs" [ref=f25e2460] [cursor=pointer]:
+            - /url: https://flareapp.io/docs/ignition/introducing-ignition/overview
+        - listitem [ref=f25e2461]: ·
+        - listitem [ref=f25e2462]:
+          - link "Laravel" [ref=f25e2463] [cursor=pointer]:
+            - /url: https://laravel.com
+      - paragraph [ref=f25e2465]:
+        - text: Ignition is built by
+        - link "Flare" [ref=f25e2466] [cursor=pointer]:
+          - /url: https://flareapp.io/?utm_campaign=ignition&utm_source=ignition
+        - text: ", the Laravel error reporting service."

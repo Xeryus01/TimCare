@@ -28,6 +28,7 @@ class AssetsImport implements ToCollection, WithHeadingRow
         'purchased_at' => ['purchased_at', 'tanggal_dibeli', 'tanggal dibeli', 'tanggal perolehan', 'tanggal_perolehan', 'purchase_date'],
         'photo_serial' => ['photo_serial', 'foto_serial', 'foto serial', 'photo serial'],
         'photo_asset' => ['photo_asset', 'foto_asset', 'foto aset', 'foto_barang', 'foto barang'],
+        'photo_bmn' => ['photo_bmn', 'foto_bmn', 'foto bmn', 'foto nomor bmn', 'foto_nomor_bmn', 'foto no bmn'],
     ];
 
     public function collection(Collection $rows)
@@ -63,6 +64,7 @@ class AssetsImport implements ToCollection, WithHeadingRow
                 'nip_pegawai' => trim($this->getValue($row, 'nip_pegawai', '')) ?: null,
                 'photo_serial' => trim($this->getValue($row, 'photo_serial', '')) ?: null,
                 'photo_asset' => trim($this->getValue($row, 'photo_asset', '')) ?: null,
+                'photo_bmn' => trim($this->getValue($row, 'photo_bmn', '')) ?: null,
             ];
 
             $unknownValues = $this->extractUnknownColumns($row);

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -24,6 +25,30 @@ class PiketSchedule extends Model
         'week_end_date' => 'date:Y-m-d',
     ];
 
+    /**
+     * Filter schedules whose date ranges overlap the requested range.
+     *
+     * A legacy row without week_end_date is treated as a seven-day schedule.
+     */
+    public function scopeOverlapping(Builder $query, $startDate, $endDate): Builder
+    {
+        $start = Carbon::parse($startDate)->startOfDay();
+        $end = Carbon::parse($endDate)->startOfDay();
+        $earliestLegacyStart = $start->copy()->subDays(6)->toDateString();
+
+        return $query
+            ->whereDate('week_start_date', '<=', $end->toDateString())
+            ->where(function (Builder $query) use ($start, $earliestLegacyStart) {
+                $query
+                    ->whereDate('week_end_date', '>=', $start->toDateString())
+                    ->orWhere(function (Builder $legacyQuery) use ($earliestLegacyStart) {
+                        $legacyQuery
+                            ->whereNull('week_end_date')
+                            ->whereDate('week_start_date', '>=', $earliestLegacyStart);
+                    });
+            });
+    }
+
     // Get current week schedule
     public static function getCurrentWeek()
     {
@@ -33,18 +58,17 @@ class PiketSchedule extends Model
     public static function forDate($date = null)
     {
         $currentDate = $date ? Carbon::parse($date) : now();
-        $weekStart = $currentDate->copy()->startOfWeek(); // Monday
 
-        return self::whereDate('week_start_date', $weekStart->toDateString())
-            ->first() ?? self::createDefault($weekStart);
+        return self::findForDate($currentDate)
+            ?? self::makeDefault($currentDate->copy()->startOfWeek());
     }
 
     public static function findForDate($date = null)
     {
         $currentDate = $date ? Carbon::parse($date) : now();
-        $weekStart = $currentDate->copy()->startOfWeek(); // Monday
-
-        return self::whereDate('week_start_date', $weekStart->toDateString())
+        $target = $currentDate->toDateString();
+        return self::overlapping($target, $target)
+            ->orderBy('week_start_date', 'desc')
             ->first();
     }
 
@@ -65,6 +89,15 @@ class PiketSchedule extends Model
             ->all();
     }
 
+    public function hasPassed(): bool
+    {
+        $endDate = $this->week_end_date
+            ? Carbon::parse($this->week_end_date)
+            : Carbon::parse($this->week_start_date)->endOfWeek();
+
+        return $endDate->toDateString() < Carbon::today()->toDateString();
+    }
+
     public function scheduledUsers()
     {
         $names = $this->scheduledUserNames();
@@ -83,6 +116,21 @@ class PiketSchedule extends Model
             })
             ->orderBy('name')
             ->get();
+    }
+
+    // Build an in-memory default schedule WITHOUT saving it to the database.
+    // Used for display/edit so that merely viewing a week never auto-creates a row.
+    public static function makeDefault($weekStart)
+    {
+        $technicians = self::getTechnicians();
+
+        return new self([
+            'week_start_date' => $weekStart->toDateString(),
+            'week_end_date' => $weekStart->copy()->endOfWeek()->toDateString(),
+            'technician_1' => $technicians[0] ?? 'Fadil Rahman',
+            'technician_2' => $technicians[1] ?? 'Marko Santoso',
+            'technician_3' => $technicians[2] ?? 'Eji Wijaya',
+        ]);
     }
 
     // Create default schedule if not exists

@@ -1,0 +1,1397 @@
+{
+  "teams": [
+    {
+      "id": 1,
+      "name": "Tim Kerja Umum"
+    },
+    {
+      "id": 2,
+      "name": "Tim Kerja UKP dan Penyiapan Materi Pimpinan"
+    },
+    {
+      "id": 3,
+      "name": "Tim Kerja Sumber Daya Manusia dan Hukum"
+    },
+    {
+      "id": 4,
+      "name": "Tim Kerja Statistik Sosial"
+    },
+    {
+      "id": 5,
+      "name": "Tim Kerja Statistik Produksi"
+    },
+    {
+      "id": 6,
+      "name": "Tim Kerja Statistik Harga"
+    },
+    {
+      "id": 7,
+      "name": "Tim Kerja Statistik Distribusi dan KTIP"
+    },
+    {
+      "id": 8,
+      "name": "Tim Kerja Sekretariat Tim Pelaksana Sensus Ekonomi 2026"
+    },
+    {
+      "id": 9,
+      "name": "Tim Kerja Reformasi Birokrasi Tahun 2026"
+    },
+    {
+      "id": 10,
+      "name": "Tim Kerja Perencanaan"
+    },
+    {
+      "id": 11,
+      "name": "Tim Kerja Pembinaan Statistik Sektoral"
+    },
+    {
+      "id": 12,
+      "name": "Tim Kerja Nerwilis"
+    },
+    {
+      "id": 13,
+      "name": "Tim Kerja Metodologi dan Sistem Informasi Statistik"
+    },
+    {
+      "id": 14,
+      "name": "Tim Kerja Manajemen Resiko dan Penjamin Kualitas"
+    },
+    {
+      "id": 15,
+      "name": "Tim Kerja Keuangan dan BMN"
+    },
+    {
+      "id": 16,
+      "name": "Tim Kerja Humas dan Protokol"
+    },
+    {
+      "id": 17,
+      "name": "Tim Kerja Evaluasi Penyelenggaraan Statistik Sektoral dan Manajemen Lapangan Sensus/Survei"
+    },
+    {
+      "id": 18,
+      "name": "Tim Kerja Diseminasi Statistik"
+    }
+  ],
+  "users": [
+    {
+      "email": "admin@bps.go.id",
+      "memberships": []
+    },
+    {
+      "email": "sugengari@bps.go.id",
+      "memberships": []
+    },
+    {
+      "email": "bsyuwono@bps.go.id",
+      "memberships": [
+        {
+          "teamId": 11,
+          "isKetua": false
+        },
+        {
+          "teamId": 13,
+          "isKetua": false
+        },
+        {
+          "teamId": 17,
+          "isKetua": true
+        }
+      ]
+    },
+    {
+      "email": "budisis@bps.go.id",
+      "memberships": []
+    },
+    {
+      "email": "oktarizal@bps.go.id",
+      "memberships": [
+        {
+          "teamId": 2,
+          "isKetua": false
+        },
+        {
+          "teamId": 11,
+          "isKetua": false
+        },
+        {
+          "teamId": 12,
+          "isKetua": true
+        }
+      ]
+    },
+    {
+      "email": "sufachri@bps.go.id",
+      "memberships": [
+        {
+          "teamId": 9,
+          "isKetua": false
+        },
+        {
+          "teamId": 10,
+          "isKetua": true
+        },
+        {
+          "teamId": 14,
+          "isKetua": true
+        }
+      ]
+    },
+    {
+      "email": "kusmanto@bps.go.id",
+      "memberships": [
+        {
+          "teamId": 8,
+          "isKetua": false
+        },
+        {
+          "teamId": 11,
+          "isKetua": false
+        },
+        {
+          "teamId": 12,
+          "isKetua": false
+        }
+      ]
+    },
+    {
+      "email": "suhaili@bps.go.id",
+      "memberships": [
+        {
+          "teamId": 5,
+          "isKetua": false
+        },
+        {
+          "teamId": 8,
+          "isKetua": false
+        },
+        {
+          "teamId": 9,
+          "isKetua": false
+        }
+      ]
+    },
+    {
+      "email": "s.hapsari@bps.go.id",
+      "memberships": [
+        {
+          "teamId": 2,
+          "isKetua": false
+        },
+        {
+          "teamId": 5,
+          "isKetua": true
+        },
+        {
+          "teamId": 8,
+          "isKetua": false
+        }
+      ]
+    },
+    {
+      "email": "nurfaizah@bps.go.id",
+      "memberships": [
+        {
+          "teamId": 7,
+          "isKetua": false
+        },
+        {
+          "teamId": 8,
+          "isKetua": false
+        },
+        {
+          "teamId": 16,
+          "isKetua": false
+        }
+      ]
+    },
+    {
+      "email": "ulfahnur@bps.go.id",
+      "memberships": [
+        {
+          "teamId": 5,
+          "isKetua": false
+        },
+        {
+          "teamId": 15,
+          "isKetua": false
+        },
+        {
+          "teamId": 17,
+          "isKetua": false
+        }
+      ]
+    },
+    {
+      "email": "noer_ain@bps.go.id",
+      "memberships": [
+        {
+          "teamId": 7,
+          "isKetua": false
+        },
+        {
+          "teamId": 8,
+          "isKetua": false
+        },
+        {
+          "teamId": 14,
+          "isKetua": false
+        }
+      ]
+    },
+    {
+      "email": "yusti@bps.go.id",
+      "memberships": [
+        {
+          "teamId": 2,
+          "isKetua": false
+        },
+        {
+          "teamId": 7,
+          "isKetua": true
+        },
+        {
+          "teamId": 8,
+          "isKetua": false
+        }
+      ]
+    },
+    {
+      "email": "mety.assahid@bps.go.id",
+      "memberships": [
+        {
+          "teamId": 3,
+          "isKetua": false
+        }
+      ]
+    },
+    {
+      "email": "y.desiana@bps.go.id",
+      "memberships": [
+        {
+          "teamId": 2,
+          "isKetua": false
+        },
+        {
+          "teamId": 6,
+          "isKetua": true
+        },
+        {
+          "teamId": 8,
+          "isKetua": false
+        }
+      ]
+    },
+    {
+      "email": "ridhoi@bps.go.id",
+      "memberships": [
+        {
+          "teamId": 2,
+          "isKetua": true
+        },
+        {
+          "teamId": 9,
+          "isKetua": false
+        },
+        {
+          "teamId": 11,
+          "isKetua": true
+        }
+      ]
+    },
+    {
+      "email": "izaddin@bps.go.id",
+      "memberships": [
+        {
+          "teamId": 10,
+          "isKetua": false
+        },
+        {
+          "teamId": 15,
+          "isKetua": false
+        },
+        {
+          "teamId": 17,
+          "isKetua": false
+        }
+      ]
+    },
+    {
+      "email": "aria@bps.go.id",
+      "memberships": [
+        {
+          "teamId": 1,
+          "isKetua": false
+        },
+        {
+          "teamId": 3,
+          "isKetua": false
+        },
+        {
+          "teamId": 9,
+          "isKetua": false
+        }
+      ]
+    },
+    {
+      "email": "ani.pertiwi@bps.go.id",
+      "memberships": [
+        {
+          "teamId": 11,
+          "isKetua": false
+        },
+        {
+          "teamId": 12,
+          "isKetua": false
+        },
+        {
+          "teamId": 17,
+          "isKetua": false
+        }
+      ]
+    },
+    {
+      "email": "evirja@bps.go.id",
+      "memberships": [
+        {
+          "teamId": 1,
+          "isKetua": false
+        },
+        {
+          "teamId": 3,
+          "isKetua": false
+        },
+        {
+          "teamId": 9,
+          "isKetua": false
+        }
+      ]
+    },
+    {
+      "email": "nimrot@bps.go.id",
+      "memberships": [
+        {
+          "teamId": 7,
+          "isKetua": false
+        },
+        {
+          "teamId": 8,
+          "isKetua": true
+        },
+        {
+          "teamId": 17,
+          "isKetua": false
+        }
+      ]
+    },
+    {
+      "email": "ridho.akbar@bps.go.id",
+      "memberships": [
+        {
+          "teamId": 9,
+          "isKetua": false
+        },
+        {
+          "teamId": 13,
+          "isKetua": true
+        },
+        {
+          "teamId": 18,
+          "isKetua": true
+        }
+      ]
+    },
+    {
+      "email": "fahrurrozi@bps.go.id",
+      "memberships": [
+        {
+          "teamId": 8,
+          "isKetua": false
+        },
+        {
+          "teamId": 13,
+          "isKetua": false
+        },
+        {
+          "teamId": 17,
+          "isKetua": false
+        }
+      ]
+    },
+    {
+      "email": "fitriakur@bps.go.id",
+      "memberships": [
+        {
+          "teamId": 4,
+          "isKetua": true
+        },
+        {
+          "teamId": 5,
+          "isKetua": false
+        },
+        {
+          "teamId": 8,
+          "isKetua": false
+        },
+        {
+          "teamId": 12,
+          "isKetua": false
+        }
+      ]
+    },
+    {
+      "email": "laravita@bps.go.id",
+      "memberships": [
+        {
+          "teamId": 5,
+          "isKetua": false
+        },
+        {
+          "teamId": 6,
+          "isKetua": false
+        },
+        {
+          "teamId": 14,
+          "isKetua": false
+        }
+      ]
+    },
+    {
+      "email": "aisyah_razak@bps.go.id",
+      "memberships": [
+        {
+          "teamId": 2,
+          "isKetua": false
+        },
+        {
+          "teamId": 9,
+          "isKetua": false
+        },
+        {
+          "teamId": 15,
+          "isKetua": true
+        }
+      ]
+    },
+    {
+      "email": "skaryadi@bps.go.id",
+      "memberships": [
+        {
+          "teamId": 1,
+          "isKetua": false
+        },
+        {
+          "teamId": 15,
+          "isKetua": false
+        },
+        {
+          "teamId": 16,
+          "isKetua": true
+        }
+      ]
+    },
+    {
+      "email": "eddy.zurisman@bps.go.id",
+      "memberships": [
+        {
+          "teamId": 1,
+          "isKetua": false
+        },
+        {
+          "teamId": 3,
+          "isKetua": false
+        },
+        {
+          "teamId": 14,
+          "isKetua": false
+        }
+      ]
+    },
+    {
+      "email": "vika@bps.go.id",
+      "memberships": [
+        {
+          "teamId": 1,
+          "isKetua": true
+        },
+        {
+          "teamId": 3,
+          "isKetua": true
+        },
+        {
+          "teamId": 9,
+          "isKetua": false
+        }
+      ]
+    },
+    {
+      "email": "dianfitri@bps.go.id",
+      "memberships": [
+        {
+          "teamId": 1,
+          "isKetua": false
+        },
+        {
+          "teamId": 3,
+          "isKetua": false
+        }
+      ]
+    },
+    {
+      "email": "gestari@bps.go.id",
+      "memberships": [
+        {
+          "teamId": 2,
+          "isKetua": false
+        },
+        {
+          "teamId": 6,
+          "isKetua": false
+        },
+        {
+          "teamId": 11,
+          "isKetua": false
+        }
+      ]
+    },
+    {
+      "email": "rizka.prima@bps.go.id",
+      "memberships": [
+        {
+          "teamId": 7,
+          "isKetua": false
+        },
+        {
+          "teamId": 12,
+          "isKetua": false
+        },
+        {
+          "teamId": 16,
+          "isKetua": false
+        }
+      ]
+    },
+    {
+      "email": "ristia@bps.go.id",
+      "memberships": [
+        {
+          "teamId": 4,
+          "isKetua": false
+        },
+        {
+          "teamId": 8,
+          "isKetua": false
+        },
+        {
+          "teamId": 17,
+          "isKetua": false
+        }
+      ]
+    },
+    {
+      "email": "megaanindita@bps.go.id",
+      "memberships": [
+        {
+          "teamId": 4,
+          "isKetua": false
+        },
+        {
+          "teamId": 9,
+          "isKetua": true
+        },
+        {
+          "teamId": 16,
+          "isKetua": false
+        }
+      ]
+    },
+    {
+      "email": "sari.sisilia@bps.go.id",
+      "memberships": [
+        {
+          "teamId": 4,
+          "isKetua": false
+        },
+        {
+          "teamId": 13,
+          "isKetua": false
+        },
+        {
+          "teamId": 18,
+          "isKetua": false
+        }
+      ]
+    },
+    {
+      "email": "sohidin@bps.go.id",
+      "memberships": [
+        {
+          "teamId": 5,
+          "isKetua": false
+        },
+        {
+          "teamId": 6,
+          "isKetua": false
+        },
+        {
+          "teamId": 11,
+          "isKetua": false
+        }
+      ]
+    },
+    {
+      "email": "yuda.rachmatullah@bps.go.id",
+      "memberships": [
+        {
+          "teamId": 3,
+          "isKetua": false
+        },
+        {
+          "teamId": 9,
+          "isKetua": false
+        },
+        {
+          "teamId": 15,
+          "isKetua": false
+        }
+      ]
+    },
+    {
+      "email": "rengga.firmandika@bps.go.id",
+      "memberships": [
+        {
+          "teamId": 11,
+          "isKetua": false
+        },
+        {
+          "teamId": 13,
+          "isKetua": false
+        },
+        {
+          "teamId": 18,
+          "isKetua": false
+        }
+      ]
+    },
+    {
+      "email": "musafrizki.istikomah@bps.go.id",
+      "memberships": [
+        {
+          "teamId": 5,
+          "isKetua": false
+        },
+        {
+          "teamId": 6,
+          "isKetua": false
+        },
+        {
+          "teamId": 7,
+          "isKetua": false
+        }
+      ]
+    },
+    {
+      "email": "rahma.nurhamidah@bps.go.id",
+      "memberships": [
+        {
+          "teamId": 11,
+          "isKetua": false
+        },
+        {
+          "teamId": 16,
+          "isKetua": false
+        },
+        {
+          "teamId": 18,
+          "isKetua": false
+        }
+      ]
+    },
+    {
+      "email": "romadlon@bps.go.id",
+      "memberships": [
+        {
+          "teamId": 4,
+          "isKetua": false
+        },
+        {
+          "teamId": 9,
+          "isKetua": false
+        },
+        {
+          "teamId": 12,
+          "isKetua": false
+        }
+      ]
+    },
+    {
+      "email": "mardha.tilla@bps.go.id",
+      "memberships": [
+        {
+          "teamId": 7,
+          "isKetua": false
+        },
+        {
+          "teamId": 8,
+          "isKetua": false
+        },
+        {
+          "teamId": 11,
+          "isKetua": false
+        }
+      ]
+    },
+    {
+      "email": "jsafitri@bps.go.id",
+      "memberships": [
+        {
+          "teamId": 5,
+          "isKetua": false
+        },
+        {
+          "teamId": 12,
+          "isKetua": false
+        },
+        {
+          "teamId": 17,
+          "isKetua": false
+        }
+      ]
+    },
+    {
+      "email": "desianars@bps.go.id",
+      "memberships": [
+        {
+          "teamId": 12,
+          "isKetua": false
+        },
+        {
+          "teamId": 17,
+          "isKetua": false
+        },
+        {
+          "teamId": 18,
+          "isKetua": false
+        }
+      ]
+    },
+    {
+      "email": "narezi.febriansa@bps.go.id",
+      "memberships": [
+        {
+          "teamId": 13,
+          "isKetua": false
+        },
+        {
+          "teamId": 16,
+          "isKetua": false
+        },
+        {
+          "teamId": 18,
+          "isKetua": false
+        }
+      ]
+    },
+    {
+      "email": "syamsu.pratama@bps.go.id",
+      "memberships": [
+        {
+          "teamId": 1,
+          "isKetua": false
+        },
+        {
+          "teamId": 10,
+          "isKetua": false
+        },
+        {
+          "teamId": 15,
+          "isKetua": false
+        }
+      ]
+    },
+    {
+      "email": "ratnasari@bps.go.id",
+      "memberships": [
+        {
+          "teamId": 4,
+          "isKetua": false
+        },
+        {
+          "teamId": 17,
+          "isKetua": false
+        },
+        {
+          "teamId": 18,
+          "isKetua": false
+        }
+      ]
+    },
+    {
+      "email": "siti.ashhabul@bps.go.id",
+      "memberships": [
+        {
+          "teamId": 6,
+          "isKetua": false
+        },
+        {
+          "teamId": 8,
+          "isKetua": false
+        },
+        {
+          "teamId": 16,
+          "isKetua": false
+        }
+      ]
+    },
+    {
+      "email": "viviyesicas@bps.go.id",
+      "memberships": [
+        {
+          "teamId": 4,
+          "isKetua": false
+        },
+        {
+          "teamId": 9,
+          "isKetua": false
+        },
+        {
+          "teamId": 16,
+          "isKetua": false
+        }
+      ]
+    },
+    {
+      "email": "ajengdamaris@bps.go.id",
+      "memberships": [
+        {
+          "teamId": 12,
+          "isKetua": false
+        },
+        {
+          "teamId": 16,
+          "isKetua": false
+        },
+        {
+          "teamId": 18,
+          "isKetua": false
+        }
+      ]
+    },
+    {
+      "email": "rommel.yonatan@bps.go.id",
+      "memberships": [
+        {
+          "teamId": 11,
+          "isKetua": false
+        },
+        {
+          "teamId": 13,
+          "isKetua": false
+        },
+        {
+          "teamId": 18,
+          "isKetua": false
+        }
+      ]
+    },
+    {
+      "email": "sakinah.ramadhani@bps.go.id",
+      "memberships": [
+        {
+          "teamId": 1,
+          "isKetua": false
+        },
+        {
+          "teamId": 12,
+          "isKetua": false
+        },
+        {
+          "teamId": 15,
+          "isKetua": false
+        }
+      ]
+    },
+    {
+      "email": "listian@bps.go.id",
+      "memberships": [
+        {
+          "teamId": 7,
+          "isKetua": false
+        },
+        {
+          "teamId": 12,
+          "isKetua": false
+        },
+        {
+          "teamId": 14,
+          "isKetua": false
+        }
+      ]
+    },
+    {
+      "email": "syavhana@bps.go.id",
+      "memberships": [
+        {
+          "teamId": 2,
+          "isKetua": false
+        },
+        {
+          "teamId": 4,
+          "isKetua": false
+        },
+        {
+          "teamId": 11,
+          "isKetua": false
+        }
+      ]
+    },
+    {
+      "email": "tri.ervina@bps.go.id",
+      "memberships": [
+        {
+          "teamId": 11,
+          "isKetua": false
+        },
+        {
+          "teamId": 14,
+          "isKetua": false
+        },
+        {
+          "teamId": 16,
+          "isKetua": false
+        }
+      ]
+    },
+    {
+      "email": "nadya.fitri@bps.go.id",
+      "memberships": [
+        {
+          "teamId": 6,
+          "isKetua": false
+        },
+        {
+          "teamId": 14,
+          "isKetua": false
+        },
+        {
+          "teamId": 18,
+          "isKetua": false
+        }
+      ]
+    },
+    {
+      "email": "bagas.fathir@bps.go.id",
+      "memberships": [
+        {
+          "teamId": 5,
+          "isKetua": false
+        },
+        {
+          "teamId": 16,
+          "isKetua": false
+        },
+        {
+          "teamId": 18,
+          "isKetua": false
+        }
+      ]
+    },
+    {
+      "email": "rm.pramadhira@bps.go.id",
+      "memberships": [
+        {
+          "teamId": 4,
+          "isKetua": false
+        },
+        {
+          "teamId": 6,
+          "isKetua": false
+        },
+        {
+          "teamId": 14,
+          "isKetua": false
+        }
+      ]
+    },
+    {
+      "email": "ramdani.agusta@BPS.go.id",
+      "memberships": [
+        {
+          "teamId": 1,
+          "isKetua": false
+        },
+        {
+          "teamId": 10,
+          "isKetua": false
+        },
+        {
+          "teamId": 15,
+          "isKetua": false
+        }
+      ]
+    },
+    {
+      "email": "ryan.giggs@BPS.go.id",
+      "memberships": [
+        {
+          "teamId": 5,
+          "isKetua": false
+        },
+        {
+          "teamId": 12,
+          "isKetua": false
+        },
+        {
+          "teamId": 18,
+          "isKetua": false
+        }
+      ]
+    },
+    {
+      "email": "januarta.marko@BPS.go.id",
+      "memberships": [
+        {
+          "teamId": 11,
+          "isKetua": false
+        },
+        {
+          "teamId": 13,
+          "isKetua": false
+        },
+        {
+          "teamId": 18,
+          "isKetua": false
+        }
+      ]
+    },
+    {
+      "email": "suryawati@BPS.go.id",
+      "memberships": [
+        {
+          "teamId": 1,
+          "isKetua": false
+        },
+        {
+          "teamId": 10,
+          "isKetua": false
+        },
+        {
+          "teamId": 14,
+          "isKetua": false
+        }
+      ]
+    },
+    {
+      "email": "marissawidya@BPS.go.id",
+      "memberships": [
+        {
+          "teamId": 5,
+          "isKetua": false
+        },
+        {
+          "teamId": 10,
+          "isKetua": false
+        },
+        {
+          "teamId": 15,
+          "isKetua": false
+        }
+      ]
+    },
+    {
+      "email": "ravinsyah.kesuma@BPS.go.id",
+      "memberships": [
+        {
+          "teamId": 1,
+          "isKetua": false
+        },
+        {
+          "teamId": 16,
+          "isKetua": false
+        },
+        {
+          "teamId": 17,
+          "isKetua": false
+        }
+      ]
+    },
+    {
+      "email": "fahrunnisam@BPS.go.id",
+      "memberships": [
+        {
+          "teamId": 6,
+          "isKetua": false
+        },
+        {
+          "teamId": 10,
+          "isKetua": false
+        },
+        {
+          "teamId": 14,
+          "isKetua": false
+        }
+      ]
+    },
+    {
+      "email": "akhmadfadil@BPS.go.id",
+      "memberships": [
+        {
+          "teamId": 13,
+          "isKetua": false
+        },
+        {
+          "teamId": 16,
+          "isKetua": false
+        },
+        {
+          "teamId": 18,
+          "isKetua": false
+        }
+      ]
+    },
+    {
+      "email": "nurulhuda-pppk@bps.go.id",
+      "memberships": [
+        {
+          "teamId": 1,
+          "isKetua": false
+        },
+        {
+          "teamId": 11,
+          "isKetua": false
+        },
+        {
+          "teamId": 16,
+          "isKetua": false
+        }
+      ]
+    },
+    {
+      "email": "syahrul.toha@bps.go.id",
+      "memberships": [
+        {
+          "teamId": 8,
+          "isKetua": false
+        },
+        {
+          "teamId": 13,
+          "isKetua": false
+        },
+        {
+          "teamId": 17,
+          "isKetua": false
+        }
+      ]
+    },
+    {
+      "email": "nurzikri.saputra@bps.go.id",
+      "memberships": [
+        {
+          "teamId": 10,
+          "isKetua": false
+        },
+        {
+          "teamId": 14,
+          "isKetua": false
+        },
+        {
+          "teamId": 17,
+          "isKetua": false
+        }
+      ]
+    },
+    {
+      "email": "shintaregina-pppk@bps.go.id",
+      "memberships": [
+        {
+          "teamId": 1,
+          "isKetua": false
+        },
+        {
+          "teamId": 15,
+          "isKetua": false
+        },
+        {
+          "teamId": 16,
+          "isKetua": false
+        }
+      ]
+    },
+    {
+      "email": "dwi.unzila@bps.go.id",
+      "memberships": [
+        {
+          "teamId": 2,
+          "isKetua": false
+        },
+        {
+          "teamId": 5,
+          "isKetua": false
+        },
+        {
+          "teamId": 8,
+          "isKetua": false
+        },
+        {
+          "teamId": 16,
+          "isKetua": false
+        }
+      ]
+    },
+    {
+      "email": "arif.ghossan@bps.go.id",
+      "memberships": [
+        {
+          "teamId": 2,
+          "isKetua": false
+        },
+        {
+          "teamId": 4,
+          "isKetua": false
+        },
+        {
+          "teamId": 16,
+          "isKetua": false
+        }
+      ]
+    },
+    {
+      "email": "dwinova@bps.go.id",
+      "memberships": [
+        {
+          "teamId": 4,
+          "isKetua": false
+        },
+        {
+          "teamId": 7,
+          "isKetua": false
+        },
+        {
+          "teamId": 16,
+          "isKetua": false
+        }
+      ]
+    },
+    {
+      "email": "medianjonson-pppk@bps.go.id",
+      "memberships": [
+        {
+          "teamId": 1,
+          "isKetua": false
+        },
+        {
+          "teamId": 6,
+          "isKetua": false
+        },
+        {
+          "teamId": 15,
+          "isKetua": false
+        }
+      ]
+    },
+    {
+      "email": "gustiawan-pppk@bps.go.id",
+      "memberships": [
+        {
+          "teamId": 1,
+          "isKetua": false
+        },
+        {
+          "teamId": 7,
+          "isKetua": false
+        },
+        {
+          "teamId": 16,
+          "isKetua": false
+        }
+      ]
+    },
+    {
+      "email": "jasminefalo-pppk@bps.go.id",
+      "memberships": [
+        {
+          "teamId": 1,
+          "isKetua": false
+        },
+        {
+          "teamId": 2,
+          "isKetua": false
+        },
+        {
+          "teamId": 16,
+          "isKetua": false
+        }
+      ]
+    },
+    {
+      "email": "ademutholib-pppk@bps.go.id",
+      "memberships": [
+        {
+          "teamId": 1,
+          "isKetua": false
+        }
+      ]
+    },
+    {
+      "email": "kasmah-pppk@bps.go.id",
+      "memberships": [
+        {
+          "teamId": 1,
+          "isKetua": false
+        }
+      ]
+    },
+    {
+      "email": "nuraini-pppk@bps.go.id",
+      "memberships": [
+        {
+          "teamId": 1,
+          "isKetua": false
+        }
+      ]
+    },
+    {
+      "email": "suryani-pppk@bps.go.id",
+      "memberships": [
+        {
+          "teamId": 1,
+          "isKetua": false
+        }
+      ]
+    },
+    {
+      "email": "danardanamuh@bps.go.id",
+      "memberships": [
+        {
+          "teamId": 2,
+          "isKetua": false
+        },
+        {
+          "teamId": 5,
+          "isKetua": false
+        },
+        {
+          "teamId": 6,
+          "isKetua": false
+        }
+      ]
+    },
+    {
+      "email": "sabillahamdas@bps.go.id",
+      "memberships": [
+        {
+          "teamId": 9,
+          "isKetua": false
+        },
+        {
+          "teamId": 13,
+          "isKetua": false
+        },
+        {
+          "teamId": 18,
+          "isKetua": false
+        }
+      ]
+    }
+  ]
+}

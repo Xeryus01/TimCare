@@ -1,0 +1,628 @@
+- generic [ref=f19e2]:
+  - complementary [ref=f19e3]:
+    - link [ref=f19e5] [cursor=pointer]:
+      - /url: http://localhost:8000/dashboard
+      - img "TimCare ITSM Dashboard" [ref=f19e6]
+    - navigation [ref=f19e7]:
+      - list [ref=f19e8]:
+        - listitem [ref=f19e9]:
+          - link "Beranda" [ref=f19e10] [cursor=pointer]:
+            - /url: http://localhost:8000/dashboard
+        - listitem [ref=f19e17]:
+          - link "Tiket Masalah TI" [ref=f19e18] [cursor=pointer]:
+            - /url: http://localhost:8000/tickets
+        - listitem [ref=f19e24]:
+          - link "Tiket ID Zoom" [ref=f19e25] [cursor=pointer]:
+            - /url: http://localhost:8000/reservations
+        - listitem [ref=f19e30]:
+          - link "Data Aset" [ref=f19e31] [cursor=pointer]:
+            - /url: http://localhost:8000/assets
+        - listitem [ref=f19e36]:
+          - link "Pemeliharaan" [ref=f19e37] [cursor=pointer]:
+            - /url: http://localhost:8000/maintenance
+        - listitem [ref=f19e44]:
+          - link "Monitoring TI" [ref=f19e45] [cursor=pointer]:
+            - /url: http://localhost:8000/monitoring-ti
+        - listitem [ref=f19e50]:
+          - link "Manajemen User" [ref=f19e51] [cursor=pointer]:
+            - /url: http://localhost:8000/users
+        - listitem [ref=f19e55]:
+          - link "Jadwal Piket" [ref=f19e56] [cursor=pointer]:
+            - /url: http://localhost:8000/admin/piket
+        - listitem [ref=f19e60]:
+          - link "Backup & Berkas" [ref=f19e61] [cursor=pointer]:
+            - /url: http://localhost:8000/admin/file-manager
+    - navigation [ref=f19e66]:
+      - list [ref=f19e67]:
+        - listitem [ref=f19e68]:
+          - link "Profil" [ref=f19e69] [cursor=pointer]:
+            - /url: http://localhost:8000/profile
+        - listitem [ref=f19e73]:
+          - button "Keluar" [ref=f19e75] [cursor=pointer]
+  - generic [ref=f19e80]:
+    - banner [ref=f19e81]:
+      - button "Toggle sidebar" [ref=f19e83] [cursor=pointer]
+      - generic [ref=f19e86]:
+        - button "Toggle dark mode" [ref=f19e87] [cursor=pointer]
+        - button [ref=f19e91] [cursor=pointer]
+        - button "A Administrator admin@example.com" [ref=f19e96] [cursor=pointer]:
+          - generic [ref=f19e97]: A
+          - generic [ref=f19e98]:
+            - paragraph [ref=f19e99]: Administrator
+            - paragraph [ref=f19e100]: admin@example.com
+    - main [ref=f19e103]:
+      - generic [ref=f19e104]:
+        - generic [ref=f19e105]:
+          - heading "Aplikasi & perangkat TI" [level=1] [ref=f19e106]
+          - paragraph [ref=f19e107]: Lihat penanggung jawab, tim pengelola, dan laporan tiap aplikasi.
+        - navigation "Menu monitoring TI" [ref=f19e108]:
+          - link "Laporan monitoring" [ref=f19e109] [cursor=pointer]:
+            - /url: http://localhost:8000/monitoring-ti
+          - link "Objek & penanggung jawab" [ref=f19e110] [cursor=pointer]:
+            - /url: http://localhost:8000/monitoring-ti/objects
+          - link "Tim kerja" [ref=f19e111] [cursor=pointer]:
+            - /url: http://localhost:8000/monitoring-ti/teams
+        - generic [ref=f19e112]:
+          - generic [ref=f19e113]:
+            - generic [ref=f19e114]:
+              - generic [ref=f19e115]: Cari aplikasi
+              - searchbox "Cari aplikasi" [ref=f19e116]
+            - generic [ref=f19e117]:
+              - generic [ref=f19e118]: Status
+              - combobox "Status" [ref=f19e119]:
+                - option "Semua status" [selected]
+                - option "Aktif"
+                - option "Nonaktif"
+                - option "Belum ditugaskan"
+            - button "Terapkan" [ref=f19e120] [cursor=pointer]
+          - link "Tambah aplikasi" [ref=f19e121] [cursor=pointer]:
+            - /url: http://localhost:8000/monitoring-ti/objects/create
+        - generic "Ringkasan aplikasi" [ref=f19e122]:
+          - generic [ref=f19e123]:
+            - generic [ref=f19e124]: "43"
+            - generic [ref=f19e125]: Aplikasi terlihat
+          - generic [ref=f19e126]:
+            - generic [ref=f19e127]: "43"
+            - generic [ref=f19e128]: Aktif
+          - link "42 Belum ditugaskan" [ref=f19e129] [cursor=pointer]:
+            - /url: http://localhost:8000/monitoring-ti/objects?status=unassigned
+            - generic [ref=f19e130]: "42"
+            - generic [ref=f19e131]: Belum ditugaskan
+        - generic [ref=f19e132]:
+          - strong [ref=f19e133]: "Alur penugasan:"
+          - text: atur PIC dan tim pengelola aplikasi. PIC atau ketua tim dapat mengisi laporan; anggota tim dapat melihatnya.
+        - generic [ref=f19e134]:
+          - article [ref=f19e135]:
+            - generic [ref=f19e136]:
+              - generic [ref=f19e137]:
+                - text: SEC-002
+                - heading "[DRAF] Antivirus/Endpoint Protection Terpusat" [level=2] [ref=f19e138]
+              - generic [ref=f19e139]:
+                - generic [ref=f19e140]: Aktif
+                - generic [ref=f19e141]: Belum ditugaskan
+            - generic [ref=f19e142]:
+              - generic [ref=f19e143]: Keamanan
+              - generic [aria-hidden] [ref=f19e144]: ·
+              - generic [ref=f19e145]: Lintas Aspek/Umum
+            - generic [ref=f19e146]:
+              - generic [ref=f19e147]:
+                - text: PIC
+                - strong [ref=f19e148]: Belum ditetapkan
+              - generic [ref=f19e149]:
+                - text: Tim pengelola
+                - strong [ref=f19e150]: Belum dipetakan
+            - generic [ref=f19e151]:
+              - generic [ref=f19e152]: 0 laporan tersimpan
+              - generic [ref=f19e153]:
+                - link "Atur penanggung jawab" [ref=f19e154] [cursor=pointer]:
+                  - /url: http://localhost:8000/monitoring-ti/objects/38/edit
+                - link "Lihat laporan" [ref=f19e155] [cursor=pointer]:
+                  - /url: http://localhost:8000/monitoring-ti?object_id=38
+          - article [ref=f19e156]:
+            - generic [ref=f19e157]:
+              - generic [ref=f19e158]:
+                - text: SEC-006
+                - heading "[DRAF] Backup & Rencana Pemulihan Bencana (Disaster Recovery)" [level=2] [ref=f19e159]
+              - generic [ref=f19e160]:
+                - generic [ref=f19e161]: Aktif
+                - generic [ref=f19e162]: Belum ditugaskan
+            - generic [ref=f19e163]:
+              - generic [ref=f19e164]: Keamanan
+              - generic [aria-hidden] [ref=f19e165]: ·
+              - generic [ref=f19e166]: Lintas Aspek/Umum
+            - generic [ref=f19e167]:
+              - generic [ref=f19e168]:
+                - text: PIC
+                - strong [ref=f19e169]: Belum ditetapkan
+              - generic [ref=f19e170]:
+                - text: Tim pengelola
+                - strong [ref=f19e171]: Belum dipetakan
+            - generic [ref=f19e172]:
+              - generic [ref=f19e173]: 0 laporan tersimpan
+              - generic [ref=f19e174]:
+                - link "Atur penanggung jawab" [ref=f19e175] [cursor=pointer]:
+                  - /url: http://localhost:8000/monitoring-ti/objects/42/edit
+                - link "Lihat laporan" [ref=f19e176] [cursor=pointer]:
+                  - /url: http://localhost:8000/monitoring-ti?object_id=42
+          - article [ref=f19e177]:
+            - generic [ref=f19e178]:
+              - generic [ref=f19e179]:
+                - text: SEC-007
+                - heading "[DRAF] CCTV/Sistem Pengawasan Area TI" [level=2] [ref=f19e180]
+              - generic [ref=f19e181]:
+                - generic [ref=f19e182]: Aktif
+                - generic [ref=f19e183]: Belum ditugaskan
+            - generic [ref=f19e184]:
+              - generic [ref=f19e185]: Keamanan
+              - generic [aria-hidden] [ref=f19e186]: ·
+              - generic [ref=f19e187]: Lintas Aspek/Umum
+            - generic [ref=f19e188]:
+              - generic [ref=f19e189]:
+                - text: PIC
+                - strong [ref=f19e190]: Belum ditetapkan
+              - generic [ref=f19e191]:
+                - text: Tim pengelola
+                - strong [ref=f19e192]: Belum dipetakan
+            - generic [ref=f19e193]:
+              - generic [ref=f19e194]: 0 laporan tersimpan
+              - generic [ref=f19e195]:
+                - link "Atur penanggung jawab" [ref=f19e196] [cursor=pointer]:
+                  - /url: http://localhost:8000/monitoring-ti/objects/43/edit
+                - link "Lihat laporan" [ref=f19e197] [cursor=pointer]:
+                  - /url: http://localhost:8000/monitoring-ti?object_id=43
+          - article [ref=f19e198]:
+            - generic [ref=f19e199]:
+              - generic [ref=f19e200]:
+                - text: SEC-001
+                - heading "[DRAF] Firewall/Sistem Keamanan Jaringan" [level=2] [ref=f19e201]
+              - generic [ref=f19e202]:
+                - generic [ref=f19e203]: Aktif
+                - generic [ref=f19e204]: Belum ditugaskan
+            - generic [ref=f19e205]:
+              - generic [ref=f19e206]: Keamanan
+              - generic [aria-hidden] [ref=f19e207]: ·
+              - generic [ref=f19e208]: Lintas Aspek/Umum
+            - generic [ref=f19e209]:
+              - generic [ref=f19e210]:
+                - text: PIC
+                - strong [ref=f19e211]: Belum ditetapkan
+              - generic [ref=f19e212]:
+                - text: Tim pengelola
+                - strong [ref=f19e213]: Belum dipetakan
+            - generic [ref=f19e214]:
+              - generic [ref=f19e215]: 0 laporan tersimpan
+              - generic [ref=f19e216]:
+                - link "Atur penanggung jawab" [ref=f19e217] [cursor=pointer]:
+                  - /url: http://localhost:8000/monitoring-ti/objects/37/edit
+                - link "Lihat laporan" [ref=f19e218] [cursor=pointer]:
+                  - /url: http://localhost:8000/monitoring-ti?object_id=37
+          - article [ref=f19e219]:
+            - generic [ref=f19e220]:
+              - generic [ref=f19e221]:
+                - text: INF-003
+                - heading "[DRAF] Jaringan Intra Pemerintah (JIP)/VPN ke BPS RI" [level=2] [ref=f19e222]
+              - generic [ref=f19e223]:
+                - generic [ref=f19e224]: Aktif
+                - generic [ref=f19e225]: Belum ditugaskan
+            - generic [ref=f19e226]:
+              - generic [ref=f19e227]: Infrastruktur
+              - generic [aria-hidden] [ref=f19e228]: ·
+              - generic [ref=f19e229]: Lintas Aspek/Umum
+            - generic [ref=f19e230]:
+              - generic [ref=f19e231]:
+                - text: PIC
+                - strong [ref=f19e232]: Belum ditetapkan
+              - generic [ref=f19e233]:
+                - text: Tim pengelola
+                - strong [ref=f19e234]: Belum dipetakan
+            - generic [ref=f19e235]:
+              - generic [ref=f19e236]: 0 laporan tersimpan
+              - generic [ref=f19e237]:
+                - link "Atur penanggung jawab" [ref=f19e238] [cursor=pointer]:
+                  - /url: http://localhost:8000/monitoring-ti/objects/31/edit
+                - link "Lihat laporan" [ref=f19e239] [cursor=pointer]:
+                  - /url: http://localhost:8000/monitoring-ti?object_id=31
+          - article [ref=f19e240]:
+            - generic [ref=f19e241]:
+              - generic [ref=f19e242]:
+                - text: INF-001
+                - heading "[DRAF] Jaringan LAN & WiFi Kantor" [level=2] [ref=f19e243]
+              - generic [ref=f19e244]:
+                - generic [ref=f19e245]: Aktif
+                - generic [ref=f19e246]: Belum ditugaskan
+            - generic [ref=f19e247]:
+              - generic [ref=f19e248]: Infrastruktur
+              - generic [aria-hidden] [ref=f19e249]: ·
+              - generic [ref=f19e250]: Lintas Aspek/Umum
+            - generic [ref=f19e251]:
+              - generic [ref=f19e252]:
+                - text: PIC
+                - strong [ref=f19e253]: Belum ditetapkan
+              - generic [ref=f19e254]:
+                - text: Tim pengelola
+                - strong [ref=f19e255]: Belum dipetakan
+            - generic [ref=f19e256]:
+              - generic [ref=f19e257]: 0 laporan tersimpan
+              - generic [ref=f19e258]:
+                - link "Atur penanggung jawab" [ref=f19e259] [cursor=pointer]:
+                  - /url: http://localhost:8000/monitoring-ti/objects/29/edit
+                - link "Lihat laporan" [ref=f19e260] [cursor=pointer]:
+                  - /url: http://localhost:8000/monitoring-ti?object_id=29
+          - article [ref=f19e261]:
+            - generic [ref=f19e262]:
+              - generic [ref=f19e263]:
+                - text: INF-002
+                - heading "[DRAF] Koneksi Internet (ISP)" [level=2] [ref=f19e264]
+              - generic [ref=f19e265]:
+                - generic [ref=f19e266]: Aktif
+                - generic [ref=f19e267]: Belum ditugaskan
+            - generic [ref=f19e268]:
+              - generic [ref=f19e269]: Infrastruktur
+              - generic [aria-hidden] [ref=f19e270]: ·
+              - generic [ref=f19e271]: Lintas Aspek/Umum
+            - generic [ref=f19e272]:
+              - generic [ref=f19e273]:
+                - text: PIC
+                - strong [ref=f19e274]: Belum ditetapkan
+              - generic [ref=f19e275]:
+                - text: Tim pengelola
+                - strong [ref=f19e276]: Belum dipetakan
+            - generic [ref=f19e277]:
+              - generic [ref=f19e278]: 0 laporan tersimpan
+              - generic [ref=f19e279]:
+                - link "Atur penanggung jawab" [ref=f19e280] [cursor=pointer]:
+                  - /url: http://localhost:8000/monitoring-ti/objects/30/edit
+                - link "Lihat laporan" [ref=f19e281] [cursor=pointer]:
+                  - /url: http://localhost:8000/monitoring-ti?object_id=30
+          - article [ref=f19e282]:
+            - generic [ref=f19e283]:
+              - generic [ref=f19e284]:
+                - text: SEC-004
+                - heading "[DRAF] Kontrol Akses Fisik Ruang Server" [level=2] [ref=f19e285]
+              - generic [ref=f19e286]:
+                - generic [ref=f19e287]: Aktif
+                - generic [ref=f19e288]: Belum ditugaskan
+            - generic [ref=f19e289]:
+              - generic [ref=f19e290]: Keamanan
+              - generic [aria-hidden] [ref=f19e291]: ·
+              - generic [ref=f19e292]: Lintas Aspek/Umum
+            - generic [ref=f19e293]:
+              - generic [ref=f19e294]:
+                - text: PIC
+                - strong [ref=f19e295]: Belum ditetapkan
+              - generic [ref=f19e296]:
+                - text: Tim pengelola
+                - strong [ref=f19e297]: Belum dipetakan
+            - generic [ref=f19e298]:
+              - generic [ref=f19e299]: 0 laporan tersimpan
+              - generic [ref=f19e300]:
+                - link "Atur penanggung jawab" [ref=f19e301] [cursor=pointer]:
+                  - /url: http://localhost:8000/monitoring-ti/objects/40/edit
+                - link "Lihat laporan" [ref=f19e302] [cursor=pointer]:
+                  - /url: http://localhost:8000/monitoring-ti?object_id=40
+          - article [ref=f19e303]:
+            - generic [ref=f19e304]:
+              - generic [ref=f19e305]:
+                - text: INF-006
+                - heading "[DRAF] Perangkat Komputer/Laptop Dinas Pegawai" [level=2] [ref=f19e306]
+              - generic [ref=f19e307]:
+                - generic [ref=f19e308]: Aktif
+                - generic [ref=f19e309]: Belum ditugaskan
+            - generic [ref=f19e310]:
+              - generic [ref=f19e311]: Infrastruktur
+              - generic [aria-hidden] [ref=f19e312]: ·
+              - generic [ref=f19e313]: Operasional SDM
+            - generic [ref=f19e314]:
+              - generic [ref=f19e315]:
+                - text: PIC
+                - strong [ref=f19e316]: Belum ditetapkan
+              - generic [ref=f19e317]:
+                - text: Tim pengelola
+                - strong [ref=f19e318]: Belum dipetakan
+            - generic [ref=f19e319]:
+              - generic [ref=f19e320]: 0 laporan tersimpan
+              - generic [ref=f19e321]:
+                - link "Atur penanggung jawab" [ref=f19e322] [cursor=pointer]:
+                  - /url: http://localhost:8000/monitoring-ti/objects/34/edit
+                - link "Lihat laporan" [ref=f19e323] [cursor=pointer]:
+                  - /url: http://localhost:8000/monitoring-ti?object_id=34
+          - article [ref=f19e324]:
+            - generic [ref=f19e325]:
+              - generic [ref=f19e326]:
+                - text: INF-007
+                - heading "[DRAF] Perangkat Layanan PST (komputer/mesin antrian publik)" [level=2] [ref=f19e327]
+              - generic [ref=f19e328]:
+                - generic [ref=f19e329]: Aktif
+                - generic [ref=f19e330]: Belum ditugaskan
+            - generic [ref=f19e331]:
+              - generic [ref=f19e332]: Infrastruktur
+              - generic [aria-hidden] [ref=f19e333]: ·
+              - generic [ref=f19e334]: Pelayanan Publik
+            - generic [ref=f19e335]:
+              - generic [ref=f19e336]:
+                - text: PIC
+                - strong [ref=f19e337]: Belum ditetapkan
+              - generic [ref=f19e338]:
+                - text: Tim pengelola
+                - strong [ref=f19e339]: Belum dipetakan
+            - generic [ref=f19e340]:
+              - generic [ref=f19e341]: 0 laporan tersimpan
+              - generic [ref=f19e342]:
+                - link "Atur penanggung jawab" [ref=f19e343] [cursor=pointer]:
+                  - /url: http://localhost:8000/monitoring-ti/objects/35/edit
+                - link "Lihat laporan" [ref=f19e344] [cursor=pointer]:
+                  - /url: http://localhost:8000/monitoring-ti?object_id=35
+          - article [ref=f19e345]:
+            - generic [ref=f19e346]:
+              - generic [ref=f19e347]:
+                - text: SEC-005
+                - heading "[DRAF] Sertifikat SSL/TLS Website & Layanan Publik" [level=2] [ref=f19e348]
+              - generic [ref=f19e349]:
+                - generic [ref=f19e350]: Aktif
+                - generic [ref=f19e351]: Belum ditugaskan
+            - generic [ref=f19e352]:
+              - generic [ref=f19e353]: Keamanan
+              - generic [aria-hidden] [ref=f19e354]: ·
+              - generic [ref=f19e355]: Pelayanan Publik
+            - generic [ref=f19e356]:
+              - generic [ref=f19e357]:
+                - text: PIC
+                - strong [ref=f19e358]: Belum ditetapkan
+              - generic [ref=f19e359]:
+                - text: Tim pengelola
+                - strong [ref=f19e360]: Belum dipetakan
+            - generic [ref=f19e361]:
+              - generic [ref=f19e362]: 0 laporan tersimpan
+              - generic [ref=f19e363]:
+                - link "Atur penanggung jawab" [ref=f19e364] [cursor=pointer]:
+                  - /url: http://localhost:8000/monitoring-ti/objects/41/edit
+                - link "Lihat laporan" [ref=f19e365] [cursor=pointer]:
+                  - /url: http://localhost:8000/monitoring-ti?object_id=41
+          - article [ref=f19e366]:
+            - generic [ref=f19e367]:
+              - generic [ref=f19e368]:
+                - text: INF-004
+                - heading "[DRAF] Server/Ruang Data Lokal (Server Room)" [level=2] [ref=f19e369]
+              - generic [ref=f19e370]:
+                - generic [ref=f19e371]: Aktif
+                - generic [ref=f19e372]: Belum ditugaskan
+            - generic [ref=f19e373]:
+              - generic [ref=f19e374]: Infrastruktur
+              - generic [aria-hidden] [ref=f19e375]: ·
+              - generic [ref=f19e376]: Lintas Aspek/Umum
+            - generic [ref=f19e377]:
+              - generic [ref=f19e378]:
+                - text: PIC
+                - strong [ref=f19e379]: Belum ditetapkan
+              - generic [ref=f19e380]:
+                - text: Tim pengelola
+                - strong [ref=f19e381]: Belum dipetakan
+            - generic [ref=f19e382]:
+              - generic [ref=f19e383]: 0 laporan tersimpan
+              - generic [ref=f19e384]:
+                - link "Atur penanggung jawab" [ref=f19e385] [cursor=pointer]:
+                  - /url: http://localhost:8000/monitoring-ti/objects/32/edit
+                - link "Lihat laporan" [ref=f19e386] [cursor=pointer]:
+                  - /url: http://localhost:8000/monitoring-ti?object_id=32
+          - article [ref=f19e387]:
+            - generic [ref=f19e388]:
+              - generic [ref=f19e389]:
+                - text: INF-005
+                - heading "[DRAF] Sistem Backup & Penyimpanan Data (Storage/NAS)" [level=2] [ref=f19e390]
+              - generic [ref=f19e391]:
+                - generic [ref=f19e392]: Aktif
+                - generic [ref=f19e393]: Belum ditugaskan
+            - generic [ref=f19e394]:
+              - generic [ref=f19e395]: Infrastruktur
+              - generic [aria-hidden] [ref=f19e396]: ·
+              - generic [ref=f19e397]: Lintas Aspek/Umum
+            - generic [ref=f19e398]:
+              - generic [ref=f19e399]:
+                - text: PIC
+                - strong [ref=f19e400]: Belum ditetapkan
+              - generic [ref=f19e401]:
+                - text: Tim pengelola
+                - strong [ref=f19e402]: Belum dipetakan
+            - generic [ref=f19e403]:
+              - generic [ref=f19e404]: 0 laporan tersimpan
+              - generic [ref=f19e405]:
+                - link "Atur penanggung jawab" [ref=f19e406] [cursor=pointer]:
+                  - /url: http://localhost:8000/monitoring-ti/objects/33/edit
+                - link "Lihat laporan" [ref=f19e407] [cursor=pointer]:
+                  - /url: http://localhost:8000/monitoring-ti?object_id=33
+          - article [ref=f19e408]:
+            - generic [ref=f19e409]:
+              - generic [ref=f19e410]:
+                - text: INF-008
+                - heading "[DRAF] Sistem Kelistrikan Pendukung TI (UPS/Genset)" [level=2] [ref=f19e411]
+              - generic [ref=f19e412]:
+                - generic [ref=f19e413]: Aktif
+                - generic [ref=f19e414]: Belum ditugaskan
+            - generic [ref=f19e415]:
+              - generic [ref=f19e416]: Infrastruktur
+              - generic [aria-hidden] [ref=f19e417]: ·
+              - generic [ref=f19e418]: Lintas Aspek/Umum
+            - generic [ref=f19e419]:
+              - generic [ref=f19e420]:
+                - text: PIC
+                - strong [ref=f19e421]: Belum ditetapkan
+              - generic [ref=f19e422]:
+                - text: Tim pengelola
+                - strong [ref=f19e423]: Belum dipetakan
+            - generic [ref=f19e424]:
+              - generic [ref=f19e425]: 0 laporan tersimpan
+              - generic [ref=f19e426]:
+                - link "Atur penanggung jawab" [ref=f19e427] [cursor=pointer]:
+                  - /url: http://localhost:8000/monitoring-ti/objects/36/edit
+                - link "Lihat laporan" [ref=f19e428] [cursor=pointer]:
+                  - /url: http://localhost:8000/monitoring-ti?object_id=36
+          - article [ref=f19e429]:
+            - generic [ref=f19e430]:
+              - generic [ref=f19e431]:
+                - text: SEC-003
+                - heading "[DRAF] Sistem Single Sign-On (SSO)" [level=2] [ref=f19e432]
+              - generic [ref=f19e433]:
+                - generic [ref=f19e434]: Aktif
+                - generic [ref=f19e435]: Belum ditugaskan
+            - generic [ref=f19e436]:
+              - generic [ref=f19e437]: Keamanan
+              - generic [aria-hidden] [ref=f19e438]: ·
+              - generic [ref=f19e439]: Lintas Aspek/Umum
+            - generic [ref=f19e440]:
+              - generic [ref=f19e441]:
+                - text: PIC
+                - strong [ref=f19e442]: Belum ditetapkan
+              - generic [ref=f19e443]:
+                - text: Tim pengelola
+                - strong [ref=f19e444]: Belum dipetakan
+            - generic [ref=f19e445]:
+              - generic [ref=f19e446]: 0 laporan tersimpan
+              - generic [ref=f19e447]:
+                - link "Atur penanggung jawab" [ref=f19e448] [cursor=pointer]:
+                  - /url: http://localhost:8000/monitoring-ti/objects/39/edit
+                - link "Lihat laporan" [ref=f19e449] [cursor=pointer]:
+                  - /url: http://localhost:8000/monitoring-ti?object_id=39
+          - article [ref=f19e450]:
+            - generic [ref=f19e451]:
+              - generic [ref=f19e452]:
+                - text: APP-001
+                - heading "Aplikasi KipApp" [level=2] [ref=f19e453]
+              - generic [ref=f19e454]:
+                - generic [ref=f19e455]: Aktif
+                - generic [ref=f19e456]: Belum ditugaskan
+            - generic [ref=f19e457]:
+              - generic [ref=f19e458]: Aplikasi & Layanan
+              - generic [aria-hidden] [ref=f19e459]: ·
+              - generic [ref=f19e460]: Pengukuran Kinerja
+            - generic [ref=f19e461]:
+              - generic [ref=f19e462]:
+                - text: PIC
+                - strong [ref=f19e463]: Belum ditetapkan
+              - generic [ref=f19e464]:
+                - text: Tim pengelola
+                - strong [ref=f19e465]: Belum dipetakan
+            - generic [ref=f19e466]:
+              - generic [ref=f19e467]: 0 laporan tersimpan
+              - generic [ref=f19e468]:
+                - link "Atur penanggung jawab" [ref=f19e469] [cursor=pointer]:
+                  - /url: http://localhost:8000/monitoring-ti/objects/1/edit
+                - link "Lihat laporan" [ref=f19e470] [cursor=pointer]:
+                  - /url: http://localhost:8000/monitoring-ti?object_id=1
+          - article [ref=f19e471]:
+            - generic [ref=f19e472]:
+              - generic [ref=f19e473]:
+                - text: APP-021
+                - heading "Back Office Selindo BPS" [level=2] [ref=f19e474]
+              - generic [ref=f19e475]:
+                - generic [ref=f19e476]: Aktif
+                - generic [ref=f19e477]: Belum ditugaskan
+            - generic [ref=f19e478]:
+              - generic [ref=f19e479]: Aplikasi & Layanan
+              - generic [aria-hidden] [ref=f19e480]: ·
+              - generic [ref=f19e481]: Operasional SDM
+            - generic [ref=f19e482]:
+              - generic [ref=f19e483]:
+                - text: PIC
+                - strong [ref=f19e484]: Belum ditetapkan
+              - generic [ref=f19e485]:
+                - text: Tim pengelola
+                - strong [ref=f19e486]: Belum dipetakan
+            - generic [ref=f19e487]:
+              - generic [ref=f19e488]: 0 laporan tersimpan
+              - generic [ref=f19e489]:
+                - link "Atur penanggung jawab" [ref=f19e490] [cursor=pointer]:
+                  - /url: http://localhost:8000/monitoring-ti/objects/18/edit
+                - link "Lihat laporan" [ref=f19e491] [cursor=pointer]:
+                  - /url: http://localhost:8000/monitoring-ti?object_id=18
+          - article [ref=f19e492]:
+            - generic [ref=f19e493]:
+              - generic [ref=f19e494]:
+                - text: APP-023
+                - heading "E-Monev Bappenas" [level=2] [ref=f19e495]
+              - generic [ref=f19e496]:
+                - generic [ref=f19e497]: Aktif
+                - generic [ref=f19e498]: Belum ditugaskan
+            - generic [ref=f19e499]:
+              - generic [ref=f19e500]: Aplikasi & Layanan
+              - generic [aria-hidden] [ref=f19e501]: ·
+              - generic [ref=f19e502]: Pengukuran Kinerja
+            - generic [ref=f19e503]:
+              - generic [ref=f19e504]:
+                - text: PIC
+                - strong [ref=f19e505]: Belum ditetapkan
+              - generic [ref=f19e506]:
+                - text: Tim pengelola
+                - strong [ref=f19e507]: Belum dipetakan
+            - generic [ref=f19e508]:
+              - generic [ref=f19e509]: 0 laporan tersimpan
+              - generic [ref=f19e510]:
+                - link "Atur penanggung jawab" [ref=f19e511] [cursor=pointer]:
+                  - /url: http://localhost:8000/monitoring-ti/objects/20/edit
+                - link "Lihat laporan" [ref=f19e512] [cursor=pointer]:
+                  - /url: http://localhost:8000/monitoring-ti?object_id=20
+          - article [ref=f19e513]:
+            - generic [ref=f19e514]:
+              - generic [ref=f19e515]:
+                - text: APP-022
+                - heading "E-Sakip Review Kemenpan RB" [level=2] [ref=f19e516]
+              - generic [ref=f19e517]:
+                - generic [ref=f19e518]: Aktif
+                - generic [ref=f19e519]: Belum ditugaskan
+            - generic [ref=f19e520]:
+              - generic [ref=f19e521]: Aplikasi & Layanan
+              - generic [aria-hidden] [ref=f19e522]: ·
+              - generic [ref=f19e523]: Pengukuran Kinerja
+            - generic [ref=f19e524]:
+              - generic [ref=f19e525]:
+                - text: PIC
+                - strong [ref=f19e526]: Belum ditetapkan
+              - generic [ref=f19e527]:
+                - text: Tim pengelola
+                - strong [ref=f19e528]: Belum dipetakan
+            - generic [ref=f19e529]:
+              - generic [ref=f19e530]: 0 laporan tersimpan
+              - generic [ref=f19e531]:
+                - link "Atur penanggung jawab" [ref=f19e532] [cursor=pointer]:
+                  - /url: http://localhost:8000/monitoring-ti/objects/19/edit
+                - link "Lihat laporan" [ref=f19e533] [cursor=pointer]:
+                  - /url: http://localhost:8000/monitoring-ti?object_id=19
+          - article [ref=f19e534]:
+            - generic [ref=f19e535]:
+              - generic [ref=f19e536]:
+                - text: APP-025
+                - heading "FRA" [level=2] [ref=f19e537]
+              - generic [ref=f19e538]:
+                - generic [ref=f19e539]: Aktif
+                - generic [ref=f19e540]: Belum ditugaskan
+            - generic [ref=f19e541]:
+              - generic [ref=f19e542]: Aplikasi & Layanan
+              - generic [aria-hidden] [ref=f19e543]: ·
+              - generic [ref=f19e544]: Pengukuran Kinerja
+            - generic [ref=f19e545]:
+              - generic [ref=f19e546]:
+                - text: PIC
+                - strong [ref=f19e547]: Belum ditetapkan
+              - generic [ref=f19e548]:
+                - text: Tim pengelola
+                - strong [ref=f19e549]: Belum dipetakan
+            - generic [ref=f19e550]:
+              - generic [ref=f19e551]: 0 laporan tersimpan
+              - generic [ref=f19e552]:
+                - link "Atur penanggung jawab" [ref=f19e553] [cursor=pointer]:
+                  - /url: http://localhost:8000/monitoring-ti/objects/22/edit
+                - link "Lihat laporan" [ref=f19e554] [cursor=pointer]:
+                  - /url: http://localhost:8000/monitoring-ti?object_id=22
+        - navigation "Pagination Navigation" [ref=f19e555]:
+          - generic [ref=f19e556]:
+            - paragraph [ref=f19e558]: Showing 1 to 20 of 43 results
+            - generic [ref=f19e560]:
+              - generic "&laquo; Previous" [ref=f19e561]
+              - generic [ref=f19e565]: "1"
+              - link "Go to page 2" [ref=f19e567] [cursor=pointer]:
+                - /url: http://localhost:8000/monitoring-ti/objects?page=2
+                - text: "2"
+              - link "Go to page 3" [ref=f19e568] [cursor=pointer]:
+                - /url: http://localhost:8000/monitoring-ti/objects?page=3
+                - text: "3"
+              - link "Next &raquo;" [ref=f19e569] [cursor=pointer]:
+                - /url: http://localhost:8000/monitoring-ti/objects?page=2

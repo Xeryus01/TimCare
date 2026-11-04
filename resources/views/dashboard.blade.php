@@ -2,6 +2,14 @@
 @php
     $user = auth()->user();
     $isAdminOrTechnician = $user->hasRole(['Admin', 'Teknisi']);
+    $showPiketWorkload = $user->hasRole('Admin');
+    $activeYear = now()->year;
+    $annualTechnicianRecap = collect();
+    $annualTicketTotal = 0;
+    $annualZoomTotal = 0;
+
+    $buildActivePiketSchedules = fn ($activePiket) => app(\App\Services\PiketWorkloadService::class)
+        ->forSchedule($activePiket, $showPiketWorkload);
 
     if ($isAdminOrTechnician) {
         // Admin/Teknisi melihat semua data
@@ -42,6 +50,48 @@
         $layananBelumDilayani = \App\Models\Ticket::whereNotIn('status', [\App\Models\Ticket::STATUS_SOLVED, \App\Models\Ticket::STATUS_SOLVED_WITH_NOTES])->count();
         $zoomBelumDilayani = \App\Models\Reservation::where('status', '!=', \App\Models\Reservation::STATUS_COMPLETED)->count();
 
+        if ($user->hasRole('Admin')) {
+            $yearStart = now()->copy()->startOfYear();
+            $yearEnd = now()->copy()->endOfYear();
+
+            $annualTicketCounts = \App\Models\Ticket::query()
+                ->whereNotNull('assignee_id')
+                ->whereBetween('created_at', [$yearStart, $yearEnd])
+                ->selectRaw('assignee_id, COUNT(*) as total')
+                ->groupBy('assignee_id')
+                ->pluck('total', 'assignee_id');
+
+            $annualZoomCounts = \App\Models\Reservation::query()
+                ->whereNotNull('approver_id')
+                ->whereBetween('start_time', [$yearStart, $yearEnd])
+                ->selectRaw('approver_id, COUNT(*) as total')
+                ->groupBy('approver_id')
+                ->pluck('total', 'approver_id');
+
+            $annualTechnicianRecap = \App\Models\User::role('Teknisi')
+                ->orderBy('name')
+                ->get(['id', 'name'])
+                ->map(function ($technician) use ($annualTicketCounts, $annualZoomCounts) {
+                    $ticketTotal = (int) $annualTicketCounts->get($technician->id, 0);
+                    $zoomTotal = (int) $annualZoomCounts->get($technician->id, 0);
+
+                    return [
+                        'name' => $technician->name,
+                        'ticket_total' => $ticketTotal,
+                        'zoom_total' => $zoomTotal,
+                        'work_total' => $ticketTotal + $zoomTotal,
+                    ];
+                })
+                ->sortBy([
+                    ['work_total', 'desc'],
+                    ['name', 'asc'],
+                ])
+                ->values();
+
+            $annualTicketTotal = $annualTechnicianRecap->sum('ticket_total');
+            $annualZoomTotal = $annualTechnicianRecap->sum('zoom_total');
+        }
+
         // Ambil data terbaru untuk ditampilkan
         $recentTickets = \App\Models\Ticket::latest()->take(5)->get();
         $recentReservations = \App\Models\Reservation::latest()->take(5)->get();
@@ -54,25 +104,12 @@
             ->where('end_time', '<=', now()->endOfMonth())
             ->get(['start_time', 'end_time', 'room_name', 'purpose', 'status', 'code', 'participants_count', 'operator_needed', 'breakroom_needed', 'requester_id', 'id']);
 
-        // Data untuk kalender piket - semua jadwal piket dalam bulan ini
-        $piketEvents = \App\Models\PiketSchedule::where('week_start_date', '>=', now()->startOfMonth()->toDateString())
-            ->where('week_start_date', '<=', now()->endOfMonth()->toDateString())
-            ->get(['id', 'week_start_date', 'technician_1', 'technician_2', 'technician_3']);
-
-        $activePiketSchedules = $piketEvents->map(function ($schedule) {
-            $weekStart = \Illuminate\Support\Carbon::parse($schedule->week_start_date)->startOfDay();
-            $weekEnd = $weekStart->copy()->addDays(6)->endOfDay();
-            $isCurrentWeek = now()->between($weekStart, $weekEnd);
-
-            return [
-                'week_start_date' => $weekStart->format('d M Y'),
-                'week_end_date' => $weekEnd->format('d M Y'),
-                'technicians' => array_filter([$schedule->technician_1, $schedule->technician_2, $schedule->technician_3]),
-                'is_active' => $isCurrentWeek,
-            ];
-        })->filter(function ($schedule) {
-            return $schedule['is_active'];
-        })->values();
+        // Kartu "Tim Piket Aktif": ambil jadwal yang MEMUAT hari ini.
+        // Minggu piket bisa dimulai di bulan sebelumnya (mis. Senin akhir bulan),
+        // jadi jangan dibatasi bulan kalender berjalan agar tidak kosong saat ganti bulan.
+        $piketToday = now()->startOfDay();
+        $activePiket = \App\Models\PiketSchedule::findForDate($piketToday);
+        $activePiketSchedules = $buildActivePiketSchedules($activePiket);
 
         $zoomEventsArray = $zoomEvents->map(function($event) {
             $statusColors = [
@@ -119,16 +156,19 @@
         // Piket schedules are not added to the calendar events here.
         // The calendar will only display Zoom reservations; piket is shown in the Tim Piket card.
     } else {
-        // User biasa melihat semua data di dashboard, tapi hanya yang mereka ajukan di daftar
-        $totalTickets = \App\Models\Ticket::count();
-        $totalZooms = \App\Models\Reservation::count();
-        $layananSelesai = \App\Models\Ticket::whereIn('status', [
+        // User biasa hanya melihat statistik dan data miliknya sendiri.
+        $userTicketQuery = \App\Models\Ticket::where('requester_id', $user->id);
+        $userReservationQuery = \App\Models\Reservation::where('requester_id', $user->id);
+
+        $totalTickets = (clone $userTicketQuery)->count();
+        $totalZooms = (clone $userReservationQuery)->count();
+        $layananSelesai = (clone $userTicketQuery)->whereIn('status', [
                 \App\Models\Ticket::STATUS_SOLVED,
                 \App\Models\Ticket::STATUS_SOLVED_WITH_NOTES,
                 \App\Models\Ticket::STATUS_REJECTED,
                 \App\Models\Ticket::STATUS_CANCELLED,
             ])->count()
-            + \App\Models\Reservation::whereIn('status', [
+            + (clone $userReservationQuery)->whereIn('status', [
                 \App\Models\Reservation::STATUS_COMPLETED,
                 \App\Models\Reservation::STATUS_REJECTED,
                 \App\Models\Reservation::STATUS_CANCELLED,
@@ -137,25 +177,25 @@
         $capaianPersentase = $totalLayanan > 0 ? round(($layananSelesai / $totalLayanan) * 100, 1) : 0;
 
         $ticketCounts = [
-            'Dibuka' => \App\Models\Ticket::where('status', \App\Models\Ticket::STATUS_OPEN)->count(),
-            'Diproses Teknisi' => \App\Models\Ticket::where('status', \App\Models\Ticket::STATUS_ASSIGNED_DETECT)->count(),
-            'Menunggu Ketersediaan Barang' => \App\Models\Ticket::where('status', \App\Models\Ticket::STATUS_WAITING_PARTS)->count(),
-            'Selesai + Catatan' => \App\Models\Ticket::where('status', \App\Models\Ticket::STATUS_SOLVED_WITH_NOTES)->count(),
-            'Selesai' => \App\Models\Ticket::where('status', \App\Models\Ticket::STATUS_SOLVED)->count(),
-            'Batal' => \App\Models\Ticket::whereIn('status', [\App\Models\Ticket::STATUS_REJECTED, \App\Models\Ticket::STATUS_CANCELLED, 'Dibatalkan'])->count(),
+            'Dibuka' => (clone $userTicketQuery)->where('status', \App\Models\Ticket::STATUS_OPEN)->count(),
+            'Diproses Teknisi' => (clone $userTicketQuery)->where('status', \App\Models\Ticket::STATUS_ASSIGNED_DETECT)->count(),
+            'Menunggu Ketersediaan Barang' => (clone $userTicketQuery)->where('status', \App\Models\Ticket::STATUS_WAITING_PARTS)->count(),
+            'Selesai + Catatan' => (clone $userTicketQuery)->where('status', \App\Models\Ticket::STATUS_SOLVED_WITH_NOTES)->count(),
+            'Selesai' => (clone $userTicketQuery)->where('status', \App\Models\Ticket::STATUS_SOLVED)->count(),
+            'Batal' => (clone $userTicketQuery)->whereIn('status', [\App\Models\Ticket::STATUS_REJECTED, \App\Models\Ticket::STATUS_CANCELLED, 'Dibatalkan'])->count(),
         ];
 
         $zoomCounts = [
-            'Dibuka' => \App\Models\Reservation::where('status', \App\Models\Reservation::STATUS_PENDING)->count(),
-            'Diproses Teknisi' => \App\Models\Reservation::where('status', \App\Models\Reservation::STATUS_APPROVED)->count(),
-            'Zoom Siap' => \App\Models\Reservation::where('status', \App\Models\Reservation::STATUS_WAITING_MONITORING)->count(),
-            'Selesai' => \App\Models\Reservation::where('status', \App\Models\Reservation::STATUS_COMPLETED)->count(),
-            'Selesai Ditolak' => \App\Models\Reservation::where('status', \App\Models\Reservation::STATUS_REJECTED)->count(),
-            'Batal' => \App\Models\Reservation::where('status', \App\Models\Reservation::STATUS_CANCELLED)->count(),
+            'Dibuka' => (clone $userReservationQuery)->where('status', \App\Models\Reservation::STATUS_PENDING)->count(),
+            'Diproses Teknisi' => (clone $userReservationQuery)->where('status', \App\Models\Reservation::STATUS_APPROVED)->count(),
+            'Zoom Siap' => (clone $userReservationQuery)->where('status', \App\Models\Reservation::STATUS_WAITING_MONITORING)->count(),
+            'Selesai' => (clone $userReservationQuery)->where('status', \App\Models\Reservation::STATUS_COMPLETED)->count(),
+            'Selesai Ditolak' => (clone $userReservationQuery)->where('status', \App\Models\Reservation::STATUS_REJECTED)->count(),
+            'Batal' => (clone $userReservationQuery)->where('status', \App\Models\Reservation::STATUS_CANCELLED)->count(),
         ];
 
-        $layananBelumDilayani = \App\Models\Ticket::whereNotIn('status', [\App\Models\Ticket::STATUS_SOLVED, \App\Models\Ticket::STATUS_SOLVED_WITH_NOTES])->count();
-        $zoomBelumDilayani = \App\Models\Reservation::where('status', '!=', \App\Models\Reservation::STATUS_COMPLETED)->count();
+        $layananBelumDilayani = (clone $userTicketQuery)->whereNotIn('status', [\App\Models\Ticket::STATUS_SOLVED, \App\Models\Ticket::STATUS_SOLVED_WITH_NOTES])->count();
+        $zoomBelumDilayani = (clone $userReservationQuery)->where('status', '!=', \App\Models\Reservation::STATUS_COMPLETED)->count();
 
         // Ambil data terbaru milik user
         $recentTickets = \App\Models\Ticket::where('requester_id', $user->id)->latest()->take(5)->get();
@@ -163,28 +203,17 @@
 
         // Data untuk kalender zoom - semua reservasi dengan Zoom link dalam bulan ini
         $zoomEvents = \App\Models\Reservation::with('requester')
+            ->where('requester_id', $user->id)
             ->whereNotNull('zoom_link')
             ->where('zoom_link', '!=', '')
             ->where('start_time', '>=', now()->startOfMonth())
             ->where('end_time', '<=', now()->endOfMonth())
             ->get(['start_time', 'end_time', 'room_name', 'purpose', 'status', 'code', 'participants_count', 'operator_needed', 'breakroom_needed', 'requester_id', 'id']);
 
-        $piketEvents = \App\Models\PiketSchedule::where('week_start_date', '>=', now()->startOfMonth()->toDateString())
-            ->where('week_start_date', '<=', now()->endOfMonth()->toDateString())
-            ->get(['id', 'week_start_date', 'technician_1', 'technician_2', 'technician_3']);
-
-        $activePiketSchedules = $piketEvents->map(function ($schedule) {
-            $weekStart = \Illuminate\Support\Carbon::parse($schedule->week_start_date)->startOfDay();
-            $weekEnd = $weekStart->copy()->addDays(6)->endOfDay();
-            $techs = array_filter([$schedule->technician_1, $schedule->technician_2, $schedule->technician_3]);
-
-            return [
-                'week_start_date' => $weekStart->format('d M Y'),
-                'week_end_date' => $weekEnd->format('d M Y'),
-                'technicians' => $techs,
-                'is_active' => now()->between($weekStart, $weekEnd),
-            ];
-        })->values();
+        // Kartu "Tim Piket Aktif": ambil jadwal yang MEMUAT hari ini (lintas batas bulan).
+        $piketToday = now()->startOfDay();
+        $activePiket = \App\Models\PiketSchedule::findForDate($piketToday);
+        $activePiketSchedules = $buildActivePiketSchedules($activePiket);
 
         $zoomEventsArray = $zoomEvents->map(function($event) {
             $statusColors = [
@@ -362,6 +391,95 @@
     .card-body { padding: 16px 20px; }
     .card-body.no-pad { padding: 0; }
 
+    .piket-list { display: flex; flex-direction: column; gap: 12px; }
+    .piket-member {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 20px;
+        padding: 14px 16px;
+        border: 1px solid var(--slate-200);
+        border-radius: 12px;
+        background: var(--white);
+    }
+    .piket-member-info { min-width: 0; }
+    .piket-role {
+        font-size: .68rem;
+        font-weight: 600;
+        letter-spacing: .08em;
+        color: var(--slate-500);
+    }
+    .piket-name {
+        margin-top: 4px;
+        font-size: .825rem;
+        font-weight: 700;
+        line-height: 1.35;
+        color: var(--slate-800);
+    }
+    .piket-workload {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 8px;
+    }
+    .workload-stat {
+        min-width: 64px;
+        padding: 7px 10px;
+        border: 1px solid var(--slate-200);
+        border-radius: 10px;
+        background: var(--slate-50);
+        text-align: center;
+    }
+    .workload-label {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        font-size: .65rem;
+        font-weight: 600;
+        color: var(--slate-500);
+    }
+    .workload-label svg { width: 12px; height: 12px; }
+    .workload-value {
+        margin-top: 2px;
+        font-size: 1rem;
+        font-weight: 800;
+        line-height: 1.2;
+        color: var(--slate-900);
+        font-variant-numeric: tabular-nums;
+    }
+    .piket-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        min-height: 30px;
+        padding: 5px 10px;
+        border-radius: 999px;
+        background: var(--slate-100);
+        color: var(--slate-600);
+        font-size: .68rem;
+        font-weight: 700;
+        white-space: nowrap;
+    }
+    .piket-status::before {
+        content: '';
+        width: 6px;
+        height: 6px;
+        border-radius: 999px;
+        background: var(--green);
+    }
+    @media (max-width: 640px) {
+        .piket-member {
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+        .piket-workload {
+            justify-content: flex-start;
+            flex-wrap: wrap;
+        }
+        .workload-stat { min-width: 72px; }
+    }
+
     .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
     @media (max-width: 900px) { .two-col { grid-template-columns: 1fr; } }
 
@@ -390,6 +508,104 @@
     .fc .fc-daygrid-day-number { font-size: .75rem; }
 
     .chart-wrap { position: relative; height: 240px; padding: 4px 0; }
+
+    .annual-summary {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+        padding: 16px 20px;
+        border-bottom: 1px solid var(--slate-100);
+    }
+    .annual-summary-item {
+        padding: 14px 16px;
+        border: 1px solid var(--slate-200);
+        border-radius: 12px;
+        background: var(--slate-50);
+    }
+    .annual-summary-label {
+        font-size: .72rem;
+        font-weight: 600;
+        color: var(--slate-500);
+    }
+    .annual-summary-value {
+        margin-top: 4px;
+        font-size: 1.35rem;
+        font-weight: 800;
+        line-height: 1;
+        color: var(--slate-900);
+        font-variant-numeric: tabular-nums;
+    }
+    .annual-table-wrap { overflow-x: auto; }
+    .annual-table {
+        width: 100%;
+        min-width: 620px;
+        border-collapse: collapse;
+    }
+    .annual-table th,
+    .annual-table td {
+        padding: 13px 20px;
+        border-bottom: 1px solid var(--slate-100);
+        text-align: left;
+        vertical-align: middle;
+    }
+    .annual-table th {
+        background: var(--slate-50);
+        color: var(--slate-500);
+        font-size: .7rem;
+        font-weight: 700;
+    }
+    .annual-table td {
+        color: var(--slate-700);
+        font-size: .8rem;
+    }
+    .annual-table tbody tr:last-child td { border-bottom: 0; }
+    .annual-table tbody tr:hover { background: var(--slate-50); }
+    .annual-technician { font-weight: 700; color: var(--slate-800); }
+    .annual-number {
+        font-weight: 700;
+        font-variant-numeric: tabular-nums;
+    }
+    .annual-total {
+        display: inline-flex;
+        min-width: 38px;
+        justify-content: center;
+        padding: 5px 10px;
+        border-radius: 8px;
+        background: var(--brand-50);
+        color: var(--brand-dark);
+        font-weight: 800;
+        font-variant-numeric: tabular-nums;
+    }
+    @media (max-width: 640px) {
+        .annual-summary { grid-template-columns: 1fr; }
+        .annual-table { min-width: 0; }
+        .annual-table thead { display: none; }
+        .annual-table tbody tr {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 12px;
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--slate-100);
+        }
+        .annual-table tbody tr:last-child { border-bottom: 0; }
+        .annual-table td {
+            padding: 0;
+            border: 0;
+        }
+        .annual-table td:first-child {
+            grid-column: 1 / -1;
+            margin-bottom: 2px;
+        }
+        .annual-table td:not(:first-child)::before {
+            content: attr(data-label);
+            display: block;
+            margin-bottom: 5px;
+            color: var(--slate-500);
+            font-size: .65rem;
+            font-weight: 600;
+            line-height: 1.2;
+        }
+    }
 
     .ticket-item {
         display: flex; align-items: center; gap: 12px;
@@ -460,6 +676,60 @@
     html.dark .card-sub { color: #94a3b8; }
     .dark .stat-label,
     html.dark .stat-label { color: #94a3b8; }
+    .dark .piket-member,
+    html.dark .piket-member {
+        background: #111827;
+        border-color: #374151;
+    }
+    .dark .piket-role,
+    html.dark .piket-role,
+    .dark .workload-label,
+    html.dark .workload-label { color: #94a3b8; }
+    .dark .piket-name,
+    html.dark .piket-name,
+    .dark .workload-value,
+    html.dark .workload-value { color: #f8fafc; }
+    .dark .workload-stat,
+    html.dark .workload-stat {
+        background: #1f2937;
+        border-color: #374151;
+    }
+    .dark .piket-status,
+    html.dark .piket-status {
+        background: #1f2937;
+        color: #cbd5e1;
+    }
+    .dark .annual-summary,
+    html.dark .annual-summary,
+    .dark .annual-table th,
+    html.dark .annual-table th,
+    .dark .annual-table td,
+    html.dark .annual-table td {
+        border-color: #374151;
+    }
+    .dark .annual-summary-item,
+    html.dark .annual-summary-item,
+    .dark .annual-table th,
+    html.dark .annual-table th {
+        background: #1f2937;
+    }
+    .dark .annual-summary-label,
+    html.dark .annual-summary-label,
+    .dark .annual-table th,
+    html.dark .annual-table th { color: #94a3b8; }
+    .dark .annual-summary-value,
+    html.dark .annual-summary-value,
+    .dark .annual-technician,
+    html.dark .annual-technician { color: #f8fafc; }
+    .dark .annual-table td,
+    html.dark .annual-table td { color: #cbd5e1; }
+    .dark .annual-table tbody tr:hover,
+    html.dark .annual-table tbody tr:hover { background: #1f2937; }
+    .dark .annual-total,
+    html.dark .annual-total {
+        background: rgba(59, 130, 246, .16);
+        color: #93c5fd;
+    }
 
     .dark .ticket-item,
     html.dark .ticket-item {
@@ -574,7 +844,11 @@
                     <div class="card-title">Tim Piket Aktif</div>
                     <div class="card-sub">Tim yang bertugas saat ini</div>
                 </div>
-                <a href="{{ route('piket.index') }}" class="link">Lihat semua</a>
+                @if(auth()->user()->hasRole('Admin'))
+                    <a href="{{ route('piket.index') }}" class="link">Lihat semua</a>
+                @elseif(auth()->user()->hasRole('Teknisi'))
+                    <a href="{{ route('piket.view') }}" class="link">Lihat semua</a>
+                @endif
             </div>
             <div class="card-body">
                 @if ($activePiketSchedules->isNotEmpty())
@@ -586,16 +860,40 @@
                             </div>
                             <div class="inline-flex items-center rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-200">Aktif</div>
                         </div>
+                        @if ($showPiketWorkload)
+                            <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">Menghitung item unik dari riwayat penugasan, serta tiket/Zoom yang saat ini ditugaskan dan dibuat atau diperbarui pada minggu piket.</p>
+                        @endif
                     </div>
-                    <div class="space-y-3">
-                        @foreach ($schedule['technicians'] as $index => $tech)
-                            <div class="rounded-2xl border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-dark-800">
-                                <div class="flex items-center justify-between gap-4">
-                                    <div>
-                                        <div class="text-xs uppercase tracking-[0.2em] text-gray-500 dark:text-gray-400">Petugas {{ $index + 1 }}</div>
-                                        <div class="mt-1 text-sm font-semibold text-slate-800 dark:text-slate-100">{{ $tech }}</div>
-                                    </div>
-                                    <div class="inline-flex items-center rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600 dark:bg-slate-800 dark:text-slate-300">Dalam tugas</div>
+                    <div class="piket-list">
+                        @foreach ($schedule['technicians'] as $index => $technician)
+                            <div class="piket-member">
+                                <div class="piket-member-info">
+                                    <div class="piket-role">Petugas {{ $index + 1 }}</div>
+                                    <div class="piket-name">{{ $technician['name'] }}</div>
+                                    @if($showPiketWorkload && ($technician['identity_ambiguous'] || $technician['identity_missing']))
+                                        <div class="mt-1 text-xs text-amber-600 dark:text-amber-400">
+                                            {{ $technician['identity_ambiguous'] ? 'Nama tidak unik; hitungan tidak dapat dipetakan.' : 'Akun petugas tidak ditemukan; hitungan tidak dapat dipetakan.' }}
+                                        </div>
+                                    @endif
+                                </div>
+                                <div class="piket-workload" aria-label="{{ $showPiketWorkload ? 'Beban kerja' : 'Status tugas' }} {{ $technician['name'] }} pada periode piket aktif">
+                                    @if ($showPiketWorkload)
+                                        <div class="workload-stat" title="Tiket yang ditugaskan kepada petugas pada minggu piket ini">
+                                            <div class="workload-label">
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg>
+                                                Tiket
+                                            </div>
+                                            <div class="workload-value">{{ $technician['ticket_count'] }}</div>
+                                        </div>
+                                        <div class="workload-stat" title="Zoom yang ditugaskan kepada petugas pada minggu piket ini">
+                                            <div class="workload-label">
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="5" width="13" height="14" rx="2"/><path d="m16 10 5-3v10l-5-3z"/></svg>
+                                                Zoom
+                                            </div>
+                                            <div class="workload-value">{{ $technician['zoom_count'] }}</div>
+                                        </div>
+                                    @endif
+                                    <div class="piket-status">Dalam tugas</div>
                                 </div>
                             </div>
                         @endforeach
@@ -667,6 +965,66 @@
             </div>
         </div>
     </div>
+
+    @if ($user->hasRole('Admin'))
+        <!-- Annual Technician Recap -->
+        <div class="card">
+            <div class="card-head">
+                <div>
+                    <div class="card-title">Rekap Pekerjaan Petugas {{ $activeYear }}</div>
+                    <div class="card-sub">Seluruh tiket dan Zoom yang diassign kepada petugas pada tahun aktif</div>
+                </div>
+                <div class="inline-flex items-center rounded-lg bg-blue-50 px-3 py-2 text-xs font-semibold text-blue-700 dark:bg-blue-500/15 dark:text-blue-200">
+                    1 Jan–31 Des {{ $activeYear }}
+                </div>
+            </div>
+
+            <div class="annual-summary">
+                <div class="annual-summary-item">
+                    <div class="annual-summary-label">Tiket masalah diassign</div>
+                    <div class="annual-summary-value">{{ $annualTicketTotal }}</div>
+                </div>
+                <div class="annual-summary-item">
+                    <div class="annual-summary-label">Zoom diassign</div>
+                    <div class="annual-summary-value">{{ $annualZoomTotal }}</div>
+                </div>
+                <div class="annual-summary-item">
+                    <div class="annual-summary-label">Total pekerjaan diassign</div>
+                    <div class="annual-summary-value">{{ $annualTicketTotal + $annualZoomTotal }}</div>
+                </div>
+            </div>
+
+            @if ($annualTechnicianRecap->isNotEmpty())
+                <div class="annual-table-wrap">
+                    <table class="annual-table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Petugas</th>
+                                <th scope="col">Tiket diassign</th>
+                                <th scope="col">Zoom diassign</th>
+                                <th scope="col">Total pekerjaan</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($annualTechnicianRecap as $recap)
+                                <tr>
+                                    <td class="annual-technician">{{ $recap['name'] }}</td>
+                                    <td class="annual-number" data-label="Tiket diassign">{{ $recap['ticket_total'] }}</td>
+                                    <td class="annual-number" data-label="Zoom diassign">{{ $recap['zoom_total'] }}</td>
+                                    <td data-label="Total pekerjaan"><span class="annual-total">{{ $recap['work_total'] }}</span></td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            @else
+                <div class="empty-state">
+                    <div class="empty-title">Belum ada data petugas</div>
+                    <div class="empty-desc">Rekap akan tampil setelah pekerjaan diassign kepada petugas.</div>
+                </div>
+            @endif
+        </div>
+    @endif
 
     <!-- Latest Tickets + Zoom -->
     <div class="two-col">
@@ -867,6 +1225,19 @@
 
         let ticketChart, zoomChart;
 
+        // Warna grafik mengikuti warna badge status pada daftar tiket/zoom
+        const STATUS_CHART_COLORS = {
+            'Dibuka': '#3b82f6',
+            'Diproses Teknisi': '#f97316',
+            'Menunggu Ketersediaan Barang': '#a855f7',
+            'Zoom Siap': '#a855f7',
+            'Selesai + Catatan': '#22c55e',
+            'Selesai': '#22c55e',
+            'Selesai Ditolak': '#ef4444',
+            'Batal': '#ef4444',
+        };
+        const chartColorsFor = (labels) => labels.map((l) => STATUS_CHART_COLORS[l] || '#6b7280');
+
         const initCharts = function(ticketData, zoomData) {
             const ticketCtx = document.getElementById('ticketChart');
             const zoomCtx = document.getElementById('zoomChart');
@@ -880,7 +1251,7 @@
                         datasets: [{
                             label: 'Jumlah tiket',
                             data: Object.values(ticketData),
-                            backgroundColor: ['#ef4444', '#f59e0b', '#6366f1', '#10b981', '#3b82f6', '#6b7280'],
+                            backgroundColor: chartColorsFor(Object.keys(ticketData)),
                             borderRadius: 8,
                             barPercentage: 0.65,
                             categoryPercentage: 0.7,
@@ -906,7 +1277,7 @@
                         labels: Object.keys(zoomData),
                         datasets: [{
                             data: Object.values(zoomData),
-                            backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#6b7280', '#8b5cf6'],
+                            backgroundColor: chartColorsFor(Object.keys(zoomData)),
                             hoverOffset: 8,
                         }]
                     },

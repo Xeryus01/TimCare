@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Notification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class NotificationController extends Controller
 {
@@ -54,6 +55,7 @@ class NotificationController extends Controller
         }
 
         $notification->markAsRead();
+        $this->forgetUnreadCount();
 
         return response()->json([
             'success' => true,
@@ -78,6 +80,7 @@ class NotificationController extends Controller
         }
 
         $notification->markAsRead();
+        $this->forgetUnreadCount();
 
         return response()->json([
             'success' => true,
@@ -96,6 +99,7 @@ class NotificationController extends Controller
         auth()->user()->notifications()
             ->where('is_read', false)
             ->update(['is_read' => true]);
+        $this->forgetUnreadCount();
 
         return response()->json([
             'success' => true,
@@ -124,6 +128,7 @@ class NotificationController extends Controller
             ->whereIn('id', $ids)
             ->where('is_read', false)
             ->update(['is_read' => true]);
+        $this->forgetUnreadCount();
 
         return response()->json([
             'success' => true,
@@ -148,6 +153,7 @@ class NotificationController extends Controller
         }
 
         $notification->delete();
+        $this->forgetUnreadCount();
 
         return response()->json([
             'success' => true,
@@ -194,5 +200,12 @@ class NotificationController extends Controller
             'data' => $notifications,
             'unread_count' => $unreadCount,
         ]);
+    }
+
+    private function forgetUnreadCount(): void
+    {
+        if (auth()->check()) {
+            Cache::forget('user.' . auth()->id() . '.unread_notifications_count');
+        }
     }
 }

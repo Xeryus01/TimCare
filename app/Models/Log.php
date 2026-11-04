@@ -14,6 +14,10 @@ class Log extends Model
         'entity_id',
         'action',
         'meta',
+        'ip_address',
+        'user_agent',
+        'request_method',
+        'request_path',
         'created_at',
     ];
 
@@ -24,6 +28,6 @@ class Log extends Model
 
     public function actor()
     {
-        return $this->belongsTo(User::class, 'actor_id');
+        return $this->belongsTo(User::class, 'actor_id')->withTrashed();
     }
 }

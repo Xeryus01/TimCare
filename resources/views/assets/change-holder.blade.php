@@ -43,11 +43,17 @@
                         <label for="new_holder" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             Pemegang Aset Baru
                         </label>
-                        <input type="text" name="new_holder" id="new_holder" 
+                        <p class="-mt-1 mb-3 text-xs text-gray-500 dark:text-gray-400">Pilih dari daftar user yang tersedia, atau ketik nama lain secara manual di luar daftar.</p>
+                        <input type="text" name="new_holder" id="new_holder" list="holder-user-list" autocomplete="off" 
                             class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-gray-900 placeholder-gray-500 dark:border-gray-600 dark:bg-dark-800 dark:text-white dark:placeholder-gray-400 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 @error('new_holder') border-red-500 @enderror"
                             placeholder="Nama pemegang aset baru"
                             value="{{ old('new_holder') }}"
                             required>
+                        <datalist id="holder-user-list">
+                            @foreach(($users ?? []) as $userName)
+                                <option value="{{ $userName }}"></option>
+                            @endforeach
+                        </datalist>
                         @error('new_holder')
                             <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                         @enderror

@@ -1,4 +1,5 @@
 <x-app-layout>
+@include('ti.partials.assets')
 <div class="min-h-screen">
     <div class="p-5 sm:p-7.5 lg:p-9">
         <!-- Page Header -->
@@ -39,7 +40,7 @@
                 </div>
 
                 <!-- Password Form -->
-                <form action="{{ route('users.updatePassword', $user) }}" method="POST">
+                <form data-tc-native action="{{ route('users.updatePassword', $user) }}" method="POST">
                     @csrf
                     @method('PATCH')
 

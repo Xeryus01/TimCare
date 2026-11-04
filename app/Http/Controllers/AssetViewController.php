@@ -56,6 +56,20 @@ class AssetViewController extends Controller
 
         $q = Asset::query();
 
+        // Pembatasan visibilitas: user biasa hanya melihat aset yang dipegangnya sendiri.
+        // Admin/Teknisi (punya izin 'manage assets') tetap melihat seluruh aset.
+        $currentUser = $request->user();
+        $canManageAssets = $currentUser->can('manage assets') || $currentUser->hasRole('Admin');
+        if (!$canManageAssets) {
+            $q->where(function ($query) use ($currentUser) {
+                $query->where('user_id', $currentUser->id);
+                $ownName = trim((string) $currentUser->name);
+                if ($ownName !== '') {
+                    $query->orWhereRaw('LOWER(holder) = ?', [mb_strtolower($ownName)]);
+                }
+            });
+        }
+
         if ($search) {
             $q->where(function ($query) use ($search) {
                 $query->where('asset_code', 'like', "%{$search}%")
@@ -120,6 +134,11 @@ class AssetViewController extends Controller
             $data['photo_asset'] = $photoAsset;
         }
 
+        // Handle BMN number photo (file or URL)
+        if ($photoBmn = $this->resolvePhotoField($request, 'photo_bmn', 'photo_bmn_url')) {
+            $data['photo_bmn'] = $photoBmn;
+        }
+
         $asset = Asset::create($data);
         
         // Send notification
@@ -148,31 +167,91 @@ class AssetViewController extends Controller
 
     public function show(Asset $asset)
     {
+        // User biasa hanya boleh membuka detail aset miliknya sendiri.
+        $currentUser = auth()->user();
+        $canManageAssets = $currentUser->can('manage assets') || $currentUser->hasRole('Admin');
+        if (!$canManageAssets) {
+            $isOwnAsset = $asset->user_id === $currentUser->id
+                || mb_strtolower(trim((string) $asset->holder)) === mb_strtolower(trim((string) $currentUser->name));
+            abort_unless($isOwnAsset, 403);
+        }
+
         $asset->load(['holderHistory.changedByUser', 'maintenances.performedByUser']);
         return view('assets.show', compact('asset'));
     }
 
     public function edit(Asset $asset)
     {
-        return view('assets.edit', compact('asset'));
+        // Tentukan apakah user boleh mengedit seluruh field atau hanya foto.
+        $currentUser = auth()->user();
+        $canEditAll = $currentUser->can('manage assets') || $currentUser->hasRole('Admin');
+
+        if (! $canEditAll) {
+            // User biasa hanya boleh mengedit foto pada aset miliknya sendiri.
+            $isOwnAsset = $asset->user_id === $currentUser->id
+                || mb_strtolower(trim((string) $asset->holder)) === mb_strtolower(trim((string) $currentUser->name));
+            abort_unless($isOwnAsset, 403);
+        }
+
+        return view('assets.edit', ['asset' => $asset, 'canEditAll' => $canEditAll]);
     }
 
     public function update(UpdateAssetRequest $request, Asset $asset)
     {
-        $changes = $request->validated();
+        $currentUser = $request->user();
+        $canManageAssets = $currentUser->can('manage assets') || $currentUser->hasRole('Admin');
+
+        if ($canManageAssets) {
+            $changes = $request->validated();
+        } else {
+            // User biasa: hanya boleh aset miliknya, dan hanya foto yang boleh diubah.
+            $isOwnAsset = $asset->user_id === $currentUser->id
+                || mb_strtolower(trim((string) $asset->holder)) === mb_strtolower(trim((string) $currentUser->name));
+            abort_unless($isOwnAsset, 403);
+            $changes = [];
+        }
+
+        $oldPhotoPaths = [];
+        $newPhotoPaths = [];
 
         // Handle uploads or URLs for serial photo
         if ($photoSerial = $this->resolvePhotoField($request, 'photo_serial', 'photo_serial_url')) {
             $changes['photo_serial'] = $photoSerial;
+            $this->trackPhotoReplacement($asset->photo_serial, $photoSerial, $oldPhotoPaths, $newPhotoPaths);
         }
 
         // Handle uploads or URLs for asset photo
         if ($photoAsset = $this->resolvePhotoField($request, 'photo_asset', 'photo_asset_url')) {
             $changes['photo_asset'] = $photoAsset;
+            $this->trackPhotoReplacement($asset->photo_asset, $photoAsset, $oldPhotoPaths, $newPhotoPaths);
         }
+
+        // Handle uploads or URLs for BMN number photo
+        if ($photoBmn = $this->resolvePhotoField($request, 'photo_bmn', 'photo_bmn_url')) {
+            $changes['photo_bmn'] = $photoBmn;
+            $this->trackPhotoReplacement($asset->photo_bmn, $photoBmn, $oldPhotoPaths, $newPhotoPaths);
+        }
+
+        if (empty($changes)) {
+            return redirect()->route('assets.show', $asset)->with('info', 'Tidak ada perubahan untuk disimpan.');
+        }
+
         $before = $asset->only(array_keys($changes));
 
-        $asset->update($changes);
+        try {
+            $asset->update($changes);
+        } catch (\Throwable $exception) {
+            foreach ($newPhotoPaths as $path) {
+                Storage::disk('public')->delete($path);
+            }
+            throw $exception;
+        }
+
+        foreach ($oldPhotoPaths as $path) {
+            if (! in_array($path, $newPhotoPaths, true)) {
+                Storage::disk('public')->delete($path);
+            }
+        }
 
         Log::create([
             'actor_id' => auth()->id(),
@@ -190,8 +269,31 @@ class AssetViewController extends Controller
 
     public function destroy(Asset $asset)
     {
+        $user = auth()->user();
+        abort_unless($user->can('manage assets') || $user->hasRole('Admin'), 403);
+
+        foreach (['photo_serial', 'photo_asset', 'photo_bmn'] as $field) {
+            $path = $asset->{$field};
+            if ($path && ! Str::startsWith($path, ['http://', 'https://', 'drive:'])
+                && Storage::disk('public')->exists($path)) {
+                Storage::disk('public')->delete($path);
+            }
+        }
+
         $asset->delete();
         return redirect()->route('assets.index')->with('success', 'Asset deleted');
+    }
+
+    private function trackPhotoReplacement(?string $oldValue, string $newValue, array &$oldPaths, array &$newPaths): void
+    {
+        if ($oldValue && ! Str::startsWith($oldValue, ['http://', 'https://', 'drive:'])
+            && Storage::disk('public')->exists($oldValue)) {
+            $oldPaths[] = $oldValue;
+        }
+
+        if (! Str::startsWith($newValue, ['http://', 'https://', 'drive:'])) {
+            $newPaths[] = $newValue;
+        }
     }
 
     public function downloadTemplate()
@@ -278,7 +380,12 @@ class AssetViewController extends Controller
     {
         abort_unless(auth()->user()->hasRole('Admin'), 403);
         
-        return view('assets.change-holder', compact('asset'));
+        $users = \App\Models\User::orderBy('name')->pluck('name')
+            ->filter(fn ($name) => filled($name))
+            ->unique()
+            ->values();
+
+        return view('assets.change-holder', compact('asset', 'users'));
     }
 
     public function storeChangeHolder(ChangeAssetHolderRequest $request, Asset $asset)

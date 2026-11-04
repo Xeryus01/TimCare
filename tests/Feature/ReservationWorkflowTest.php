@@ -61,7 +61,7 @@ class ReservationWorkflowTest extends TestCase
     /** @test */
     public function user_can_create_reservation_with_nota_dinas_pdf(): void
     {
-        \Illuminate\Support\Facades\Storage::fake('public');
+        \Illuminate\Support\Facades\Storage::fake('local');
 
         $user = User::factory()->create();
 
@@ -85,18 +85,18 @@ class ReservationWorkflowTest extends TestCase
 
         $reservation = Reservation::where('requester_id', $user->id)->latest()->first();
         $this->assertNotNull($reservation->nota_dinas_path);
-        \Illuminate\Support\Facades\Storage::disk('public')->assertExists($reservation->nota_dinas_path);
+        \Illuminate\Support\Facades\Storage::disk('local')->assertExists($reservation->nota_dinas_path);
     }
 
     /** @test */
-    public function any_user_can_view_nota_dinas_pdf(): void
+    public function unrelated_user_cannot_view_nota_dinas_pdf(): void
     {
-        \Illuminate\Support\Facades\Storage::fake('public');
+        \Illuminate\Support\Facades\Storage::fake('local');
 
         $requester = User::factory()->create();
         $otherUser = User::factory()->create();
 
-        \Illuminate\Support\Facades\Storage::disk('public')->put('nota_dinas/test.pdf', 'fake-pdf-content');
+        \Illuminate\Support\Facades\Storage::disk('local')->put('nota_dinas/test.pdf', 'fake-pdf-content');
 
         $reservation = Reservation::create([
             'code' => 'RES-TEST-002',
@@ -109,8 +109,11 @@ class ReservationWorkflowTest extends TestCase
             'nota_dinas_path' => 'nota_dinas/test.pdf',
         ]);
 
-        // Test that any user (not just the requester) can view the nota dinas
         $this->actingAs($otherUser)
+            ->get(route('reservations.nota-dinas', $reservation))
+            ->assertForbidden();
+
+        $this->actingAs($requester)
             ->get(route('reservations.nota-dinas', $reservation))
             ->assertOk()
             ->assertHeader('content-type', 'application/pdf');
@@ -185,7 +188,7 @@ class ReservationWorkflowTest extends TestCase
     }
 
     /** @test */
-    public function regular_user_can_view_someone_elses_reservation()
+    public function regular_user_cannot_view_someone_elses_reservation()
     {
         $requester = User::factory()->create();
         $otherUser = User::factory()->create();
@@ -202,6 +205,6 @@ class ReservationWorkflowTest extends TestCase
 
         $this->actingAs($otherUser)
             ->get(route('reservations.show', $reservation))
-            ->assertOk();
+            ->assertForbidden();
     }
 }

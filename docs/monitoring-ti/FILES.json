@@ -1,0 +1,211 @@
+{
+  "version": "2026-10-19",
+  "base": "timcare-dev.zip supplied by user",
+  "database_change": "additive; one new migration only",
+  "files": [
+    {
+      "path": "README-MONITORING-TI.md",
+      "change": "added",
+      "base_sha256": null,
+      "patch_sha256": "0ba07136b9c61e185cf180414e8ebd0256f6d805b2baf21dd63e2605044f2ff7"
+    },
+    {
+      "path": "app/Console/Commands/ImportTimcareTiReference.php",
+      "change": "added",
+      "base_sha256": null,
+      "patch_sha256": "603951e04cde161bfa893877cb56812464acac13e53579f76fa210c2ea094098"
+    },
+    {
+      "path": "app/Http/Controllers/TiObjectController.php",
+      "change": "added",
+      "base_sha256": null,
+      "patch_sha256": "1388ea1e214e7031aeac18b4e6238814a93c1fe47f252103181c739643c74869"
+    },
+    {
+      "path": "app/Http/Controllers/TiReportController.php",
+      "change": "added",
+      "base_sha256": null,
+      "patch_sha256": "5bdb1475d7c42a8d73a1e6a5c1aac1066596723a41b54fc61eead4af27bdf78c"
+    },
+    {
+      "path": "app/Http/Controllers/TiTeamController.php",
+      "change": "added",
+      "base_sha256": null,
+      "patch_sha256": "b9c45e1afed092757040c48a9109424d5818ec8925d9be2d7dc3f55ae1ba1e25"
+    },
+    {
+      "path": "app/Http/Controllers/UserController.php",
+      "change": "modified",
+      "base_sha256": "44990d6fe6df9542a9b68839d372456bf1cf13fe566f70d2c10855feb4927665",
+      "patch_sha256": "7241f59d0c07c49f6cf47262baddb14e5a22a16991d41ecd669ef0f864ed429f"
+    },
+    {
+      "path": "app/Models/TiObject.php",
+      "change": "added",
+      "base_sha256": null,
+      "patch_sha256": "c96e8b05eee4c24a7fe34ee8326c97ee534c7371e7b9aef399fdc02bcb348015"
+    },
+    {
+      "path": "app/Models/TiReport.php",
+      "change": "added",
+      "base_sha256": null,
+      "patch_sha256": "f0b900f13d6e39ed95386ee01537f79ebe47ab2ab74b722e8a99dedeaff23289"
+    },
+    {
+      "path": "app/Models/TiTeam.php",
+      "change": "added",
+      "base_sha256": null,
+      "patch_sha256": "231166d16898f241743603504abfa3b32cd7f08d4384fa9136b87656c2aa257f"
+    },
+    {
+      "path": "app/Models/User.php",
+      "change": "modified",
+      "base_sha256": "c2a9cbecfbf1f3aa190839af6e422e107f8e66cf2c1d0f8346cb45996535ab77",
+      "patch_sha256": "16329be48a4149e2858a46c7c37059fee499c8648f0558b5e583d4cbb38932f2"
+    },
+    {
+      "path": "app/Services/TiAccess.php",
+      "change": "added",
+      "base_sha256": null,
+      "patch_sha256": "5380659ea22387022cb1477bb16aae7099d84fb1612228bb4a49ab9825317c9c"
+    },
+    {
+      "path": "app/Support/TiForm.php",
+      "change": "added",
+      "base_sha256": null,
+      "patch_sha256": "7ea325a05bf54bf5d5a54f4b752a779f8dbe841c92131f8d6bdbffc5d771c73b"
+    },
+    {
+      "path": "database/data/timcare-teams.json",
+      "change": "added",
+      "base_sha256": null,
+      "patch_sha256": "05659a7d80653fb5e8c656fba13830b5320bf9d275b687fd6662c962c100fb3a"
+    },
+    {
+      "path": "database/data/timcare-ti-objects.json",
+      "change": "added",
+      "base_sha256": null,
+      "patch_sha256": "e64f8e44c1b31ca6c5d866d8582204ccf6867e74abfc1faa15cd8d142b067625"
+    },
+    {
+      "path": "database/data/timcare-ti-scales.json",
+      "change": "added",
+      "base_sha256": null,
+      "patch_sha256": "f1ae95b1c40f5d6cacdc17c3d090c70d8ca6462790e5386be815c2a0e13eeb5f"
+    },
+    {
+      "path": "database/migrations/2026_10_19_000001_create_timcare_ti_monitoring_tables.php",
+      "change": "added",
+      "base_sha256": null,
+      "patch_sha256": "2773606dc30e3b2f98af3257a1b0f4d6323a3e8d1be28dca2a20334a49b76446"
+    },
+    {
+      "path": "docs/monitoring-ti/TEST-REPORT.md",
+      "change": "added",
+      "base_sha256": null,
+      "patch_sha256": "e44c68b58a95792f347f4085c2b3dee4cbd2727d02db69b2e864c75cfa8bef72"
+    },
+    {
+      "path": "install-monitoring-ti.sh",
+      "change": "added",
+      "base_sha256": null,
+      "patch_sha256": "beddac8498e0ef75b7feb5960cb507a4b4a90dadfcebd3b7dd2e2051cf359253"
+    },
+    {
+      "path": "public/css/timcare-ti.css",
+      "change": "added",
+      "base_sha256": null,
+      "patch_sha256": "c46047482a102a38f284821b73718c5cd267a1ff128edc667ee34a63b17d1a17"
+    },
+    {
+      "path": "resources/views/components/ti-field.blade.php",
+      "change": "added",
+      "base_sha256": null,
+      "patch_sha256": "fbf95fe7d126f68b64b135b4fae4fb5464f7a9436923241e1b4f3b0bb19354a1"
+    },
+    {
+      "path": "resources/views/layouts/sidebar.blade.php",
+      "change": "modified",
+      "base_sha256": "86c7fffc5566a8a19a9233dec7a6093effc47ec88ceca6fb23215e5497da8ef6",
+      "patch_sha256": "10a05531d6dd081a72d27c56111cc73cb50b1c3225a20107aa7304469c00913c"
+    },
+    {
+      "path": "resources/views/ti/objects/form.blade.php",
+      "change": "added",
+      "base_sha256": null,
+      "patch_sha256": "977eaf9d0c57c008121c0bd379fb65ea4902cd84f93e1ad110c4944fa39b0434"
+    },
+    {
+      "path": "resources/views/ti/objects/index.blade.php",
+      "change": "added",
+      "base_sha256": null,
+      "patch_sha256": "f0dad319ff6834530a7e69a5810a417e99a8cbf83011876e2a7a6ed0c8f885e0"
+    },
+    {
+      "path": "resources/views/ti/partials/header.blade.php",
+      "change": "added",
+      "base_sha256": null,
+      "patch_sha256": "e55e8d32884759bab38277d9a88991c95917a66ba93f83f2794536ded77bfa97"
+    },
+    {
+      "path": "resources/views/ti/reports/form.blade.php",
+      "change": "added",
+      "base_sha256": null,
+      "patch_sha256": "f9138c63a88c5c48b9b7b46613d03e26faf90f3b25c142509fc811ff8d73fb8d"
+    },
+    {
+      "path": "resources/views/ti/reports/index.blade.php",
+      "change": "added",
+      "base_sha256": null,
+      "patch_sha256": "8cb5204d853762f1f73ee4d89e7c4a53bb1171a1ef289bbd897edcbef156daf2"
+    },
+    {
+      "path": "resources/views/ti/reports/show.blade.php",
+      "change": "added",
+      "base_sha256": null,
+      "patch_sha256": "67945d787685b02de79d71cfda858717ac416a3fc5135807db2f64b4ce3edf7e"
+    },
+    {
+      "path": "resources/views/ti/teams.blade.php",
+      "change": "added",
+      "base_sha256": null,
+      "patch_sha256": "2d823594c5ce7726d8358ad07723e57d76531b7ac372f9297c71d594d84990a9"
+    },
+    {
+      "path": "resources/views/users/create.blade.php",
+      "change": "modified",
+      "base_sha256": "5f6098619dc4b278bfcaaf550dc1e23c23b44530e820d16672ca9c1250ef5345",
+      "patch_sha256": "f276fc9fbf7dfa53010983ae92288ed45b852cd2976a3bee6bd1f541bcfbcca6"
+    },
+    {
+      "path": "resources/views/users/edit.blade.php",
+      "change": "modified",
+      "base_sha256": "608a95e1c836a94dfb18ae2b8f50b78d203e771d0bbd7778d167e940fada9e71",
+      "patch_sha256": "f991d01f5f5584064b03213f07e1ee4eee45a2388f3f666ab2938a29ab7612c2"
+    },
+    {
+      "path": "resources/views/users/index.blade.php",
+      "change": "modified",
+      "base_sha256": "06cc6e1d20d38fa88db03a378b2e033fd7ea1015e13820c9a584c3632be05b7d",
+      "patch_sha256": "b91ab5889109d127fdd823c5db96b3c3366d2581194e6eb85acf31a1150790ae"
+    },
+    {
+      "path": "resources/views/users/partials/teams.blade.php",
+      "change": "added",
+      "base_sha256": null,
+      "patch_sha256": "69094e8be8cf68d3ec37c5ec2c5808c17ff0412fcfd6cbd1eb92ef3fd8f19e54"
+    },
+    {
+      "path": "routes/ti.php",
+      "change": "added",
+      "base_sha256": null,
+      "patch_sha256": "b4b94bbd56a39b604673f9290c42b1139306e74a377a9cc7f58cce198b7b1900"
+    },
+    {
+      "path": "routes/web.php",
+      "change": "modified",
+      "base_sha256": "c8ad589de606744491b72f64d173cfe237059bbcb83512eb9c47f9debcd1a109",
+      "patch_sha256": "569cefe0f1404755a1f9bb09445a8243273d740ea24841cced0f585072fadf2b"
+    }
+  ]
+}

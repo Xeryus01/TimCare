@@ -5,12 +5,13 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, HasRoles;
+    use HasFactory, Notifiable, HasRoles, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -72,6 +73,11 @@ class User extends Authenticatable
         return $this->hasMany(Log::class, 'actor_id');
     }
 
+    public function assets()
+    {
+        return $this->hasMany(Asset::class);
+    }
+
     public function attachments()
     {
         return $this->hasMany(Attachment::class);
@@ -80,5 +86,14 @@ class User extends Authenticatable
     public function notifications()
     {
         return $this->hasMany(Notification::class);
+    }
+    public function teams()
+    {
+        return $this->belongsToMany(TiTeam::class, 'ti_team_user', 'user_id', 'team_id');
+    }
+
+    public function ledTeams()
+    {
+        return $this->hasMany(TiTeam::class, 'leader_user_id');
     }
 }
