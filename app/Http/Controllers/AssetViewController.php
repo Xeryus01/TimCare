@@ -210,9 +210,12 @@ class AssetViewController extends Controller
             abort_unless($isOwnAsset, 403);
             $changes = [];
         }
+<<<<<<< HEAD
 
         $oldPhotoPaths = [];
         $newPhotoPaths = [];
+=======
+>>>>>>> 86283643a095c48bf1433b50ced58effc4036f8f
 
         // Handle uploads or URLs for serial photo
         if ($photoSerial = $this->resolvePhotoField($request, 'photo_serial', 'photo_serial_url')) {
@@ -229,7 +232,10 @@ class AssetViewController extends Controller
         // Handle uploads or URLs for BMN number photo
         if ($photoBmn = $this->resolvePhotoField($request, 'photo_bmn', 'photo_bmn_url')) {
             $changes['photo_bmn'] = $photoBmn;
+<<<<<<< HEAD
             $this->trackPhotoReplacement($asset->photo_bmn, $photoBmn, $oldPhotoPaths, $newPhotoPaths);
+=======
+>>>>>>> 86283643a095c48bf1433b50ced58effc4036f8f
         }
 
         if (empty($changes)) {

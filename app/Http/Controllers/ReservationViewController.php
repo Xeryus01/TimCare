@@ -68,6 +68,7 @@ class ReservationViewController extends Controller
         $perPage = $request->input('per_page', 10);
         $perPage = in_array($perPage, [10, 20, 50]) ? (int)$perPage : 10;
         
+<<<<<<< HEAD
         $filterScope = Reservation::query();
         if (! $user->hasAnyRole(['Admin', 'Teknisi'])) {
             $filterScope->where('requester_id', $user->id);
@@ -218,6 +219,15 @@ class ReservationViewController extends Controller
         }
 
         return back()->with('success', $message);
+=======
+        $requesters = User::whereIn('id', Reservation::query()->distinct()->pluck('requester_id')->filter())
+            ->orderBy('name')->get(['id', 'name']);
+        $approvers = User::whereIn('id', Reservation::query()->whereNotNull('approver_id')->distinct()->pluck('approver_id')->filter())
+            ->orderBy('name')->get(['id', 'name']);
+
+        $reservations = $q->paginate($perPage)->appends(request()->query());
+        return view('reservations.index', compact('reservations', 'sort', 'direction', 'requesters', 'approvers'));
+>>>>>>> 86283643a095c48bf1433b50ced58effc4036f8f
     }
 
     public function create()
@@ -517,7 +527,11 @@ class ReservationViewController extends Controller
 
         // Sajikan via response()->file() (BinaryFileResponse) agar mendukung HTTP Range request,
         // sehingga PDF nota dinas dimuat andal di browser (StreamedResponse tidak mendukung range).
+<<<<<<< HEAD
         $response = response()->file($disk->path($reservation->nota_dinas_path), [
+=======
+        return response()->file($disk->path($reservation->nota_dinas_path), [
+>>>>>>> 86283643a095c48bf1433b50ced58effc4036f8f
             'Content-Type' => 'application/pdf',
             'Content-Disposition' => 'inline; filename="nota_dinas_' . $reservation->code . '.pdf"',
         ]);

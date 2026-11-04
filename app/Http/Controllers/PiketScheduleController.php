@@ -43,10 +43,16 @@ class PiketScheduleController extends Controller
     // Show edit form for a specific saved schedule.
     public function edit(PiketSchedule $schedule)
     {
+<<<<<<< HEAD
         if ($schedule->hasPassed()) {
             return redirect()->route('piket.index')
                 ->with('error', 'Jadwal yang sudah terlewat tidak dapat diedit.');
         }
+=======
+        $weekStartDate = \Carbon\Carbon::parse($weekStart)->startOfWeek();
+        $schedule = PiketSchedule::whereDate('week_start_date', $weekStartDate->toDateString())
+            ->first() ?? PiketSchedule::makeDefault($weekStartDate);
+>>>>>>> 86283643a095c48bf1433b50ced58effc4036f8f
 
         $technicians = PiketSchedule::getTechnicians();
 
@@ -56,7 +62,13 @@ class PiketScheduleController extends Controller
     // Update piket schedule
     public function update(Request $request, PiketSchedule $schedule)
     {
+<<<<<<< HEAD
         abort_if($schedule->hasPassed(), 403, 'Jadwal yang sudah terlewat tidak dapat diedit.');
+=======
+        $weekStartDate = \Carbon\Carbon::parse($weekStart)->startOfWeek();
+        $schedule = PiketSchedule::whereDate('week_start_date', $weekStartDate->toDateString())
+            ->first() ?? PiketSchedule::makeDefault($weekStartDate);
+>>>>>>> 86283643a095c48bf1433b50ced58effc4036f8f
 
         $request->validate([
             'week_start_date' => ['required', 'date', Rule::unique('piket_schedules', 'week_start_date')->ignore($schedule->getKey())],
@@ -71,6 +83,7 @@ class PiketScheduleController extends Controller
             'technician_3.different' => 'Petugas 3 tidak boleh sama dengan Petugas 1 atau Petugas 2',
         ]);
 
+<<<<<<< HEAD
         $newStart = \Carbon\Carbon::parse($request->input('week_start_date'))->toDateString();
         $newEnd = \Carbon\Carbon::parse($request->input('week_end_date'))->toDateString();
 
@@ -102,6 +115,10 @@ class PiketScheduleController extends Controller
             ]));
             $lockedSchedule->save();
         });
+=======
+        $schedule->fill($request->only(['week_start_date', 'week_end_date', 'technician_1', 'technician_2', 'technician_3']));
+        $schedule->save();
+>>>>>>> 86283643a095c48bf1433b50ced58effc4036f8f
 
         return redirect()->route('piket.index')->with('success', 'Jadwal piket berhasil diperbarui');
     }

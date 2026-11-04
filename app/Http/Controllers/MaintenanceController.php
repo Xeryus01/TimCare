@@ -149,7 +149,11 @@ class MaintenanceController extends Controller
         $attachmentId = null;
         if ($request->hasFile('attachment')) {
             $file = $request->file('attachment');
+<<<<<<< HEAD
             $path = $file->store('attachments', 'local');
+=======
+            $path = $file->store('attachments', 'public');
+>>>>>>> 86283643a095c48bf1433b50ced58effc4036f8f
             $attachment = Attachment::create([
                 'ticket_id' => $ticket->id,
                 'uploader_id' => $user->id,

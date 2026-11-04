@@ -59,8 +59,13 @@ class PiketSchedule extends Model
     {
         $currentDate = $date ? Carbon::parse($date) : now();
 
+<<<<<<< HEAD
         return self::findForDate($currentDate)
             ?? self::makeDefault($currentDate->copy()->startOfWeek());
+=======
+        return self::whereDate('week_start_date', $weekStart->toDateString())
+            ->first() ?? self::makeDefault($weekStart);
+>>>>>>> 86283643a095c48bf1433b50ced58effc4036f8f
     }
 
     public static function findForDate($date = null)
