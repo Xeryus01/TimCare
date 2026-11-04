@@ -122,7 +122,6 @@ class TicketViewController extends Controller
         $perPage = $request->input('per_page', 10);
         $perPage = in_array($perPage, [10, 20, 50]) ? (int)$perPage : 10;
         
-<<<<<<< HEAD
         $filterScope = Ticket::query();
         if (! $user->hasAnyRole(['Admin', 'Teknisi'])) {
             $filterScope->where('requester_id', $user->id);
@@ -263,15 +262,6 @@ class TicketViewController extends Controller
         }
 
         return back()->with('success', $message);
-=======
-        $requesters = User::whereIn('id', Ticket::query()->distinct()->pluck('requester_id')->filter())
-            ->orderBy('name')->get(['id', 'name']);
-        $assignees = User::whereIn('id', Ticket::query()->whereNotNull('assignee_id')->distinct()->pluck('assignee_id')->filter())
-            ->orderBy('name')->get(['id', 'name']);
-
-        $tickets = $q->paginate($perPage)->appends(request()->query());
-        return view('tickets.index', compact('tickets', 'sort', 'direction', 'requesters', 'assignees'));
->>>>>>> 86283643a095c48bf1433b50ced58effc4036f8f
     }
 
     public function create(Request $request)
@@ -472,7 +462,6 @@ class TicketViewController extends Controller
     {
         if (! $request->user()->hasRole('Admin')) {
             abort(403, 'Hanya Admin yang dapat menghapus tiket.');
-<<<<<<< HEAD
         }
 
         foreach ($ticket->attachments as $attachment) {
@@ -481,8 +470,6 @@ class TicketViewController extends Controller
                     Storage::disk($diskName)->delete($attachment->file_path);
                 }
             }
-=======
->>>>>>> 86283643a095c48bf1433b50ced58effc4036f8f
         }
 
         $ticket->delete();
@@ -647,11 +634,7 @@ class TicketViewController extends Controller
 
         // Sajikan via response()->file() (BinaryFileResponse) agar mendukung HTTP Range request,
         // sehingga gambar/PDF besar dimuat andal di browser (StreamedResponse tidak mendukung range).
-<<<<<<< HEAD
         $response = response()->file($disk->path($attachment->file_path), [
-=======
-        return response()->file($disk->path($attachment->file_path), [
->>>>>>> 86283643a095c48bf1433b50ced58effc4036f8f
             'Content-Type' => $mime,
             'Content-Disposition' => 'inline; filename="' . $attachment->file_name . '"',
         ]);

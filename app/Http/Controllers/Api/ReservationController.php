@@ -183,10 +183,7 @@ class ReservationController extends Controller
             abort(403, 'Hanya Admin yang dapat menghapus pengajuan Zoom.');
         }
 
-<<<<<<< HEAD
         $this->deleteStoredFile($reservation->nota_dinas_path);
-=======
->>>>>>> 86283643a095c48bf1433b50ced58effc4036f8f
         $reservation->delete();
         $this->auditTrailService->record($request, $request->user()->id, 'Reservation', $reservation->id, 'DELETED');
         return response()->noContent();

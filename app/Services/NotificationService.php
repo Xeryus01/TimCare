@@ -386,7 +386,6 @@ class NotificationService
             'reservation',
             $reservation->id,
             true,
-<<<<<<< HEAD
             $sendEmail
         );
     }
@@ -423,8 +422,6 @@ Link Zoom: {$reservation->zoom_link}";
             'reservation',
             $reservation->id,
             $sendWhatsApp,
-=======
->>>>>>> 86283643a095c48bf1433b50ced58effc4036f8f
             $sendEmail
         );
     }
