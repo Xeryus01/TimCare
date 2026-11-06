@@ -4,7 +4,8 @@
 /public/hot
 /public/storage
 /storage/*.key
-# /storage/framework/views
+/storage/framework/views
+/.playwright-mcp
 /vendor
 .env
 .env.*
