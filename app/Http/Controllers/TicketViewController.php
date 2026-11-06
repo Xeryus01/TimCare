@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Ticket;
+use App\Http\Requests\StoreTicketRequest;
+use App\Http\Requests\UpdateTicketRequest;
 use App\Models\Asset;
 use App\Models\Attachment;
+use App\Models\Log;
+use App\Models\Ticket;
 use App\Models\TicketComment;
 use App\Models\User;
 use App\Services\NotificationService;
@@ -13,10 +16,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
-
-use App\Http\Requests\StoreTicketRequest;
-use App\Http\Requests\UpdateTicketRequest;
-use App\Models\Log;
 
 class TicketViewController extends Controller
 {
@@ -120,8 +119,8 @@ class TicketViewController extends Controller
         }
 
         $perPage = $request->input('per_page', 10);
-        $perPage = in_array($perPage, [10, 20, 50]) ? (int)$perPage : 10;
-        
+        $perPage = in_array($perPage, [10, 20, 50]) ? (int) $perPage : 10;
+
         $filterScope = Ticket::query();
         if (! $user->hasAnyRole(['Admin', 'Teknisi'])) {
             $filterScope->where('requester_id', $user->id);
@@ -266,9 +265,8 @@ class TicketViewController extends Controller
 
     public function create(Request $request)
     {
-        $assets = \Cache::remember('assets.all', 3600, function () {
-            return Asset::all();
-        });
+        $assets = $this->ticketAssetOptions();
+
         return view('tickets.create', compact('assets'));
     }
 
@@ -347,9 +345,21 @@ class TicketViewController extends Controller
             abort(403, 'Tiket yang sudah selesai atau dibatalkan tidak dapat diedit kembali kecuali oleh Admin atau Teknisi.');
         }
 
-        $assets = Asset::all();
+        $assets = $this->ticketAssetOptions();
         $technicians = \App\Models\User::role('Teknisi')->get();
+
         return view('tickets.edit', compact('ticket', 'assets', 'technicians'));
+    }
+
+    private function ticketAssetOptions()
+    {
+        return \Cache::remember('assets.all', 3600, function () {
+            return Asset::query()
+                ->orderByRaw("CASE WHEN holder IS NOT NULL AND TRIM(holder) <> '' THEN 0 ELSE 1 END")
+                ->orderBy('holder')
+                ->orderBy('asset_code')
+                ->get();
+        });
     }
 
     public function update(UpdateTicketRequest $request, Ticket $ticket)
@@ -388,7 +398,7 @@ class TicketViewController extends Controller
         // Jika petugas diassign dan status belum ASSIGNED_DETECT, ubah otomatis
         if (isset($data['assignee_id']) && $data['assignee_id'] !== null) {
             $completedStatuses = [Ticket::STATUS_SOLVED, Ticket::STATUS_SOLVED_WITH_NOTES, Ticket::STATUS_REJECTED, Ticket::STATUS_CANCELLED];
-            if (!in_array($ticket->status, $completedStatuses, true) && $ticket->status !== Ticket::STATUS_ASSIGNED_DETECT) {
+            if (! in_array($ticket->status, $completedStatuses, true) && $ticket->status !== Ticket::STATUS_ASSIGNED_DETECT) {
                 $data['status'] = Ticket::STATUS_ASSIGNED_DETECT;
             }
         }
@@ -455,7 +465,7 @@ class TicketViewController extends Controller
             ]);
         }
 
-        return redirect()->route('tickets.show', $ticket)->with('success','Ticket updated');
+        return redirect()->route('tickets.show', $ticket)->with('success', 'Ticket updated');
     }
 
     public function destroy(Request $request, Ticket $ticket)
@@ -473,7 +483,8 @@ class TicketViewController extends Controller
         }
 
         $ticket->delete();
-        return redirect()->route('tickets.index')->with('success','Tiket berhasil dihapus');
+
+        return redirect()->route('tickets.index')->with('success', 'Tiket berhasil dihapus');
     }
 
     public function comment(Request $request, Ticket $ticket)
@@ -522,7 +533,7 @@ class TicketViewController extends Controller
         }
 
         // if status was provided and user is technician/admin, update ticket
-        if (isset($data['status']) && $request->user()->hasAnyRole(['Admin','Teknisi'])) {
+        if (isset($data['status']) && $request->user()->hasAnyRole(['Admin', 'Teknisi'])) {
             $oldStatus = $ticket->status;
             $ticket->status = $data['status'];
             if (in_array($ticket->status, [Ticket::STATUS_SOLVED, Ticket::STATUS_SOLVED_WITH_NOTES], true)) {
@@ -576,7 +587,7 @@ class TicketViewController extends Controller
             $this->notificationService->notifyTicketCommented($ticket->assignee, $ticket, $comment, false, false);
         }
 
-        return redirect()->route('tickets.show', $ticket)->with('success','Pesan berhasil dikirim');
+        return redirect()->route('tickets.show', $ticket)->with('success', 'Pesan berhasil dikirim');
     }
 
     public function uploadAttachment(Request $request, Ticket $ticket)
@@ -636,7 +647,7 @@ class TicketViewController extends Controller
         // sehingga gambar/PDF besar dimuat andal di browser (StreamedResponse tidak mendukung range).
         $response = response()->file($disk->path($attachment->file_path), [
             'Content-Type' => $mime,
-            'Content-Disposition' => 'inline; filename="' . $attachment->file_name . '"',
+            'Content-Disposition' => 'inline; filename="'.$attachment->file_name.'"',
         ]);
 
         // Cache + validasi kondisional (ETag/Last-Modified) agar file tidak di-unduh ulang

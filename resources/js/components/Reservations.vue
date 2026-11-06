@@ -2,7 +2,7 @@
     <div class="p-6">
         <h2 class="text-2xl font-bold mb-4">Reservations</h2>
         <div class="mb-4">
-            <a href="/reservations/create" class="px-4 py-2 bg-blue-600 text-white rounded">New Reservation</a>
+            <a :href="`${baseUrl}reservations/create`" class="px-4 py-2 bg-blue-600 text-white rounded">New Reservation</a>
         </div>
         <table class="min-w-full bg-white">
             <thead class="bg-gray-200">
@@ -37,13 +37,14 @@ import axios from 'axios';
 export default {
     data() {
         return {
+            baseUrl: import.meta.env.BASE_URL,
             reservations: [],
             prevPage: null,
             nextPage: null,
         };
     },
     mounted() {
-        this.load('/api/reservations');
+        this.load('api/reservations');
     },
     methods: {
         load(url) {

@@ -12,13 +12,18 @@ import Pusher from 'pusher-js';
 
 window.Pusher = Pusher;
 
-window.Echo = new Echo({
-    broadcaster: 'pusher',
-    key: process.env.MIX_PUSHER_APP_KEY || process.env.MIX_PUSHER_KEY,
-    cluster: process.env.MIX_PUSHER_APP_CLUSTER || process.env.MIX_PUSHER_CLUSTER,
-    encrypted: true,
-    forceTLS: true,
-});
+const pusherKey = import.meta.env.VITE_PUSHER_APP_KEY;
+const pusherCluster = import.meta.env.VITE_PUSHER_APP_CLUSTER;
+
+window.Echo = null;
+if (pusherKey && pusherCluster) {
+    window.Echo = new Echo({
+        broadcaster: 'pusher',
+        key: pusherKey,
+        cluster: pusherCluster,
+        forceTLS: true,
+    });
+}
 
 const vueApp = createApp({
     data() {

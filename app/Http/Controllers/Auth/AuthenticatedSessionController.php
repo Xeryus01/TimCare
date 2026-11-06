@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Services\AuditTrailService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -22,9 +23,10 @@ class AuthenticatedSessionController extends Controller
     /**
      * Handle an incoming authentication request.
      */
-    public function store(LoginRequest $request): RedirectResponse
+    public function store(LoginRequest $request, AuditTrailService $auditTrail): RedirectResponse
     {
         $request->authenticate();
+        $auditTrail->record($request, $request->user()->id, 'USER', $request->user()->id, 'LOGIN');
 
         // Ensure session is saved before redirect
         $request->session()->regenerate();
@@ -36,8 +38,10 @@ class AuthenticatedSessionController extends Controller
     /**
      * Destroy an authenticated session.
      */
-    public function destroy(Request $request): RedirectResponse
+    public function destroy(Request $request, AuditTrailService $auditTrail): RedirectResponse
     {
+        $userId = $request->user()->id;
+        $auditTrail->record($request, $userId, 'USER', $userId, 'LOGOUT');
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();

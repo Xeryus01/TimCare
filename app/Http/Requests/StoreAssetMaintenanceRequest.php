@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Asset;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreAssetMaintenanceRequest extends FormRequest
 {
@@ -27,8 +29,16 @@ class StoreAssetMaintenanceRequest extends FormRequest
             'description' => 'required|string|max:1000',
             'findings' => 'nullable|string|max:2000',
             'actions_taken' => 'nullable|string|max:2000',
-            'condition_before' => 'nullable|string|in:GOOD,LIGHT,HEAVY',
-            'condition_after' => 'nullable|string|in:GOOD,LIGHT,HEAVY',
+            'condition_before' => ['nullable', 'string', Rule::in(array_merge(array_keys(Asset::conditionOptions()), [
+                Asset::CONDITION_GOOD,
+                Asset::CONDITION_LIGHT,
+                Asset::CONDITION_HEAVY,
+            ]))],
+            'condition_after' => ['nullable', 'string', Rule::in(array_merge(array_keys(Asset::conditionOptions()), [
+                Asset::CONDITION_GOOD,
+                Asset::CONDITION_LIGHT,
+                Asset::CONDITION_HEAVY,
+            ]))],
             'next_maintenance_date' => 'nullable|date|after:maintenance_date',
         ];
     }

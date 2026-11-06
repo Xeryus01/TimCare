@@ -59,22 +59,22 @@
                     <label for="asset_search" class="mb-2 block text-sm font-medium text-gray-900 dark:text-white">Aset Terkait <span class="text-gray-400">(opsional)</span></label>
                     @php
                         $oldAsset = $assets->firstWhere('id', old('asset_id'));
-                        $oldAssetLabel = $oldAsset ? $oldAsset->asset_code . ' - ' . $oldAsset->name : '';
+                        $oldAssetLabel = $oldAsset?->ticket_option_label ?? '';
                     @endphp
-                    <input id="asset_search" type="text" autocomplete="off" value="{{ old('asset_id') ? $oldAssetLabel : '' }}" placeholder="Cari aset berdasarkan kode atau nama" class="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-gray-900 dark:border-gray-600 dark:bg-dark-800 dark:text-white @error('asset_id') border-red-500 @enderror" list="asset_list" />
+                    <input id="asset_search" type="text" autocomplete="off" value="{{ old('asset_id') ? $oldAssetLabel : '' }}" placeholder="Cari kode, nama, atau pemegang aset" class="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-gray-900 dark:border-gray-600 dark:bg-dark-800 dark:text-white @error('asset_id') border-red-500 @enderror" list="asset_list" />
                     <input id="asset_id" type="hidden" name="asset_id" value="{{ old('asset_id', '') }}" />
                     <datalist id="asset_list">
                         @foreach($assets as $asset)
-                            <option value="{{ $asset->asset_code }} - {{ $asset->name }}">{{ $asset->asset_code }} - {{ $asset->name }}</option>
+                            <option value="{{ $asset->ticket_option_label }}">{{ $asset->ticket_option_label }}</option>
                         @endforeach
                     </datalist>
-                    <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Ketik untuk mencari aset, lalu pilih dari daftar dropdown.</p>
+                    <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Aset dengan pemegang ditampilkan lebih dahulu. Cari berdasarkan kode, nama aset, nama pemegang, atau Asset Tag.</p>
                 </div>
                 <script>
                     document.addEventListener('DOMContentLoaded', function () {
                         const assetInput = document.getElementById('asset_search');
                         const assetHidden = document.getElementById('asset_id');
-                        const assetMap = @json($assets->mapWithKeys(fn($asset) => [$asset->asset_code . ' - ' . $asset->name => $asset->id]));
+                        const assetMap = @json($assets->mapWithKeys(fn($asset) => [$asset->ticket_option_label => $asset->id]));
 
                         const syncAssetId = () => {
                             const value = assetInput.value.trim();

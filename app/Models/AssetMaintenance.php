@@ -26,7 +26,9 @@ class AssetMaintenance extends Model
     ];
 
     const TYPE_PREVENTIVE = 'PREVENTIVE';
+
     const TYPE_CORRECTIVE = 'CORRECTIVE';
+
     const TYPE_INSPECTION = 'INSPECTION';
 
     public static function types(): array
@@ -49,7 +51,7 @@ class AssetMaintenance extends Model
             return null;
         }
 
-        return Asset::conditionOptions()[Asset::normalizeCondition($this->condition_before)] ?? $this->condition_before;
+        return Asset::conditionLabel($this->condition_before);
     }
 
     public function getConditionAfterLabelAttribute(): ?string
@@ -58,7 +60,7 @@ class AssetMaintenance extends Model
             return null;
         }
 
-        return Asset::conditionOptions()[Asset::normalizeCondition($this->condition_after)] ?? $this->condition_after;
+        return Asset::conditionLabel($this->condition_after);
     }
 
     public function asset()

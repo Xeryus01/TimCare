@@ -1,14 +1,19 @@
 # Asset Management System - Data Documentation
 
 ## Overview
-This document describes the asset data loaded into the system from the Excel template (`asset-upload-template.xlsx`). The system now contains **771 assets** across **27 categories**, **29 brands**, **3 condition levels**, **3 allocation statuses**, and **8 office locations**.
+The current inventory import is the 312-row workbook
+`database/data/aset-berwujud-2026-11-05-142737.xlsx`. The seeder replaces the
+existing asset inventory; see [Asset Seeder Usage Guide](ASSET_SEEDER_USAGE_GUIDE.md)
+for the required backup, migration, and seeding steps. Category, brand, and
+location lists below document the previous 771-asset snapshot and may not match
+the current workbook.
 
 ## Data Source
-- **File**: `asset-upload-template.xlsx`
-- **Total Assets**: 771
-- **Import Date**: 2026-06-05
+- **File**: `database/data/aset-berwujud-2026-11-05-142737.xlsx`
+- **Total Assets**: 312
+- **Import Date**: 2026-11-05
 - **Seeder Files**: 
-  - `database/seeders/AssetSeeder.php` - Main asset data (771 entries)
+  - `database/seeders/AssetSeeder.php` - Replaces inventory from the workbook
   - `database/seeders/AssetAttributesSeeder.php` - Reference attributes
 
 ## Asset Categories (27 types)
@@ -58,32 +63,24 @@ Acer, Aruba, Asus, Axway, Brother, Buffalo, Canon, Cisco, D-Link, Dell, Epson, F
 
 ## Asset Condition Levels
 
-Assets are classified into three condition categories:
+The import preserves the three condition values used in the current workbook:
 
-| Code | Indonesian | English | Excel Value |
-|------|-----------|---------|-------------|
-| `GOOD` | Baik | Good | Baik |
-| `LIGHT` | Rusak Ringan | Light Damage | Rusak Ringan |
-| `HEAVY` | Rusak Berat | Heavy Damage | Rusak Berat |
+| Stored value | English |
+|------|---------|
+| `Baik` | Good |
+| `Rusak Ringan` | Light Damage |
+| `Rusak Berat` | Heavy Damage |
 
 ### Condition Distribution:
-- **GOOD (Baik)**: Assets in good working condition
-- **LIGHT (Rusak Ringan)**: Assets with minor damage, still usable
-- **HEAVY (Rusak Berat)**: Assets with major damage, not usable
+- **Baik**: Assets in good working condition
+- **Rusak Ringan**: Assets with minor damage, still usable
+- **Rusak Berat**: Assets with major damage, not usable
 
 ## Allocation Status
 
-Assets have the following allocation statuses mapped to the system:
-
-| System Status | Indonesian | Original Excel Values |
-|---------------|-----------|---------------------|
-| `ACTIVE` | Aktif | Teralokasi, Siap Dialokasikan |
-| `INACTIVE` | Tidak Aktif | Tidak Dapat Dialokasikan |
-
-### Mapping:
-- **Teralokasi** (Allocated) → `ACTIVE`
-- **Siap Dialokasikan** (Ready to Allocate) → `ACTIVE`
-- **Tidak Dapat Dialokasikan** (Cannot Allocate) → `INACTIVE`
+The six status values are stored and shown using the same wording as the
+workbook: `Teralokasi`, `Tidak Dapat Dialokasikan`, `Pengajuan Alokasi`,
+`Penetapan Pengembalian`, `Pengajuan Pengembalian`, and `Siap Dialokasikan`.
 
 ## Office Locations (8)
 
@@ -104,7 +101,7 @@ The Excel columns map to the Asset model as follows:
 
 | Excel Column | Asset Field | Notes |
 |------|-----------|-------|
-| NO BMN | asset_code | Primary identifier, unique |
+| NO BMN | asset_code | BMN inventory number; may be shared |
 | Nama | name | Asset name/description |
 | Asset Tag | serial_number | Tag/serial number |
 | Jenis Barang / Kategori | type | Asset category |
@@ -112,8 +109,8 @@ The Excel columns map to the Asset model as follows:
 | Tanggal Perolehan | purchased_at | Acquisition date |
 | Lokasi Aset | location | Current location |
 | Nama Pegawai | holder | Assigned employee (if applicable) |
-| Kondisi | condition | Normalized to GOOD/LIGHT/HEAVY |
-| Status | status | Mapped to ACTIVE/INACTIVE |
+| Kondisi | condition | Preserved as Baik/Rusak Ringan/Rusak Berat |
+| Status | status | Preserved as the workbook's Indonesian status |
 
 ## Additional Fields
 
@@ -121,8 +118,8 @@ The following fields are set during seeding but not in the Excel:
 
 - **model**: Empty (can be filled manually)
 - **specs**: Null (can be populated later)
-- **status**: Derived from Excel "Status" column
-- **condition**: Normalized from Excel "Kondisi" column
+- **status**: Preserved from the Excel "Status" column
+- **condition**: Preserved from the Excel "Kondisi" column
 
 ## Usage
 
@@ -152,10 +149,10 @@ use App\Models\Asset;
 $assets = Asset::all();
 
 // Get by condition
-$goodAssets = Asset::where('condition', 'GOOD')->get();
+$goodAssets = Asset::where('condition', 'Baik')->get();
 
 // Get by status
-$activeAssets = Asset::where('status', 'ACTIVE')->get();
+$allocatedAssets = Asset::where('status', 'Teralokasi')->get();
 
 // Get by location
 $assetsByLocation = Asset::where('location', 'BPS Provinsi Kep. Bangka Belitung')->get();
@@ -164,16 +161,11 @@ $assetsByLocation = Asset::where('location', 'BPS Provinsi Kep. Bangka Belitung'
 $laptops = Asset::where('type', 'Lap Top')->get();
 ```
 
-## Statistics
+## Previous Snapshot Statistics
 
-Based on the extracted data:
-
-- **Total Assets**: 771
-- **Asset Categories**: 27 types
-- **Manufacturers**: 29 brands
-- **Locations**: 8 offices
-- **Condition Statuses**: 3 levels
-- **Allocation Statuses**: 2 states
+The following summaries describe the former 771-asset snapshot, not the current
+312-row import. Use database queries to obtain current category, brand, and
+location totals.
 
 ### Top Asset Categories:
 The system contains predominantly computing equipment and network infrastructure, reflecting the operational needs of a statistical agency.
@@ -194,11 +186,9 @@ The system contains predominantly computing equipment and network infrastructure
 
 1. **Employee Assignment**: When the Excel column "Nama Pegawai" (Employee Name) contains "Belum dialokasikan" (Not yet allocated), the holder field is set to NULL.
 
-2. **Condition Normalization**: The condition values from Excel are normalized to the system's standard conditions (GOOD, LIGHT, HEAVY) to ensure data consistency.
+2. **Condition and status values**: Current workbook values are retained so the UI and exports match the source labels.
 
-3. **Status Mapping**: The detailed Excel statuses are mapped to the system's two-state model (ACTIVE/INACTIVE) for operational efficiency.
-
-4. **Unique Constraint**: The `asset_code` field is unique and cannot be duplicated. The seeder uses `firstOrCreate` to prevent duplicate entries.
+4. **Unique Constraint**: Asset Tags (`serial_number`) are unique. NO BMN (`asset_code`) may be shared.
 
 5. **Audit Trail**: All asset operations are logged through the system's audit log for compliance and tracking purposes.
 

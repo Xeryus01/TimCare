@@ -140,6 +140,10 @@ class SsoController extends Controller
         $config = config('sso', []);
 
         // clear local session/auth
+        $userId = $request->user()?->id;
+        if ($userId) {
+            $this->auditTrailService->record($request, $userId, 'USER', $userId, 'SSO_LOGOUT');
+        }
         Auth::logout();
         $this->ssoTokenService->clear($request);
 

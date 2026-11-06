@@ -50,16 +50,19 @@
                 init() {
                     const savedState = localStorage.getItem('sidebarOpen');
                     const isMobile = window.innerWidth < 1024;
+                    this.isMobile = isMobile;
                     this.isOpen = isMobile ? false : (savedState === null ? true : savedState === 'true');
                     
                     window.addEventListener('resize', () => {
                         const nowMobile = window.innerWidth < 1024;
+                        this.isMobile = nowMobile;
                         if (nowMobile && this.isOpen) {
                             this.close();
                         }
                     });
                 },
                 isOpen: true,
+                isMobile: false,
                 toggle() {
                     this.isOpen = !this.isOpen;
                     localStorage.setItem('sidebarOpen', this.isOpen);
@@ -85,14 +88,22 @@
     <div class="flex h-full bg-gray-50 dark:bg-dark-900">
         <!-- Sidebar -->
         @include('layouts.sidebar')
+        <div
+            x-cloak
+            x-show="$store.sidebar.isOpen && $store.sidebar.isMobile"
+            x-transition.opacity
+            @click="$store.sidebar.close()"
+            class="fixed inset-0 z-[45] bg-gray-950/40 backdrop-blur-[1px] lg:hidden"
+            aria-hidden="true"
+        ></div>
         
         <!-- Main Content -->
-        <div class="flex flex-col h-full overflow-hidden transition-all duration-300" :style="{ marginLeft: $store.sidebar.isOpen ? '16rem' : '0', width: $store.sidebar.isOpen ? 'calc(100% - 16rem)' : '100%' }">
+        <div class="flex h-full min-w-0 flex-col overflow-hidden transition-all duration-300" :style="{ marginLeft: $store.sidebar.isOpen && !$store.sidebar.isMobile ? '16rem' : '0', width: $store.sidebar.isOpen && !$store.sidebar.isMobile ? 'calc(100% - 16rem)' : '100%' }">
             <!-- Top Header -->
             @include('layouts.header')
             
             <!-- Page Content -->
-            <main class="flex-1 overflow-auto overflow-x-hidden">
+            <main class="min-w-0 flex-1 overflow-auto overflow-x-hidden bg-gray-50/70 dark:bg-dark-900">
                 <!-- Flash Messages -->
                 <div class="fixed inset-x-0 top-20 z-50 flex justify-center px-4 sm:px-6 lg:px-8 pointer-events-none">
                     <div class="w-full max-w-3xl">

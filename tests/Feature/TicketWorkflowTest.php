@@ -96,7 +96,7 @@ class TicketWorkflowTest extends TestCase
         Ticket::factory()->count(2)->create(['status' => Ticket::STATUS_SOLVED]);
 
         $this->actingAs($user);
-        $res = $this->getJson('/api/tickets?status=' . Ticket::STATUS_SOLVED);
+        $res = $this->getJson('/api/tickets?status='.Ticket::STATUS_SOLVED);
         $res->assertStatus(200);
         $data = $res->json('data');
         $this->assertCount(2, $data);
@@ -114,7 +114,7 @@ class TicketWorkflowTest extends TestCase
         $this->actingAs($user);
         $res = $this->getJson('/api/dashboard/summary');
         $res->assertStatus(200)
-            ->assertJson([ 'tickets' => [
+            ->assertJson(['tickets' => [
                 'open' => 1,
                 'assigned_detect' => 1,
                 'solved_with_notes' => 1,

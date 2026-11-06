@@ -1,0 +1,24 @@
+[14999341ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://127.0.0.1:8000/api/notifications/unread-count:0
+[14999342ms] [ERROR] Error fetching unread count: Error: Network response was not ok
+    at eval (eval at <anonymous> (http://127.0.0.1:8000/build/assets/app-DoFPyEoQ.js:33:745), <anonymous>:30:49) @ :42
+[15029316ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://127.0.0.1:8000/api/notifications/unread-count:0
+[15029316ms] [ERROR] Error fetching unread count: Error: Network response was not ok
+    at eval (eval at <anonymous> (http://127.0.0.1:8000/build/assets/app-DoFPyEoQ.js:33:745), <anonymous>:30:49) @ :42
+[15059343ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://127.0.0.1:8000/api/notifications/unread-count:0
+[15059344ms] [ERROR] Error fetching unread count: Error: Network response was not ok
+    at eval (eval at <anonymous> (http://127.0.0.1:8000/build/assets/app-DoFPyEoQ.js:33:745), <anonymous>:30:49) @ :42
+[15089346ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://127.0.0.1:8000/api/notifications/unread-count:0
+[15089347ms] [ERROR] Error fetching unread count: Error: Network response was not ok
+    at eval (eval at <anonymous> (http://127.0.0.1:8000/build/assets/app-DoFPyEoQ.js:33:745), <anonymous>:30:49) @ :42
+[15119960ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://127.0.0.1:8000/api/notifications/unread-count:0
+[15119961ms] [ERROR] Error fetching unread count: Error: Network response was not ok
+    at eval (eval at <anonymous> (http://127.0.0.1:8000/build/assets/app-DoFPyEoQ.js:33:745), <anonymous>:30:49) @ :42
+[15149748ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://127.0.0.1:8000/api/notifications/unread-count:0
+[15149748ms] [ERROR] Error fetching unread count: Error: Network response was not ok
+    at eval (eval at <anonymous> (http://127.0.0.1:8000/build/assets/app-DoFPyEoQ.js:33:745), <anonymous>:30:49) @ :42
+[15179347ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://127.0.0.1:8000/api/notifications/unread-count:0
+[15179347ms] [ERROR] Error fetching unread count: Error: Network response was not ok
+    at eval (eval at <anonymous> (http://127.0.0.1:8000/build/assets/app-DoFPyEoQ.js:33:745), <anonymous>:30:49) @ :42
+[15209332ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://127.0.0.1:8000/api/notifications/unread-count:0
+[15209332ms] [ERROR] Error fetching unread count: Error: Network response was not ok
+    at eval (eval at <anonymous> (http://127.0.0.1:8000/build/assets/app-DoFPyEoQ.js:33:745), <anonymous>:30:49) @ :42

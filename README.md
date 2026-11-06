@@ -174,147 +174,21 @@ curl -H "Accept: application/json" http://localhost:8000/api/dashboard/summary
 
 ### Deployment via cPanel
 
-#### Struktur Folder yang Benar
-**PENTING:** Untuk keamanan, aplikasi Laravel HARUS dipisah dari public_html:
+The supported deployment target is
+`https://digistat.web.bps.go.id/timcare-dev`. Keep the Laravel project outside
+`public_html` at `~/timcare-dev`; only the public entry point and built assets
+belong at `~/public_html/timcare-dev`.
 
-```
-/home/username/
-├── public_html/                # Hanya folder public Laravel
-│   ├── index.php
-│   ├── .htaccess
-│   ├── css/
-│   ├── js/
-│   ├── images/
-│   └── storage/ → symlink ke ../timcare/storage/app/public
-├── timcare/                    # Aplikasi utama (di luar public_html)
-│   ├── app/
-│   ├── config/
-│   ├── database/
-│   ├── routes/
-│   ├── storage/
-│   ├── vendor/
-│   ├── .env (production)
-│   └── artisan
-```
-
-#### Langkah-Langkah Deployment
-
-**1. Prepare Database**
-```bash
-# Di cPanel → MySQL Databases:
-# - Create database: timcare_production
-# - Create user: timcare_user
-# - Grant all privileges
-```
-
-**2. Upload Files**
-```bash
-# Upload project ke folder sementara
-# Ekstrak ke ~/timcare folder
-# Jangan upload langsung ke public_html
-```
-
-**3. Run Setup Script**
-```bash
-cd ~/timcare
-bash setup-cpanel-structure.sh
-```
-
-Atau **Manual Setup**:
-```bash
-# Production dependencies
-cd ~/timcare
-composer install --no-dev --optimize-autoloader
-npm run build
-
-# Generate key & cache
-php artisan key:generate
-php artisan config:cache
-php artisan route:cache
-php artisan view:cache
-
-# Database migration
-php artisan migrate --force
-
-# Seed initial data (opsional)
-php artisan db:seed --force
-
-# Setup storage symlink
-cd ~/public_html
-ln -s ../timcare/storage/app/public storage
-
-# Set permissions
-cd ~/timcare
-chmod -R 755 storage bootstrap/cache
-```
-
-**4. Update .env untuk Production**
-```env
-APP_NAME="TimCare ITSM"
-APP_ENV=production
-APP_DEBUG=false
-APP_URL=https://yourdomain.com
-
-# Database
-DB_CONNECTION=mysql
-DB_HOST=localhost
-DB_DATABASE=timcare_production
-DB_USERNAME=timcare_user
-DB_PASSWORD=strong_password_here
-
-# Cache & Session
-CACHE_STORE=database
-SESSION_DRIVER=database
-QUEUE_CONNECTION=sync
-
-# Mail untuk production
-MAIL_MAILER=smtp
-MAIL_HOST=mail.yourdomain.com
-MAIL_PORT=587
-MAIL_USERNAME=admin@yourdomain.com
-MAIL_PASSWORD=your_password
-MAIL_ENCRYPTION=tls
-MAIL_FROM_ADDRESS=smtp_user@example.com
-
-# WhatsApp
-WHATSAPP_ENABLED=true
-WHATSAPP_FONNTE_KEY=your_api_key
-```
-
-**5. Setup .htaccess di public_html**
-```apache
-<IfModule mod_rewrite.c>
-    RewriteEngine On
-    RewriteBase /
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule ^ index.php [QSA,L]
-</IfModule>
-```
-
-**6. Configure Cron Jobs**
-Di cPanel → Cron Jobs, tambahkan:
-```bash
-# Laravel scheduler (setiap menit)
-* * * * * cd /home/username/timcare && php artisan schedule:run >> /dev/null 2>&1
-
-# Optional: Queue worker (jika perlu background jobs)
-* * * * * cd /home/username/timcare && php artisan queue:work --sleep=3 --tries=3 >> /dev/null 2>&1
-```
-
-### Automated Deployment Script
-```bash
-cd ~/timcare
-bash deploy.sh
-```
-
-Lihat [DEPLOYMENT_CPANEL.md](DEPLOYMENT_CPANEL.md) untuk panduan detail.
+Follow the [cPanel subdirectory deployment guide](docs/deployment/DEPLOYMENT_CPANEL.md).
+The older setup/deploy scripts have been replaced with non-destructive scripts.
+Do not run database seeders or regenerate `APP_KEY` as part of routine
+deployment.
 
 ## 📚 Documentation & Guides
 
 ### Core Documentation
 - **[Setup Guide](SETUP_GUIDE.md)** - Panduan setup lengkap untuk development & production
-- **[Deployment cPanel](DEPLOYMENT_CPANEL.md)** - Detailed deployment guide untuk cPanel hosting
+- **[Deployment cPanel](docs/deployment/DEPLOYMENT_CPANEL.md)** - Deployment aman untuk URL subdirektori `/timcare-dev`
 - **[Quick Start](QUICK_START.md)** - Quick reference untuk setup cepat
 
 ### Feature Guides
@@ -640,4 +514,3 @@ Jika Anda menemukan security vulnerability, segera laporkan ke:
 **Last Updated**: Juni 2026  
 **Status**: Production Ready ✅  
 **Version**: 1.0
-

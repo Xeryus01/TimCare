@@ -1,12 +1,29 @@
 <!-- Header -->
-    <header class="sticky top-0 z-40 flex items-center justify-between border-b border-gray-200 bg-white px-4 py-3 sm:px-5.5 sm:py-4 lg:px-9 dark:border-gray-700 dark:bg-dark-800">
+    @php
+        $headerTitle = match (true) {
+            request()->routeIs('dashboard') => 'Beranda',
+            request()->routeIs('tickets.*') => 'Tiket Masalah TI',
+            request()->routeIs('reservations.*') => 'Tiket ID Zoom',
+            request()->routeIs('assets.*') => 'Data Aset',
+            request()->routeIs('maintenance.*') => 'Pemeliharaan',
+            request()->routeIs('piket.*') => 'Jadwal Piket',
+            request()->routeIs('ti.*') => 'Monitoring TI',
+            request()->routeIs('users.*') => 'Manajemen User',
+            request()->routeIs('file-manager.*') => 'Backup & Berkas',
+            request()->routeIs('notifications.*') => 'Notifikasi',
+            request()->routeIs('profile.*') => 'Profil',
+            default => 'TimCare',
+        };
+    @endphp
+    <header class="sticky top-0 z-40 flex min-h-[4.5rem] items-center justify-between border-b border-gray-200/80 bg-white/95 px-4 py-2.5 shadow-sm shadow-gray-900/[0.02] backdrop-blur-md sm:px-5.5 lg:px-8 dark:border-gray-700/80 dark:bg-dark-800/95">
     <!-- Left Section -->
-    <div class="flex items-center gap-3 sm:gap-4">
+    <div class="flex min-w-0 items-center gap-3 sm:gap-4">
         <!-- Sidebar Toggle Button -->
         <button 
             @click="$store.sidebar.toggle()" 
-            class="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-gray-200 text-gray-500 hover:bg-gray-100 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-white/5 transition-colors lg:h-9 lg:w-9"
-            title="Toggle sidebar"
+            class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-500 shadow-sm transition hover:border-brand-200 hover:bg-brand-50 hover:text-brand-700 focus:outline-none focus:ring-2 focus:ring-brand-500/30 dark:border-gray-700 dark:bg-dark-800 dark:text-gray-400 dark:hover:border-gray-600 dark:hover:bg-white/5 dark:hover:text-white"
+            title="Tampilkan atau sembunyikan menu"
+            aria-label="Tampilkan atau sembunyikan menu"
         >
             <!-- Hamburger Icon -->
             <svg x-show="!$store.sidebar.isOpen" class="fill-current" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -17,20 +34,52 @@
                 <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
             </svg>
         </button>
+        <div class="min-w-0 border-l border-gray-200 pl-3 dark:border-gray-700 sm:pl-4">
+            <p class="truncate text-sm font-semibold text-gray-900 dark:text-white sm:text-base">{{ $headerTitle }}</p>
+            <p class="hidden text-xs text-gray-500 dark:text-gray-400 sm:block">TimCare <span class="px-1 text-gray-300 dark:text-gray-600">/</span> Layanan TI</p>
+        </div>
     </div>
 
     <!-- Right Section -->
-    <div class="flex items-center gap-2 sm:gap-3">
+    <div class="flex shrink-0 items-center gap-2 sm:gap-3">
         <!-- Theme Toggle Button -->
-        <button @click="$store.theme.toggle()" class="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-gray-200 text-gray-500 hover:bg-gray-100 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-white/5 transition-colors lg:h-9 lg:w-9" title="Toggle dark mode">
-            <!-- Moon Icon (shown in light mode - click to enable dark mode) -->
-            <svg x-show="!$store.theme.isDark" class="fill-current" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M21.64 15.89C21.38 16.54 20.84 17.09 20.16 17.54C22.83 14.63 22.17 9.82 19.22 7.29C16.27 4.76 11.63 5.55 9.36 8.26C7.09 10.97 7.75 15.78 10.7 18.31C13.65 20.84 18.29 20.05 20.56 17.34C19.84 18.15 18.59 18.87 17.5 19.09L17.15 19.15C18.5 20.3 20.78 20.28 22.25 18.78C23.35 17.71 23.9 16.34 21.64 15.89Z" fill="currentColor"/>
+        <button
+            @click="$store.theme.toggle()"
+            class="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-gray-200 bg-white text-amber-500 shadow-sm transition duration-200 hover:border-amber-200 hover:bg-amber-50 hover:text-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-500/30 dark:border-gray-700 dark:bg-dark-800 dark:text-sky-300 dark:hover:border-sky-800 dark:hover:bg-sky-500/10 dark:hover:text-sky-200"
+            :title="$store.theme.isDark ? 'Mode gelap aktif. Beralih ke mode terang' : 'Mode terang aktif. Beralih ke mode gelap'"
+            :aria-label="$store.theme.isDark ? 'Beralih ke mode terang' : 'Beralih ke mode gelap'"
+            :aria-pressed="$store.theme.isDark.toString()"
+        >
+            <svg
+                x-cloak
+                x-show="!$store.theme.isDark"
+                x-transition.opacity
+                class="h-5 w-5"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+            >
+                <circle cx="12" cy="12" r="4"></circle>
+                <path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"></path>
             </svg>
-            <!-- Sun Icon (shown in dark mode - click to enable light mode) -->
-            <svg x-show="$store.theme.isDark" class="fill-current" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 18C15.3137 18 18 15.3137 18 12C18 8.68629 15.3137 6 12 6C8.68629 6 6 8.68629 6 12C6 15.3137 8.68629 18 12 18Z" fill="currentColor"/>
-                <path d="M12 1V3M12 21V23M23 12H21M3 12H1M20.485 3.515L19.071 4.929M4.929 19.071L3.515 20.485M20.485 20.485L19.071 19.071M4.929 4.929L3.515 3.515" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <svg
+                x-cloak
+                x-show="$store.theme.isDark"
+                x-transition.opacity
+                class="h-5 w-5"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+            >
+                <path d="M20.2 15.3A8.5 8.5 0 0 1 8.7 3.8 8.5 8.5 0 1 0 20.2 15.3Z"></path>
             </svg>
         </button>
 
@@ -139,18 +188,18 @@
                 }
             }
         }" class="relative">
-            <button @click="notifOpen = !notifOpen; notifOpen && fetchLatestUnread()" class="relative inline-flex h-9 w-9 items-center justify-center rounded-lg border border-gray-200 text-gray-500 hover:bg-gray-100 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-white/5">
+            <button @click="notifOpen = !notifOpen; notifOpen && fetchLatestUnread()" class="relative inline-flex h-10 w-10 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-500 shadow-sm transition hover:border-brand-200 hover:bg-brand-50 hover:text-brand-700 focus:outline-none focus:ring-2 focus:ring-brand-500/30 dark:border-gray-700 dark:bg-dark-800 dark:text-gray-400 dark:hover:border-gray-600 dark:hover:bg-white/5 dark:hover:text-white" aria-label="Buka notifikasi">
                 <!-- Bell Icon -->
                 <svg class="fill-current" width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M16.1999 14.9C15.9199 14.7 15.7 14.4 15.7 14V10C15.7 7.9 14.5 6.2 12.9 5.5V5C12.9 3.6 11.8 2.5 10.4 2.5C9 2.5 7.9 3.6 7.9 5V5.5C6.3 6.2 5.1 7.9 5.1 10V14C5.1 14.4 4.9 14.7 4.6 14.9C3.5 15.7 2.8 16.8 2.8 18H16.1C16.1 16.8 15.3 15.7 16.1999 14.9Z"></path>
                     <path d="M11.7 18C11.7 18.6 11.2 19.1 10.5 19.1C9.8 19.1 9.3 18.6 9.3 18H11.7Z"></path>
                 </svg>
                 <!-- Unread Badge -->
-                <span x-show="unreadCount > 0" x-text="unreadCount" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform scale-75" x-transition:enter-end="opacity-100 transform scale-100" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100 transform scale-100" x-transition:leave-end="opacity-0 transform scale-75" class="absolute -top-1 -right-1 flex items-center justify-center h-5 w-5 rounded-full bg-red-500 text-white text-xs font-bold"></span>
+                <span x-show="unreadCount > 0" x-text="unreadCount > 99 ? '99+' : unreadCount" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform scale-75" x-transition:enter-end="opacity-100 transform scale-100" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100 transform scale-100" x-transition:leave-end="opacity-0 transform scale-75" class="absolute -right-1.5 -top-1.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold leading-none text-white ring-2 ring-white dark:ring-dark-800"></span>
             </button>
 
             <!-- Notifications Dropdown -->
-            <div x-show="notifOpen" @click.outside="notifOpen = false" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 transform scale-95" x-transition:enter-end="opacity-100 transform scale-100" x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 transform scale-100" x-transition:leave-end="opacity-0 transform scale-95" class="absolute right-0 mt-2 w-80 sm:w-80 md:w-96 rounded-lg border border-gray-200 bg-white shadow-xl dark:border-gray-700 dark:bg-dark-800 z-60 max-h-[80vh] overflow-hidden">
+            <div x-cloak x-show="notifOpen" @click.outside="notifOpen = false" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 transform scale-95" x-transition:enter-end="opacity-100 transform scale-100" x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 transform scale-100" x-transition:leave-end="opacity-0 transform scale-95" class="absolute right-0 z-60 mt-2 max-h-[80vh] w-[calc(100vw-2rem)] overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-xl dark:border-gray-700 dark:bg-dark-800 sm:w-80 md:w-96">
                 <!-- Header -->
                 <div class="border-b border-gray-200 px-4 py-3 dark:border-gray-700">
                     <p class="text-sm font-semibold text-gray-900 dark:text-white">Notifikasi</p>
@@ -235,25 +284,29 @@
 
         <!-- User Profile Dropdown -->
         <div x-data="{ userOpen: false }" class="relative">
-            <button @click="userOpen = !userOpen" class="flex items-center gap-3 rounded-lg px-3.5 py-2 hover:bg-gray-100 dark:hover:bg-white/5">
-                <div class="flex h-9 w-9 items-center justify-center rounded-full bg-brand-500 text-white font-medium">
+            <button @click="userOpen = !userOpen" class="flex items-center gap-2 rounded-xl border border-transparent py-1.5 pl-1.5 pr-2 transition hover:border-gray-200 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-brand-500/30 dark:hover:border-gray-700 dark:hover:bg-white/5 sm:gap-3 sm:pr-3">
+                <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-brand-500 to-brand-700 text-sm font-semibold text-white shadow-sm ring-2 ring-brand-100 dark:ring-brand-900/50">
                     {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
                 </div>
-                <div class="hidden text-left sm:block">
-                    <p class="text-sm font-medium text-gray-900 dark:text-white">{{ auth()->user()->name }}</p>
-                    <p class="text-xs text-gray-500 dark:text-gray-400">{{ auth()->user()->email }}</p>
+                <div class="hidden max-w-40 text-left sm:block">
+                    <p class="truncate text-sm font-semibold text-gray-900 dark:text-white">{{ auth()->user()->name }}</p>
+                    <p class="truncate text-xs text-gray-500 dark:text-gray-400">{{ auth()->user()->email }}</p>
                 </div>
-                <svg class="fill-current text-gray-500 dark:text-gray-400" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg class="h-4 w-4 shrink-0 fill-current text-gray-400 dark:text-gray-500" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M8 11.75C7.8125 11.75 7.625 11.6875 7.47187 11.5469L2.34375 6.53906C2.03125 6.25 2.03125 5.78906 2.34375 5.5C2.65625 5.21094 3.15625 5.21094 3.46875 5.5L8 9.75L12.5312 5.5C12.8438 5.21094 13.3438 5.21094 13.6562 5.5C13.9688 5.78906 13.9688 6.25 13.6562 6.53906L8.52812 11.5469C8.375 11.6875 8.1875 11.75 8 11.75Z"></path>
                 </svg>
             </button>
 
             <!-- Dropdown Menu -->
-            <div x-show="userOpen" @click.outside="userOpen = false" class="absolute right-0 mt-2 w-48 rounded-lg border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-dark-800">
-                <a href="{{ url()->to(route('profile.edit')) }}" class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-white/5">Profil Saya</a>
+            <div x-cloak x-show="userOpen" @click.outside="userOpen = false" x-transition class="absolute right-0 z-50 mt-2 w-56 overflow-hidden rounded-2xl border border-gray-200 bg-white p-1.5 shadow-xl shadow-gray-900/10 dark:border-gray-700 dark:bg-dark-800">
+                <div class="border-b border-gray-100 px-3 py-2.5 dark:border-gray-700">
+                    <p class="truncate text-sm font-semibold text-gray-900 dark:text-white">{{ auth()->user()->name }}</p>
+                    <p class="truncate text-xs text-gray-500 dark:text-gray-400">{{ auth()->user()->email }}</p>
+                </div>
+                <a href="{{ url()->to(route('profile.edit')) }}" class="block rounded-xl px-3 py-2.5 text-sm font-medium text-gray-700 transition hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-white/5">Profil Saya</a>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
-                    <button type="submit" class="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-white/5 border-t border-gray-200 dark:border-gray-700">Keluar</button>
+                    <button type="submit" class="w-full rounded-xl px-3 py-2.5 text-left text-sm font-medium text-red-600 transition hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-500/10">Keluar</button>
                 </form>
             </div>
         </div>

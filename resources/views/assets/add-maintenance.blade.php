@@ -93,7 +93,7 @@
                             class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-gray-900 dark:border-gray-600 dark:bg-dark-800 dark:text-white focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 @error('condition_before') border-red-500 @enderror">
                             <option value="">-- Pilih kondisi sebelum --</option>
                             @foreach(\App\Models\Asset::conditionOptions() as $value => $label)
-                                <option value="{{ $value }}" {{ old('condition_before', $asset->condition) === $value ? 'selected' : '' }}>{{ $label }}</option>
+                                <option value="{{ $value }}" {{ old('condition_before', $asset->condition_label) === $value ? 'selected' : '' }}>{{ $label }}</option>
                             @endforeach
                         </select>
                         @error('condition_before')

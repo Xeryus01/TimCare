@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Asset;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreAssetRequest extends FormRequest
 {
@@ -25,8 +27,16 @@ class StoreAssetRequest extends FormRequest
             'nilai_perolehan' => 'nullable|numeric|min:0',
             'kode_satker' => 'nullable|string|max:50',
             'nip_pegawai' => 'nullable|string|max:30',
-            'status' => 'required|string|in:ACTIVE,INACTIVE,PENDING',
-            'condition' => 'required|string|in:GOOD,LIGHT,HEAVY',
+            'status' => ['required', 'string', Rule::in(array_merge(array_keys(Asset::statusOptions()), [
+                Asset::STATUS_ALLOCATED,
+                Asset::STATUS_READY_TO_ALLOCATE,
+                Asset::STATUS_NOT_ALLOCATABLE,
+            ]))],
+            'condition' => ['required', 'string', Rule::in(array_merge(array_keys(Asset::conditionOptions()), [
+                Asset::CONDITION_GOOD,
+                Asset::CONDITION_LIGHT,
+                Asset::CONDITION_HEAVY,
+            ]))],
             'purchased_at' => 'nullable|date',
             'photo_serial' => 'nullable|image|max:5120',
             'photo_serial_url' => 'nullable|url',

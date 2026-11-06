@@ -6,7 +6,7 @@
         <!-- Current Password Field -->
         <div>
             <label for="update_password_current_password" class="block text-sm font-medium text-gray-900 dark:text-white mb-2">
-                {{ __('Current Password') }}
+                Kata Sandi Saat Ini
             </label>
             <input id="update_password_current_password" name="current_password" type="password" autocomplete="current-password" class="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-gray-900 placeholder-gray-500 outline-none transition focus:border-brand-600 focus:ring-2 focus:ring-brand-100 disabled:cursor-default disabled:bg-gray-50 dark:border-gray-600 dark:bg-dark-800 dark:text-white dark:placeholder-gray-400 dark:focus:border-brand-600 dark:focus:ring-brand-900/20" />
             @if ($errors->updatePassword->has('current_password'))
@@ -17,7 +17,7 @@
         <!-- New Password Field -->
         <div>
             <label for="update_password_password" class="block text-sm font-medium text-gray-900 dark:text-white mb-2">
-                {{ __('New Password') }}
+                Kata Sandi Baru
             </label>
             <input id="update_password_password" name="password" type="password" autocomplete="new-password" class="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-gray-900 placeholder-gray-500 outline-none transition focus:border-brand-600 focus:ring-2 focus:ring-brand-100 disabled:cursor-default disabled:bg-gray-50 dark:border-gray-600 dark:bg-dark-800 dark:text-white dark:placeholder-gray-400 dark:focus:border-brand-600 dark:focus:ring-brand-900/20" />
             @if ($errors->updatePassword->has('password'))
@@ -28,7 +28,7 @@
         <!-- Confirm Password Field -->
         <div>
             <label for="update_password_password_confirmation" class="block text-sm font-medium text-gray-900 dark:text-white mb-2">
-                {{ __('Confirm Password') }}
+                Konfirmasi Kata Sandi
             </label>
             <input id="update_password_password_confirmation" name="password_confirmation" type="password" autocomplete="new-password" class="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-gray-900 placeholder-gray-500 outline-none transition focus:border-brand-600 focus:ring-2 focus:ring-brand-100 disabled:cursor-default disabled:bg-gray-50 dark:border-gray-600 dark:bg-dark-800 dark:text-white dark:placeholder-gray-400 dark:focus:border-brand-600 dark:focus:ring-brand-900/20" />
             @if ($errors->updatePassword->has('password_confirmation'))
@@ -39,7 +39,7 @@
         <!-- Submit Button -->
         <div class="flex items-center gap-4 pt-4">
             <button type="submit" class="inline-flex items-center justify-center rounded-lg bg-brand-600 px-6 py-2.5 text-center font-medium text-white hover:bg-brand-700">
-                {{ __('Save Changes') }}
+                Simpan Kata Sandi
             </button>
 
             @if (session('status') === 'password-updated')

@@ -23,7 +23,7 @@
             <div class="w-full max-w-md">
                 <!-- Logo/Branding -->
                 <div class="mb-8 text-center">
-                    <a href="/" class="inline-flex items-center justify-center">
+                    <a href="{{ url('/') }}" class="inline-flex items-center justify-center">
                         <img src="{{ asset(file_exists(public_path('logo/full-logo.png')) ? 'logo/full-logo.png' : 'logo/logo.png') }}" alt="{{ config('app.name', 'TimCare') }}" class="h-12 w-auto object-contain" />
                     </a>
                     <h1 class="mt-4 text-2xl font-bold text-gray-900 dark:text-white">{{ config('app.name', 'ITSM Dashboard') }}</h1>

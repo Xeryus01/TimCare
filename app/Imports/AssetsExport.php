@@ -3,14 +3,15 @@
 namespace App\Imports;
 
 use App\Models\Asset;
+use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
-use Carbon\Carbon;
 
 class AssetsExport implements FromCollection, WithHeadings
 {
     protected $startDate;
+
     protected $endDate;
 
     public function __construct($startDate = null, $endDate = null)
@@ -86,7 +87,7 @@ class AssetsExport implements FromCollection, WithHeadings
             ->first();
 
         if ($maintenance && $maintenance->condition_after) {
-            return Asset::conditionOptions()[Asset::normalizeCondition($maintenance->condition_after)] ?? $maintenance->condition_after;
+            return Asset::conditionLabel($maintenance->condition_after);
         }
 
         return $asset->condition_label;

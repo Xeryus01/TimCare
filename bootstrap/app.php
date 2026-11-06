@@ -11,6 +11,7 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
+    ->withBroadcasting(__DIR__.'/../routes/channels.php', ['middleware' => ['web', 'auth']])
     ->withMiddleware(function (Middleware $middleware) {
         // Percayai semua reverse proxy agar Laravel mendeteksi HTTPS dengan benar
         // (memperbaiki error CSP form-action saat login & kirim form di belakang proxy).

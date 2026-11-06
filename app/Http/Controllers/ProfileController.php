@@ -3,9 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Services\AuditTrailService;
+use App\Support\ActivityLogPresenter;
+use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 
@@ -16,23 +20,46 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): View
     {
+        $user = $request->user();
+        $activityLogs = $user->logs()
+            ->latest('created_at')
+            ->paginate(6, ['*'], 'activity_page');
+        $lastLoginAt = $user->logs()
+            ->whereIn('action', ['LOGIN', 'SSO_LOGIN'])
+            ->latest('created_at')
+            ->value('created_at');
+        $lastLoginAt = $lastLoginAt ?: $user->last_login_at;
+
         return view('profile.edit', [
-            'user' => $request->user(),
+            'user' => $user,
+            'activityLogs' => $activityLogs,
+            'lastLoginAt' => $lastLoginAt ? Carbon::parse($lastLoginAt) : null,
+            'activityLogPresenter' => app(ActivityLogPresenter::class),
         ]);
     }
 
     /**
      * Update the user's profile information.
      */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
+    public function update(ProfileUpdateRequest $request, AuditTrailService $auditTrail): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        $user = $request->user();
+        $user->fill($request->validated());
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
         }
 
-        $request->user()->save();
+        $changedFields = array_keys($user->getDirty());
+        DB::transaction(function () use ($user, $changedFields, $request, $auditTrail): void {
+            $user->save();
+
+            if ($changedFields !== []) {
+                $auditTrail->record($request, $user->id, 'USER', $user->id, 'PROFILE_UPDATED', [
+                    'changed_fields' => $changedFields,
+                ]);
+            }
+        });
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }

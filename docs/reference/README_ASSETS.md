@@ -1,8 +1,13 @@
-# 📦 Asset Management System - Complete Setup
+# Asset Management System - Historical Setup Report
 
 ## 🎯 Project Summary
 
-Your asset management system has been successfully populated with **771 assets** extracted from the Excel template (`asset-upload-template.xlsx`). The system includes comprehensive categorization, condition tracking, location management, and employee assignment capabilities.
+This report describes the previous 771-asset snapshot from 2026-06-05 and is
+kept for historical reference. The current import contains 312 rows from
+`database/data/aset-berwujud-2026-11-05-142737.xlsx` and replaces existing
+assets. Do not use the historical counts or truncation instructions below for
+the current import. Follow [ASSET_SEEDER_USAGE_GUIDE.md](ASSET_SEEDER_USAGE_GUIDE.md)
+for the current, transactional seeder and ticket-preservation behavior.
 
 ---
 

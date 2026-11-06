@@ -40,7 +40,7 @@ class AssetsImport implements ToCollection, WithHeadingRow
             $assetTag = trim($this->getValue($row, 'serial_number', ''));
 
             $status = $this->normalizeStatus($this->getValue($row, 'status', Asset::STATUS_ALLOCATED));
-            $condition = $this->getValue($row, 'condition', 'GOOD');
+            $condition = $this->normalizeImportedCondition($this->getValue($row, 'condition', 'GOOD'));
 
             $holder = trim($this->getValue($row, 'holder', ''));
             if ($holder === '' || Str::upper($holder) === 'BELUM DIALOKASIKAN') {
@@ -57,18 +57,18 @@ class AssetsImport implements ToCollection, WithHeadingRow
                 'location' => trim($this->getValue($row, 'location', '')),
                 'holder' => $holder,
                 'status' => $status,
-                'condition' => Asset::normalizeCondition($condition),
+                'condition' => $condition,
                 'purchased_at' => $this->normalizeDate($this->getValue($row, 'purchased_at', null)),
                 'nilai_perolehan' => $this->normalizeAmount($this->getValue($row, 'nilai_perolehan', null)),
                 'kode_satker' => trim($this->getValue($row, 'kode_satker', '')) ?: null,
-                'nip_pegawai' => trim($this->getValue($row, 'nip_pegawai', '')) ?: null,
+                'nip_pegawai' => $this->normalizeNip($this->getValue($row, 'nip_pegawai', '')),
                 'photo_serial' => trim($this->getValue($row, 'photo_serial', '')) ?: null,
                 'photo_asset' => trim($this->getValue($row, 'photo_asset', '')) ?: null,
                 'photo_bmn' => trim($this->getValue($row, 'photo_bmn', '')) ?: null,
             ];
 
             $unknownValues = $this->extractUnknownColumns($row);
-            if (!empty($unknownValues)) {
+            if (! empty($unknownValues)) {
                 $data['specs'] = $this->mergeSpecs($data['specs'], $unknownValues);
             }
 
@@ -97,11 +97,11 @@ class AssetsImport implements ToCollection, WithHeadingRow
                 ], $data);
 
                 // Ensure asset_code uniqueness by appending suffix only if collision still occurs
-                $baseCode = $newAssetData['asset_code'] ?: ('ASSET-' . uniqid());
+                $baseCode = $newAssetData['asset_code'] ?: ('ASSET-'.uniqid());
                 $attempt = 0;
                 while (Asset::where('asset_code', $newAssetData['asset_code'])->exists()) {
                     $attempt++;
-                    $newAssetData['asset_code'] = $baseCode . '-' . $attempt;
+                    $newAssetData['asset_code'] = $baseCode.'-'.$attempt;
                     if ($attempt > 100) {
                         break;
                     }
@@ -111,7 +111,6 @@ class AssetsImport implements ToCollection, WithHeadingRow
             }
         }
     }
-    
 
     protected function normalizeRow(array $row): array
     {
@@ -150,15 +149,57 @@ class AssetsImport implements ToCollection, WithHeadingRow
 
     protected function normalizeStatus(?string $status): string
     {
-        $value = strtoupper(trim((string) $status));
+        $original = trim((string) $status);
+        $value = strtoupper($original);
 
         return match ($value) {
-            'ACTIVE', 'AKTIF', 'TERALOKASI', 'TERALOKASIKAN', 'DIALOKASI', 'DIALOKASIKAN' => Asset::STATUS_ALLOCATED,
-            'PENDING', 'MENUNGGU', 'SIAP DIALOKASIKAN', 'SIAP_DIALOKASIKAN', 'SIAP DIALOKASI' => Asset::STATUS_READY_TO_ALLOCATE,
-            'INACTIVE', 'NONAKTIF', 'TIDAKAKTIF', 'TIDAK DAPAT DIALOKASIKAN', 'TIDAK_DAPAT_DIALOKASIKAN', 'TIDAK DAPAT DIAKOLASIKAN', 'TIDAK DAPAT DIALOKASIKAN' => Asset::STATUS_NOT_ALLOCATABLE,
-            'MAINTENANCE', 'BROKEN', 'RETIRED', 'DECOMMISSIONED' => Asset::STATUS_NOT_ALLOCATABLE,
-            default => Asset::STATUS_ALLOCATED,
+            'ACTIVE', 'AKTIF', 'TERALOKASI', 'TERALOKASIKAN', 'DIALOKASI', 'DIALOKASIKAN' => 'Teralokasi',
+            'PENDING', 'MENUNGGU', 'SIAP DIALOKASIKAN', 'SIAP_DIALOKASIKAN', 'SIAP DIALOKASI' => 'Siap Dialokasikan',
+            'PENGAJUAN ALOKASI' => 'Pengajuan Alokasi',
+            'PENETAPAN PENGEMBALIAN' => 'Penetapan Pengembalian',
+            'PENGAJUAN PENGEMBALIAN' => 'Pengajuan Pengembalian',
+            'INACTIVE', 'NONAKTIF', 'TIDAKAKTIF', 'TIDAK DAPAT DIALOKASIKAN', 'TIDAK_DAPAT_DIALOKASIKAN', 'TIDAK DAPAT DIAKOLASIKAN' => 'Tidak Dapat Dialokasikan',
+            'MAINTENANCE', 'BROKEN', 'RETIRED', 'DECOMMISSIONED' => 'Tidak Dapat Dialokasikan',
+            default => $original !== '' ? $original : Asset::STATUS_ALLOCATED,
         };
+    }
+
+    protected function normalizeImportedCondition(?string $condition): string
+    {
+        $original = trim((string) $condition);
+
+        if ($original === '') {
+            return Asset::CONDITION_GOOD;
+        }
+
+        $canonical = match (strtoupper($original)) {
+            'BAIK' => 'Baik',
+            'RUSAK RINGAN' => 'Rusak Ringan',
+            'RUSAK BERAT' => 'Rusak Berat',
+            default => null,
+        };
+
+        if ($canonical !== null) {
+            return $canonical;
+        }
+
+        return Asset::conditionLabel($original) === $original
+            ? $original
+            : Asset::normalizeCondition($original);
+    }
+
+    protected function normalizeNip(?string $value): ?string
+    {
+        $value = trim((string) $value);
+
+        return preg_match('/^\d+$/', $value) ? $value : null;
+    }
+
+    protected function normalizeNullableValue(?string $value): ?string
+    {
+        $value = trim((string) $value);
+
+        return $value === '' || $value === '-' ? null : $value;
     }
 
     protected function extractUnknownColumns(array $row): array

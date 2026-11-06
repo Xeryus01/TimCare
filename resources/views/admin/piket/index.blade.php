@@ -1,9 +1,24 @@
 <x-app-layout>
-<div class="min-h-screen">
-    <div class="p-5 sm:p-7.5 lg:p-9">
-        <div class="mb-6">
-            <h1 class="text-2xl font-bold text-gray-900 dark:text-white sm:text-3xl">Manajemen Jadwal Piket Mingguan</h1>
-            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Kelola jadwal piket tim IT untuk setiap minggu</p>
+<div class="min-h-full">
+    <div class="mx-auto w-full max-w-[1680px] p-4 sm:p-6 lg:p-8">
+        <div class="mb-7 flex flex-col gap-4 rounded-3xl border border-gray-200 bg-gradient-to-br from-white via-white to-brand-50/70 p-5 shadow-sm dark:border-gray-700 dark:from-dark-800 dark:via-dark-800 dark:to-dark-900 sm:flex-row sm:items-center sm:justify-between sm:p-7">
+            <div class="flex items-start gap-4">
+                <div class="hidden h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-brand-100 text-brand-700 dark:bg-brand-500/15 dark:text-brand-300 sm:flex">
+                    <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <rect x="3" y="5" width="18" height="16" rx="2"></rect>
+                        <path d="M16 3v4M8 3v4M3 10h18M8 14h3M8 17h3"></path>
+                    </svg>
+                </div>
+                <div>
+                    <p class="mb-1 text-xs font-semibold uppercase tracking-[0.18em] text-brand-700 dark:text-brand-300">Operasional TI</p>
+                    <h1 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-3xl">Jadwal Piket</h1>
+                    <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Atur petugas dan pantau jadwal piket mingguan tim TI.</p>
+                </div>
+            </div>
+            <a href="{{ route('piket.create') }}" class="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-700 focus:outline-none focus:ring-4 focus:ring-brand-500/20">
+                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
+                Tambah Jadwal
+            </a>
         </div>
 
         @if (session('success'))
@@ -60,19 +75,23 @@
             });
         @endphp
 
-        <div class="grid gap-3 md:grid-cols-2 mb-5">
-            <div class="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-dark-800">
-                <div class="flex items-center justify-between gap-3">
+        <div class="mb-6 grid gap-4 md:grid-cols-2">
+            <div class="relative overflow-hidden rounded-2xl border border-gray-200 bg-white p-5 shadow-sm transition hover:shadow-md dark:border-gray-700 dark:bg-dark-800">
+                <div class="flex items-start justify-between gap-3">
                     <div>
-                        <p class="text-xs uppercase tracking-[0.25em] text-gray-500 dark:text-gray-400">Total Jadwal</p>
-                        <p class="mt-2 text-2xl font-semibold text-gray-900 dark:text-white">{{ $schedules->count() }}</p>
+                        <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Total jadwal tersimpan</p>
+                        <p class="mt-2 text-3xl font-bold tracking-tight text-gray-900 dark:text-white">{{ $schedules->count() }}</p>
                     </div>
-                    <span class="inline-flex items-center rounded-full bg-brand-50 px-2.5 py-1 text-xs font-semibold text-brand-700">{{ $schedules->count() }}</span>
+                    <span class="flex h-11 w-11 items-center justify-center rounded-xl bg-brand-50 text-brand-600 dark:bg-brand-500/15 dark:text-brand-300">
+                        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M16 3v4M8 3v4M3 10h18"></path></svg>
+                    </span>
                 </div>
-                <p class="mt-3 text-xs text-gray-500 dark:text-gray-400">Jumlah jadwal piket tersimpan.</p>
+                <p class="mt-3 text-xs text-gray-500 dark:text-gray-400">Jumlah seluruh periode piket yang sudah dibuat.</p>
             </div>
-            <div class="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-dark-800">
-                <p class="text-xs uppercase tracking-[0.25em] text-gray-500 dark:text-gray-400">Minggu Aktif</p>
+            <div class="relative overflow-hidden rounded-2xl border border-gray-200 bg-white p-5 shadow-sm transition hover:shadow-md dark:border-gray-700 dark:bg-dark-800">
+                <div class="flex items-start justify-between gap-3">
+                    <div>
+                        <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Jadwal saat ini</p>
                 @if ($currentSchedule)
                     @php
                         $currentStart = \Carbon\Carbon::parse($currentSchedule->week_start_date);
@@ -80,46 +99,42 @@
                             ? \Carbon\Carbon::parse($currentSchedule->week_end_date)
                             : $currentStart->copy()->addDays(6);
                     @endphp
-                    <p class="mt-2 text-lg font-semibold text-gray-900 dark:text-white">{{ $currentStart->format('d M') }} — {{ $currentEnd->format('d M Y') }}</p>
-                    <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">{{ $currentSchedule->technician_1 }}, {{ $currentSchedule->technician_2 }}, {{ $currentSchedule->technician_3 }}</p>
+                    <p class="mt-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">{{ $currentStart->format('d M') }} — {{ $currentEnd->format('d M Y') }}</p>
+                    <p class="mt-1 max-w-2xl text-sm text-gray-500 dark:text-gray-400">{{ $currentSchedule->technician_1 }} · {{ $currentSchedule->technician_2 }} · {{ $currentSchedule->technician_3 }}</p>
                 @else
-                    <p class="mt-2 text-lg font-semibold text-gray-900 dark:text-white">Tidak aktif</p>
-                    <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Tambahkan jadwal minggu ini.</p>
+                    <p class="mt-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">Belum ada jadwal aktif</p>
+                    <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Buat jadwal baru untuk menetapkan petugas piket.</p>
                 @endif
-            </div>
-        </div>
-
-        <div class="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-dark-800">
-            <div class="mb-6 flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
-                <div>
-                    <p class="text-sm uppercase tracking-[0.2em] text-gray-500 dark:text-gray-400">Kalender Piket</p>
-                    <h2 class="mt-1 text-2xl font-semibold text-gray-900 dark:text-white">Jadwal Mingguan</h2>
-                </div>
-                <div class="flex flex-wrap items-center gap-3">
-                    <span class="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-600 dark:bg-gray-800 dark:text-gray-300">
-                        <span class="h-2.5 w-2.5 rounded-full bg-brand-500"></span>
-                        {{ $schedules->count() }} jadwal tersedia
+                    </div>
+                    <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl {{ $currentSchedule ? 'bg-emerald-50 text-emerald-600 dark:bg-emerald-500/15 dark:text-emerald-300' : 'bg-gray-100 text-gray-500 dark:bg-gray-700 dark:text-gray-300' }}">
+                        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="m8 12 2.5 2.5L16 9"></path></svg>
                     </span>
-                    <a href="{{ route('piket.create') }}" class="inline-flex items-center rounded-full bg-brand-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-700">+ Tambah Jadwal</a>
                 </div>
             </div>
-
-            <div class="min-h-[580px] w-full overflow-hidden rounded-3xl border border-gray-100 bg-white shadow-sm dark:border-gray-800 dark:bg-dark-900" id="piketCalendar"></div>
         </div>
 
-        <div class="mt-6 rounded-3xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-dark-800">
-            <div class="mb-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div class="overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-dark-800">
+            <div class="flex flex-col gap-3 border-b border-gray-100 px-5 py-5 dark:border-gray-700 sm:flex-row sm:items-center sm:justify-between sm:px-6">
                 <div>
-                    <p class="text-sm uppercase tracking-[0.2em] text-gray-500 dark:text-gray-400">Daftar Jadwal Piket</p>
-                    <h2 class="mt-1 text-2xl font-semibold text-gray-900 dark:text-white">Data Mingguan</h2>
+                    <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Kalender jadwal</h2>
+                    <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Pilih jadwal yang akan datang atau sedang berjalan untuk mengeditnya.</p>
                 </div>
-                <span class="inline-flex items-center rounded-full bg-brand-50 px-3 py-1 text-sm font-semibold text-brand-700">{{ $schedules->count() }} jadwal</span>
             </div>
 
-            <div class="mb-5 flex flex-wrap items-center justify-end gap-2">
+            <div class="p-3 sm:p-5">
+                <div class="min-h-[440px] w-full overflow-hidden rounded-2xl border border-gray-100 bg-white dark:border-gray-800 dark:bg-dark-900 sm:min-h-[500px]" id="piketCalendar"></div>
+            </div>
+        </div>
+
+        <div class="mt-6 overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-dark-800">
+            <div class="flex flex-col gap-4 border-b border-gray-100 px-5 py-5 dark:border-gray-700 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+                <div>
+                    <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Daftar jadwal</h2>
+                    <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Tinjau periode, petugas, dan status jadwal.</p>
+                </div>
                 <form method="GET" class="flex items-center gap-2">
-                    <label for="rangeSelect" class="text-sm text-gray-500 dark:text-gray-400">Tampilkan</label>
-                    <select id="rangeSelect" name="range" onchange="this.form.submit()" class="rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-sm text-gray-700 focus:border-brand-500 focus:ring-brand-500 dark:border-gray-700 dark:bg-dark-900 dark:text-gray-200">
+                    <label for="rangeSelect" class="text-sm font-medium text-gray-600 dark:text-gray-300">Periode</label>
+                    <select id="rangeSelect" name="range" onchange="this.form.submit()" class="rounded-xl border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 shadow-sm focus:border-brand-500 focus:ring-brand-500 dark:border-gray-700 dark:bg-dark-900 dark:text-gray-200">
                         <option value="1" @selected($range === '1')>Per bulan</option>
                         <option value="2" @selected($range === '2')>Per 2 bulan</option>
                         <option value="3" @selected($range === '3')>Per 3 bulan</option>
@@ -207,14 +222,36 @@
 
         <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
         <style>
-            #piketCalendar { min-height: 580px; }
+            #piketCalendar { min-height: 440px; }
             #piketCalendar .fc { min-height: 100%; }
-            #piketCalendar .fc .fc-toolbar-title { font-size: 1rem; font-weight: 600; }
+            #piketCalendar .fc .fc-toolbar { gap: 0.75rem; }
+            #piketCalendar .fc .fc-toolbar-title { color: #111827; font-size: 1.05rem; font-weight: 700; }
+            #piketCalendar .fc .fc-button-primary { border-color: #0284c7; border-radius: 0.65rem; background: #0284c7; box-shadow: none; font-size: 0.8rem; font-weight: 600; }
+            #piketCalendar .fc .fc-button-primary:hover { border-color: #0369a1; background: #0369a1; }
+            #piketCalendar .fc .fc-button-primary:focus { box-shadow: 0 0 0 3px rgb(14 165 233 / 20%); }
+            #piketCalendar .fc .fc-button-primary:disabled { border-color: #7dd3fc; background: #7dd3fc; }
+            #piketCalendar .fc .fc-daygrid-day-frame { min-height: 5.5rem; }
+            #piketCalendar .fc .fc-col-header-cell { background: #f9fafb; color: #4b5563; font-size: 0.75rem; font-weight: 600; }
             #piketCalendar .fc .fc-daygrid-day-top { padding: 0.55rem 0.65rem; }
             #piketCalendar .fc .fc-daygrid-event { padding: 0.4rem 0.45rem; font-size: 0.75rem; border-radius: 0.55rem; }
             #piketCalendar .fc .fc-daygrid-more-link { font-size: 0.75rem; }
             #piketCalendar .fc .fc-event-title { white-space: normal; line-height: 1.15; }
             #piketCalendar .fc .fc-event-crew { color: rgba(255,255,255,0.85); font-size: 0.65rem; line-height: 1.15; }
+            .dark #piketCalendar .fc { --fc-border-color: #334155; --fc-page-bg-color: #0f172a; --fc-neutral-bg-color: #1e293b; --fc-today-bg-color: rgb(14 165 233 / 10%); color: #e5e7eb; }
+            .dark #piketCalendar .fc .fc-toolbar-title { color: #f9fafb; }
+            .dark #piketCalendar .fc .fc-col-header-cell { background: #1e293b; color: #d1d5db; }
+            .dark #piketCalendar .fc .fc-daygrid-day-number { color: #d1d5db; }
+            .dark #piketCalendar .fc .fc-button-primary { color: #fff; }
+            @media (max-width: 640px) {
+                #piketCalendar { min-height: 400px; }
+                #piketCalendar .fc .fc-toolbar { flex-direction: column; }
+                #piketCalendar .fc .fc-toolbar-chunk { display: flex; justify-content: center; }
+                #piketCalendar .fc .fc-toolbar-title { font-size: 0.95rem; }
+                #piketCalendar .fc .fc-button-primary { padding: 0.35rem 0.45rem; font-size: 0.7rem; }
+                #piketCalendar .fc .fc-daygrid-day-frame { min-height: 4rem; }
+                #piketCalendar .fc .fc-daygrid-day-top { padding: 0.3rem; }
+                #piketCalendar .fc .fc-daygrid-event { padding: 0.2rem; font-size: 0.65rem; }
+            }
         </style>
         <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
         <script>

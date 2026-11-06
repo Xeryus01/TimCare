@@ -47,8 +47,9 @@
         @endphp
 
         <div class="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-gray-700 dark:bg-dark-800">
-            <div class="overflow-x-auto">
-                <table class="w-full">
+            <p class="border-b border-gray-100 px-4 py-2 text-xs text-gray-500 dark:border-gray-700 dark:text-gray-400 sm:hidden">Geser tabel ke samping untuk melihat detail dan aksi tiket.</p>
+            <div class="overflow-x-auto focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500" role="region" aria-label="Daftar tiket pemeliharaan, gulir horizontal untuk melihat semua kolom" tabindex="0">
+                <table class="w-full min-w-[1120px]">
                     <thead class="border-b border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-white/5">
                         <tr>
                             <th class="px-5 py-3.5 text-left text-xs font-semibold uppercase text-gray-500 dark:text-gray-400 sm:px-6">
@@ -100,7 +101,7 @@
                                     <span class="text-sm font-semibold text-gray-900 dark:text-white">{{ $ticket->code }}</span>
                                 </td>
                                 <td class="px-5 py-4 sm:px-6">
-                                    <p class="text-sm font-semibold text-gray-900 dark:text-white">{{ $ticket->title }}</p>
+                                    <p class="max-w-xs text-sm font-semibold text-gray-900 dark:text-white">{{ $ticket->title }}</p>
                                     <p class="text-xs text-gray-500 dark:text-gray-400">{{ $ticket->category_label }}</p>
                                 </td>
                                 <td class="px-5 py-4 sm:px-6 text-sm text-gray-700 dark:text-gray-300">{{ $ticket->created_at->format('d/m/Y H:i') }}</td>

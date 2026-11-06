@@ -155,6 +155,17 @@
 .tc-report-table td:nth-child(2) { min-width:190px; }
 .tc-report-row-action { min-height:36px; padding:6px 10px; font-size:13px; }
 .tc-report-table .tc-empty { min-width:0; }
+@media(max-width:700px) {
+    .tc-report-table { min-width:0; display:block; }
+    .tc-report-table thead { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+    .tc-report-table tbody { display:grid; gap:12px; padding:12px; }
+    .tc-report-table tbody tr { display:block; overflow:hidden; border:1px solid var(--tc-line); border-radius:12px; background:var(--tc-bg); }
+    .tc-report-table tbody td { display:grid; grid-template-columns:minmax(104px,.75fr) minmax(0,1.25fr); gap:12px; align-items:start; padding:12px; border-bottom:1px solid var(--tc-line); }
+    .tc-report-table tbody td::before { content:attr(data-label); color:var(--tc-muted); font-size:11px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; }
+    .tc-report-table tbody td[colspan] { display:block; }
+    .tc-report-table tbody td[colspan]::before { content:none; }
+    .tc-report-table .tc-actions { gap:6px; }
+}
 @media(max-width:1000px) { .tc-report-history .tc-report-filters { grid-template-columns:repeat(2,minmax(0,1fr)); } .tc-report-search { grid-column:span 2; } .tc-filter-actions { grid-column:span 2; } }
 @media(max-width:700px) { .tc-start-empty { padding:14px; } .tc-report-history .tc-report-filters { grid-template-columns:repeat(2,minmax(0,1fr)); padding:14px; } .tc-report-search { grid-column:span 2; } .tc-filter-actions { grid-column:span 2; flex-wrap:wrap; } .tc-report-export { align-items:flex-start; flex-direction:column; } .tc-results-heading { align-items:flex-start; flex-direction:column; gap:2px; } }
 @media(max-width:480px) { .tc-report-history .tc-report-filters { grid-template-columns:1fr; } .tc-report-search,.tc-filter-actions { grid-column:auto; } .tc-filter-actions .tc-btn { flex:1; } .tc-start-empty { flex-direction:column; } }

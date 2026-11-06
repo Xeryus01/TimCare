@@ -1,267 +1,144 @@
-# Panduan Deployment cPanel - TimCare ITSM Dashboard
+# Deploy TimCare to cPanel (`/timcare-dev`)
 
-## Struktur Folder yang Benar
+This deployment keeps Laravel's application files outside the web root and exposes
+only the public entry point and built static assets. Do not use the old workflow
+that moved files out of the project, copied `.env` into `public_html`, generated a
+new key on every deploy, or automatically seeded the database.
 
-### Struktur cPanel yang Aman:
-```
-/home/username/
-├── public_html/          # Hanya folder public Laravel
-│   ├── index.php
-│   ├── .htaccess
-│   ├── assets/
-│   └── storage/          # Symlink ke ../timcare/storage/app/public
-├── timcare/              # Folder aplikasi utama (di luar public_html)
-│   ├── app/
-│   ├── config/
-│   ├── database/
-│   ├── resources/
-│   ├── routes/
-│   ├── storage/
-│   ├── vendor/
-│   ├── artisan
-│   ├── composer.json
-│   ├── .env
+## Required layout
+
+```text
+/home/CPANEL_USER/
+├── timcare-dev/                 # Laravel project, including .env and vendor
+│   ├── public/build/             # Vite production build
 │   └── ...
-└── backups/              # Folder backup (opsional)
+└── public_html/timcare-dev/      # Web-accessible files only
+    ├── index.php                 # Laravel front controller
+    ├── .htaccess
+    ├── build/
+    └── storage -> /home/CPANEL_USER/timcare-dev/storage/app/public
 ```
 
-### Mengapa Struktur Ini Penting:
-- **Keamanan**: File sensitif (config, .env) tidak accessible via web
-- **Performance**: Cache files tidak di public_html
-- **Best Practice**: Standar untuk shared hosting
+The configured URL and Apache rewrite base are
+`https://digistat.web.bps.go.id/timcare-dev`. The application folder name and
+document-root subdirectory are intentionally fixed to match this setup.
 
-## Persiapan di cPanel
+## 1. Prepare the database and application files
 
-### 1. Buat Database MySQL
-1. Login ke cPanel
-2. Buka **MySQL Databases**
-3. Buat database baru (contoh: `timcare_db`)
-4. Buat user database (contoh: `timcare_user`)
-5. Berikan semua privileges ke user tersebut
+1. In cPanel, create a MySQL database and user, and grant the user the required
+   privileges.
+2. Upload the Laravel project to `~/timcare-dev`. Do not upload `.env`,
+   `.env.cpanel`, database dumps, `.git`, or `node_modules`. Include
+   `public/build/` after completing the frontend build below.
+3. Keep `~/public_html/timcare-dev` for public files only. Do not place the full
+   Laravel project or its `.env` in `public_html`.
+4. Configure `~/timcare-dev/.env` on the server. Keep the existing `APP_KEY`
+   during subsequent deployments; generate it only once if this is a new install.
 
-### 2. Setup Struktur Folder
-1. **Buat folder aplikasi** di luar public_html:
-   ```bash
-   mkdir ~/timcare
-   ```
-
-2. **Upload files aplikasi** ke folder `timcare`:
-   - Upload semua file kecuali folder `public/`
-   - Folder `public/` akan dipindah ke `public_html/`
-
-3. **Pindah folder public** ke public_html:
-   ```bash
-   # Dari folder timcare
-   mv public/* ~/public_html/
-   mv public/.* ~/public_html/ 2>/dev/null || true
-   rmdir public
-   ```
-
-4. **Update path di index.php**:
-   ```php
-   // public_html/index.php - update baris 24
-   require __DIR__.'/../timcare/vendor/autoload.php';
-   $app = require_once __DIR__.'/../timcare/bootstrap/app.php';
-   ```
-
-### 3. Konfigurasi Environment
-1. Copy `.env.example` menjadi `.env` di folder `timcare`
-2. Edit `.env` dengan konfigurasi berikut:
+Minimum production settings:
 
 ```env
-APP_NAME="TimCare ITSM Dashboard"
 APP_ENV=production
-APP_KEY=  # Generate dengan: php artisan key:generate
 APP_DEBUG=false
-APP_TIMEZONE=Asia/Jakarta
-APP_URL=https://yourdomain.com
+APP_URL=https://digistat.web.bps.go.id/timcare-dev
+ASSET_URL=https://digistat.web.bps.go.id/timcare-dev
+VITE_BASE=/timcare-dev/
 
-# Database
 DB_CONNECTION=mysql
 DB_HOST=localhost
 DB_PORT=3306
-DB_DATABASE=timcare_db
-DB_USERNAME=timcare_user
-DB_PASSWORD=your_password
+DB_DATABASE=CPANEL_DATABASE
+DB_USERNAME=CPANEL_DATABASE_USER
+DB_PASSWORD=SET_ON_SERVER
 
-# Mail (Gmail SMTP)
-MAIL_MAILER=smtp
-MAIL_HOST=smtp.gmail.com
-MAIL_PORT=587
-MAIL_USERNAME=timcare@gmail.com
-MAIL_PASSWORD=your_gmail_app_password
-MAIL_ENCRYPTION=tls
-MAIL_FROM_ADDRESS="timcare@gmail.com"
-MAIL_FROM_NAME="TimCare ITSM"
-
-# Cache & Session untuk cPanel
-CACHE_STORE=database
 SESSION_DRIVER=database
+SESSION_PATH=/timcare-dev
+SESSION_DOMAIN=null
+SESSION_SECURE_COOKIE=true
+SESSION_SAME_SITE=lax
+CACHE_STORE=database
 QUEUE_CONNECTION=sync
+BROADCAST_CONNECTION=log
+WHATSAPP_ENABLED=false
 ```
 
-## Setup Aplikasi
+Use the real cPanel mail settings if the application must send email. Keep
+broadcasting on `log` unless Pusher credentials are configured. Never commit or
+send server credentials through source control.
 
-### Via SSH/Terminal cPanel
+If `APP_KEY` has not yet been set on a new installation, generate it once from
+the application directory with `php artisan key:generate`. Never run this during
+routine deployments, because it invalidates existing sessions and encrypted data.
+
+## 2. Build frontend assets
+
+Run this in the project directory on a machine with Node.js dependencies
+installed. In PowerShell:
+
+```powershell
+$env:VITE_BASE = '/timcare-dev/'
+npm ci
+npm run build
+```
+
+Upload the resulting `public/build/` directory to `~/timcare-dev/public/build/`.
+The Vite base must include the `/timcare-dev/` prefix so Vue API requests and
+links remain inside the subdirectory.
+
+## 3. Deploy from cPanel Terminal / SSH
 
 ```bash
-# Masuk ke folder aplikasi
-cd ~/timcare
+cd ~/timcare-dev
+bash deploy-cpanel-subdirectory.sh
+```
 
-# ⚠️ CRITICAL: Update .env ke MySQL (copy dari .env.cpanel)
-cp .env.cpanel .env
-# Edit dan pastikan credentials MySQL benar
-nano .env
+The script checks production settings and the Vite manifest, publishes public
+files without copying the app or `.env`, preserves an existing correct storage
+symlink, and rebuilds Laravel caches. It does **not** rotate `APP_KEY` or seed
+the database.
 
-# Install dependencies
-composer install --no-dev --optimize-autoloader
+For a first install or an intentional schema update, back up the database first,
+then run migrations explicitly:
 
-# Generate application key
-php artisan key:generate
-
-# ⭐ CLEAR CONFIG CACHE (SANGAT PENTING!)
-php artisan config:clear
-php artisan cache:clear
-
-# Jalankan migrations
+```bash
+cd ~/timcare-dev
 php artisan migrate --force
-
-# Buat symbolic link storage (dari public_html)
-cd ~/public_html
-ln -s ../timcare/storage/app/public storage
-
-# Kembali ke folder aplikasi
-cd ~/timcare
-
-# Set permissions
-chmod -R 755 storage
-chmod -R 755 bootstrap/cache
-
-# Cache konfigurasi untuk production
-php artisan config:cache
-php artisan route:cache
-php artisan view:cache
-
-# Verifikasi database connection
-php artisan tinker
-# Ketik: DB::connection()->getPdo()
-# Kemudian: exit
 ```
 
-**⚠️ PENTING:**
-1. **Jangan lupa `php artisan config:clear`** - Cache lama bisa menyebabkan error
-2. **Update `.env` dengan MySQL credentials** - Jangan gunakan SQLite di production
-3. **Verify database connection** - Pastikan MySQL terhubung sebelum migrations
-
-### Atau Via File Manager cPanel
-
-1. **Upload files**:
-   - Upload semua kecuali `public/` ke `timcare/`
-   - Upload isi `public/` ke `public_html/`
-
-2. **Edit index.php** di public_html:
-   ```php
-   // Baris 24: update path
-   require __DIR__.'/../timcare/vendor/autoload.php';
-   $app = require_once __DIR__.'/../timcare/bootstrap/app.php';
-   ```
-
-3. **Buat storage symlink**:
-   ```bash
-   cd ~/public_html
-   ln -s ../timcare/storage/app/public storage
-   ```
-
-## Konfigurasi Tambahan
-
-### Cron Job untuk Queue (Opsional)
-Jika menggunakan queue untuk notifications:
+Alternatively, after making and verifying the backup, invoke the deploy script
+with `RUN_MIGRATIONS=1`; it runs only `migrate --force`, never seeders:
 
 ```bash
-# Tambahkan cron job di cPanel
-* * * * * cd /home/username/public_html/timcare && php artisan queue:work --sleep=3 --tries=3
+cd ~/timcare-dev
+RUN_MIGRATIONS=1 bash deploy-cpanel-subdirectory.sh
 ```
 
-### SSL Certificate
-1. Install SSL certificate di cPanel
-2. Pastikan `APP_URL` menggunakan `https://`
+The cPanel account must provide the PHP version and extensions required by
+`composer.json`, a writable `storage/` and `bootstrap/cache/`, and Apache
+`mod_rewrite`. Ensure the document root is exactly
+`~/public_html/timcare-dev`.
 
-### Backup Database
-Setup backup otomatis di cPanel untuk database MySQL.
+## 4. Verify after deployment
 
-## Troubleshooting
+- Open `https://digistat.web.bps.go.id/timcare-dev` and sign in.
+- Check browser developer tools for failed `/timcare-dev/build/...` and
+  `/timcare-dev/api/...` requests.
+- Test an asset upload/download and verify `public_html/timcare-dev/storage` is
+  a symlink to `~/timcare-dev/storage/app/public`.
+- Check `storage/logs/laravel.log` and the cPanel PHP/Apache error logs.
+- Confirm HTTPS is active and `APP_DEBUG=false`.
 
-### ⚠️ ERROR: "Database file at path [...database.sqlite] does not exist"
-**Penyebab:** Aplikasi masih menggunakan SQLite padahal seharusnya MySQL.
+## Rollback and maintenance
 
-**Solusi:**
+Take a database backup before migrations and retain the previous release files.
+If deployment fails, restore the previous application/build files and the
+database backup as appropriate. Do not run `db:seed` on a production database
+unless a specific, reviewed seeder is intended.
+
+For cache changes:
+
 ```bash
-# 1. Verifikasi .env menggunakan MySQL
-cat .env | grep DB_
-
-# 2. Jika masih SQLite, update:
-nano .env
-# Ubah: DB_CONNECTION=mysql (bukan sqlite)
-
-# 3. CLEAR CACHE (KRITIS!)
-php artisan config:clear
-php artisan cache:clear
-rm bootstrap/cache/config.php 2>/dev/null
-
-# 4. Verify koneksi
-php artisan tinker
->>> DB::connection()->getPdo()
->>> exit
+cd ~/timcare-dev
+php artisan optimize:clear
+php artisan optimize
 ```
-
-### Error 500
-- Cek file `.env` ada dan benar
-- Jalankan `php artisan config:clear`
-- Cek permissions folder
-- Lihat log: `tail -50 storage/logs/laravel.log`
-
-### Database Connection Error
-- Pastikan DB credentials benar (cek cPanel MySQL Databases)
-- Cek apakah database dan user sudah dibuat
-- Pastikan user punya privileges
-- Test MySQL: `php -r "$c=new mysqli('localhost','user','pass','db');echo $c->connect_error?:'OK'"`
-
-### Storage Link Error
-- Jalankan `php artisan storage:link` via SSH
-- Atau buat symbolic link manual di file manager: `ln -s ../timcare/storage/app/public storage`
-
-## Performance Optimization
-
-### Untuk cPanel Shared Hosting
-```bash
-# Cache everything
-php artisan config:cache
-php artisan route:cache
-php artisan view:cache
-
-# Clear cache jika ada masalah
-php artisan cache:clear
-php artisan config:clear
-php artisan route:clear
-php artisan view:clear
-```
-
-### Monitoring
-- Monitor log files di `storage/logs/`
-- Cek error log cPanel
-- Monitor penggunaan resources
-
-## Security Checklist
-- [ ] APP_DEBUG=false
-- [ ] APP_KEY sudah di-generate
-- [ ] Database password kuat
-- [ ] File permissions benar (755 untuk folders, 644 untuk files)
-- [ ] SSL certificate terinstall
-- [ ] Backup database aktif
-- [ ] .env tidak accessible via web (pastikan di luar public_html)
-
-## Support
-Jika ada masalah, cek:
-1. Laravel logs: `storage/logs/laravel.log`
-2. cPanel error logs
-3. PHP error logs

@@ -2,23 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\Imports\AssetsImport;
-use App\Imports\AssetsTemplateExport;
-use App\Imports\AssetsExport;
-use App\Models\Asset;
-use App\Services\NotificationService;
-use Illuminate\Http\Request;
-use Maatwebsite\Excel\Facades\Excel;
-
-use App\Http\Requests\StoreAssetRequest;
-use App\Http\Requests\UpdateAssetRequest;
 use App\Http\Requests\ChangeAssetHolderRequest;
 use App\Http\Requests\StoreAssetMaintenanceRequest;
+use App\Http\Requests\StoreAssetRequest;
+use App\Http\Requests\UpdateAssetRequest;
+use App\Imports\AssetsExport;
+use App\Imports\AssetsImport;
+use App\Imports\AssetsTemplateExport;
+use App\Models\Asset;
 use App\Models\AssetHolderHistory;
 use App\Models\AssetMaintenance;
 use App\Models\Log;
-use Illuminate\Support\Str;
+use App\Services\NotificationService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Maatwebsite\Excel\Facades\Excel;
 
 class AssetViewController extends Controller
 {
@@ -60,7 +59,7 @@ class AssetViewController extends Controller
         // Admin/Teknisi (punya izin 'manage assets') tetap melihat seluruh aset.
         $currentUser = $request->user();
         $canManageAssets = $currentUser->can('manage assets') || $currentUser->hasRole('Admin');
-        if (!$canManageAssets) {
+        if (! $canManageAssets) {
             $q->where(function ($query) use ($currentUser) {
                 $query->where('user_id', $currentUser->id);
                 $ownName = trim((string) $currentUser->name);
@@ -83,15 +82,22 @@ class AssetViewController extends Controller
         }
 
         if ($status) {
-            $q->where('status', $status);
+            $q->whereIn('status', Asset::statusFilterValues($status));
         }
 
         if ($condition) {
-            $q->where('condition', $condition);
+            $q->whereIn('condition', Asset::conditionFilterValues($condition));
         }
 
-        if ($type) {
-            $q->where('type', 'like', "%{$type}%");
+        if ($type !== null && $type !== '') {
+            $typeValues = Asset::assetTypeFilterValues($type);
+            if ($typeValues === []) {
+                $q->whereNotIn('type', array_merge(...array_values(Asset::assetTypeGroups())));
+            } elseif ($typeValues !== null) {
+                $q->whereIn('type', $typeValues);
+            } else {
+                $q->where('type', 'like', "%{$type}%");
+            }
         }
 
         if (array_key_exists($sort, $sortableColumns)) {
@@ -100,19 +106,14 @@ class AssetViewController extends Controller
             $q->latest();
         }
 
-        $assetTypes = Asset::query()
-            ->select('type')
-            ->whereNotNull('type')
-            ->where('type', '<>', '')
-            ->distinct()
-            ->orderBy('type')
-            ->pluck('type');
-
         $perPage = $request->input('per_page', 10);
-        $perPage = in_array($perPage, [10, 20, 50]) ? (int)$perPage : 10;
-        
+        $perPage = in_array($perPage, [10, 20, 50]) ? (int) $perPage : 10;
+
         $assets = $q->paginate($perPage)->appends(request()->query());
-        return view('assets.index', compact('assets', 'sort', 'direction', 'assetTypes'));
+
+        $assetTypeGroups = Asset::assetTypeGroupOptions();
+
+        return view('assets.index', compact('assets', 'sort', 'direction', 'assetTypeGroups'));
     }
 
     public function create()
@@ -140,7 +141,7 @@ class AssetViewController extends Controller
         }
 
         $asset = Asset::create($data);
-        
+
         // Send notification
         $this->notificationService->notifyAssetCreated($request->user(), $asset);
 
@@ -156,7 +157,7 @@ class AssetViewController extends Controller
         if ($request->filled($urlKey)) {
             $url = $request->input($urlKey);
             if ($id = Asset::extractGoogleDriveId($url)) {
-                return 'drive:' . $id;
+                return 'drive:'.$id;
             }
 
             return $url;
@@ -170,13 +171,14 @@ class AssetViewController extends Controller
         // User biasa hanya boleh membuka detail aset miliknya sendiri.
         $currentUser = auth()->user();
         $canManageAssets = $currentUser->can('manage assets') || $currentUser->hasRole('Admin');
-        if (!$canManageAssets) {
+        if (! $canManageAssets) {
             $isOwnAsset = $asset->user_id === $currentUser->id
                 || mb_strtolower(trim((string) $asset->holder)) === mb_strtolower(trim((string) $currentUser->name));
             abort_unless($isOwnAsset, 403);
         }
 
         $asset->load(['holderHistory.changedByUser', 'maintenances.performedByUser']);
+
         return view('assets.show', compact('asset'));
     }
 
@@ -281,6 +283,7 @@ class AssetViewController extends Controller
         }
 
         $asset->delete();
+
         return redirect()->route('assets.index')->with('success', 'Asset deleted');
     }
 
@@ -303,7 +306,7 @@ class AssetViewController extends Controller
         $filename = 'template-aset.xlsx';
 
         // Delivery langsung, tanpa ketergantungan file system lokal
-        return Excel::download(new AssetsTemplateExport(), $filename, \Maatwebsite\Excel\Excel::XLSX);
+        return Excel::download(new AssetsTemplateExport, $filename, \Maatwebsite\Excel\Excel::XLSX);
     }
 
     public function import(Request $request)
@@ -317,9 +320,9 @@ class AssetViewController extends Controller
         $file = $request->file('file');
 
         try {
-            Excel::import(new AssetsImport(), $file);
+            Excel::import(new AssetsImport, $file);
         } catch (\Exception $ex) {
-            return redirect()->route('assets.index')->with('error', 'Import gagal: ' . $ex->getMessage());
+            return redirect()->route('assets.index')->with('error', 'Import gagal: '.$ex->getMessage());
         }
 
         return redirect()->route('assets.index')->with('success', 'Data aset berhasil diimpor dari Excel.');
@@ -369,9 +372,9 @@ class AssetViewController extends Controller
             $endDate = $request->end_date;
         }
 
-        $filename = 'aset-' . ($startDate ? \Carbon\Carbon::parse($startDate)->format('Y-m-d') : 'all') .
-                   '-to-' . ($endDate ? \Carbon\Carbon::parse($endDate)->format('Y-m-d') : 'all') .
-                   '-' . now()->format('Ymd-His') . '.xlsx';
+        $filename = 'aset-'.($startDate ? \Carbon\Carbon::parse($startDate)->format('Y-m-d') : 'all').
+                   '-to-'.($endDate ? \Carbon\Carbon::parse($endDate)->format('Y-m-d') : 'all').
+                   '-'.now()->format('Ymd-His').'.xlsx';
 
         return Excel::download(new AssetsExport($startDate, $endDate), $filename, \Maatwebsite\Excel\Excel::XLSX);
     }
@@ -379,7 +382,7 @@ class AssetViewController extends Controller
     public function changeHolder(Asset $asset)
     {
         abort_unless(auth()->user()->hasRole('Admin'), 403);
-        
+
         $users = \App\Models\User::orderBy('name')->pluck('name')
             ->filter(fn ($name) => filled($name))
             ->unique()
@@ -393,7 +396,7 @@ class AssetViewController extends Controller
         abort_unless(auth()->user()->hasRole('Admin'), 403);
 
         $previousHolder = $asset->holder;
-        
+
         // Create history record
         AssetHolderHistory::create([
             'asset_id' => $asset->id,
@@ -408,15 +411,15 @@ class AssetViewController extends Controller
         $asset->update(['holder' => $request->new_holder]);
 
         return redirect()->route('assets.show', $asset)
-            ->with('success', 'Pemegang aset berhasil diubah dari ' . ($previousHolder ?? '-') . ' menjadi ' . $request->new_holder);
+            ->with('success', 'Pemegang aset berhasil diubah dari '.($previousHolder ?? '-').' menjadi '.$request->new_holder);
     }
 
     public function addMaintenance(Asset $asset)
     {
         abort_unless(auth()->user()->hasRole('Admin'), 403);
-        
+
         $maintenanceTypes = AssetMaintenance::types();
-        
+
         return view('assets.add-maintenance', compact('asset', 'maintenanceTypes'));
     }
 
@@ -446,4 +449,3 @@ class AssetViewController extends Controller
             ->with('success', 'Perawatan aset berhasil dicatat');
     }
 }
-

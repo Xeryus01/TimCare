@@ -2,7 +2,7 @@
     <div class="p-6">
         <h2 class="text-2xl font-bold mb-4">Tickets</h2>
         <div class="mb-4">
-            <a href="/tickets/create" class="px-4 py-2 bg-blue-600 text-white rounded">New Ticket</a>
+            <a :href="`${baseUrl}tickets/create`" class="px-4 py-2 bg-blue-600 text-white rounded">New Ticket</a>
         </div>
         <table class="min-w-full bg-white">
             <thead class="bg-gray-200">
@@ -23,7 +23,7 @@
                     <td class="py-2 px-4">{{ t.status }}</td>
                     <td class="py-2 px-4">{{ t.priority }}</td>
                     <td class="py-2 px-4">
-                        <a :href="`/tickets/${t.id}`" class="text-blue-500">View</a>
+                        <a :href="`${baseUrl}tickets/${t.id}`" class="text-blue-500">View</a>
                     </td>
                 </tr>
             </tbody>
@@ -41,13 +41,14 @@ import axios from 'axios';
 export default {
     data() {
         return {
+            baseUrl: import.meta.env.BASE_URL,
             tickets: [],
             prevPage: null,
             nextPage: null,
         };
     },
     mounted() {
-        this.load('/api/tickets');
+        this.load('api/tickets');
     },
     methods: {
         load(url) {

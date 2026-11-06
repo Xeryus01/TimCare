@@ -54,8 +54,9 @@
 
         <!-- Users Table -->
         <div class="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-gray-700 dark:bg-dark-800">
-            <div class="overflow-x-auto">
-                <table class="w-full">
+            <p class="border-b border-gray-100 px-4 py-2 text-xs text-gray-500 dark:border-gray-700 dark:text-gray-400 sm:hidden">Geser tabel ke samping untuk melihat semua informasi.</p>
+            <div class="overflow-x-auto focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500" role="region" aria-label="Daftar pengguna, gulir horizontal untuk melihat semua kolom" tabindex="0">
+                <table class="w-full min-w-[980px]">
                     @php
                         $sort = request('sort');
                         $direction = request('direction', 'asc') === 'desc' ? 'desc' : 'asc';
@@ -108,10 +109,10 @@
                         @forelse($users as $user)
                             <tr class="hover:bg-gray-50 dark:hover:bg-white/5">
                                 <td class="px-5 py-4 sm:px-6">
-                                    <span class="text-sm font-medium text-gray-900 dark:text-white">{{ $user->name }}</span>
+                                    <span class="whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">{{ $user->name }}</span>
                                 </td>
                                 <td class="px-5 py-4 sm:px-6">
-                                    <span class="text-sm text-gray-600 dark:text-gray-400">{{ $user->email }}</span>
+                                    <span class="whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">{{ $user->email }}</span>
                                 </td>
                                 <td class="px-5 py-4 sm:px-6">
                                     @if($user->hasRole('Admin'))
@@ -126,7 +127,7 @@
                                 <td class="px-5 py-4 sm:px-6 text-sm text-gray-600 dark:text-gray-400">{{ $user->phone_number ?? '-' }}</td>
                                 <td class="px-5 py-4 sm:px-6 text-sm text-gray-600 dark:text-gray-400">{{ $user->created_at->format('d/m/Y') }}</td>
                                 <td class="px-5 py-4 sm:px-6 text-right text-sm font-medium">
-                                    <div class="flex justify-end gap-3">
+                                    <div class="flex justify-end gap-3 whitespace-nowrap">
                                         <a href="{{ url()->to(route('users.show', $user)) }}" class="text-brand-600 hover:text-brand-700 dark:text-brand-400 dark:hover:text-brand-300">Lihat</a>
                                         <a href="{{ url()->to(route('users.editPassword', $user)) }}" class="text-amber-600 hover:text-amber-700 dark:text-amber-400 dark:hover:text-amber-300">Password</a>
                                         <a href="{{ url()->to(route('users.edit', $user)) }}" class="text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300">Edit</a>

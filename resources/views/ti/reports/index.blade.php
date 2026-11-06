@@ -71,18 +71,18 @@
     </div>
 </section>
 <div class="tc-results-heading"><h2>Hasil laporan</h2><span class="tc-muted">{{ $reports->total() }} laporan</span></div>
-<div class="tc-table-wrap tc-report-table-wrap">
+<div class="tc-table-wrap tc-report-table-wrap" role="region" aria-label="Daftar laporan monitoring TI" tabindex="0">
     <table class="tc-report-table">
         <caption class="tc-visually-hidden">Daftar laporan monitoring TI</caption>
-        <thead><tr><th>Objek TI</th><th>Jenis / periode</th><th>Status laporan</th><th>Terakhir diubah</th><th>Aksi</th></tr></thead>
+        <thead><tr><th scope="col">Objek TI</th><th scope="col">Jenis / periode</th><th scope="col">Status laporan</th><th scope="col">Terakhir diubah</th><th scope="col">Aksi</th></tr></thead>
         <tbody>
         @forelse($reports as $report)
             <tr>
-                <td><strong>{{ $report->object->name }}</strong><small>{{ $report->object->code }} · {{ $report->scope_snapshot }}</small></td>
-                <td><strong>{{ \App\Support\TiForm::TYPES[$report->type] }}</strong><small>{{ \App\Support\TiForm::period($report->type,$report->period) }} {{ $report->year }}</small></td>
-                <td><span class="tc-chip">{{ $report->data['obstacle_status'] ?? $report->data['status'] ?? 'Tercatat' }}</span></td>
-                <td>{{ $report->updated_at->format('d/m/Y H:i') }}<small>{{ $report->editor?->name ?? 'Akun tidak tersedia' }}</small></td>
-                <td><div class="tc-actions">
+                <td data-label="Objek TI"><strong>{{ $report->object->name }}</strong><small>{{ $report->object->code }} · {{ $report->scope_snapshot }}</small></td>
+                <td data-label="Jenis / periode"><strong>{{ \App\Support\TiForm::TYPES[$report->type] }}</strong><small>{{ \App\Support\TiForm::period($report->type,$report->period) }} {{ $report->year }}</small></td>
+                <td data-label="Status laporan"><span class="tc-chip">{{ $report->data['obstacle_status'] ?? $report->data['status'] ?? 'Tercatat' }}</span></td>
+                <td data-label="Terakhir diubah">{{ $report->updated_at->format('d/m/Y H:i') }}<small>{{ $report->editor?->name ?? 'Akun tidak tersedia' }}</small></td>
+                <td data-label="Aksi"><div class="tc-actions">
                     <a class="tc-btn tc-report-row-action" href="{{ route('ti.reports.show',$report) }}">Lihat</a>
                     @if(\App\Services\TiAccess::canEdit(auth()->user(),$report->object))
                         <a class="tc-btn tc-report-row-action" href="{{ route('ti.reports.edit',$report) }}">Edit</a>

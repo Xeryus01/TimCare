@@ -319,7 +319,7 @@
                     </label>
                     <select id="condition" name="condition" class="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-gray-900 outline-none transition focus:border-brand-600 focus:ring-2 focus:ring-brand-100 dark:border-gray-600 dark:bg-dark-800 dark:text-white dark:focus:border-brand-600 dark:focus:ring-brand-900/20 @error('condition') border-red-500 @enderror">
                         @foreach(\App\Models\Asset::conditionOptions() as $value => $label)
-                            <option value="{{ $value }}" {{ old('condition', $asset->condition) === $value ? 'selected' : '' }}>{{ $label }}</option>
+                            <option value="{{ $value }}" {{ old('condition', $asset->condition_label) === $value ? 'selected' : '' }}>{{ $label }}</option>
                         @endforeach
                     </select>
                     @error('condition')
@@ -334,7 +334,7 @@
                     </label>
                     <select id="status" name="status" class="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-gray-900 outline-none transition focus:border-brand-600 focus:ring-2 focus:ring-brand-100 dark:border-gray-600 dark:bg-dark-800 dark:text-white dark:focus:border-brand-600 dark:focus:ring-brand-900/20 @error('status') border-red-500 @enderror">
                         @foreach(\App\Models\Asset::statusOptions() as $value => $label)
-                            <option value="{{ $value }}" {{ old('status', $asset->status) === $value ? 'selected' : '' }}>{{ $label }}</option>
+                            <option value="{{ $value }}" {{ old('status', $asset->status_label) === $value ? 'selected' : '' }}>{{ $label }}</option>
                         @endforeach
                     </select>
                     @error('status')

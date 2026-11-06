@@ -47,7 +47,7 @@ export default {
         }
     },
     mounted() {
-        axios.get('/api/dashboard/summary')
+        axios.get('api/dashboard/summary')
             .then(res => { this.summary = res.data; })
             .catch(console.error);
     }

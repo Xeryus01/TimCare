@@ -1,407 +1,252 @@
 <x-app-layout>
-<style>
-    :root {
-        --brand: #2563eb;
-        --brand-light: #eff6ff;
-        --brand-dark: #1d4ed8;
-        --danger: #dc2626;
-        --danger-light: #fef2f2;
-        --success: #16a34a;
-        --text-primary: #0f172a;
-        --text-secondary: #64748b;
-        --text-muted: #94a3b8;
-        --border: #e2e8f0;
-        --input-bg: #f8fafc;
-        --shadow-card: 0 1px 3px rgba(0,0,0,.07), 0 8px 24px rgba(0,0,0,.05);
-    }
-    
-    .profile-page { padding: 36px 40px; }
-    .page-header { margin-bottom: 32px; }
-    .page-header h1 { font-size: 26px; font-weight: 700; color: var(--text-primary); }
-    .page-header p { margin-top: 4px; font-size: 14px; color: var(--text-secondary); }
-    
-    .profile-grid { display: grid; grid-template-columns: 300px 1fr; gap: 24px; align-items: start; }
-    
-    .card {
-        background: #fff;
-        border-radius: 14px;
-        border: 1px solid var(--border);
-        box-shadow: var(--shadow-card);
-        overflow: hidden;
-    }
-    
-    .card-header { padding: 20px 24px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; }
-    .card-header-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-    .card-header-icon.blue { background: var(--brand-light); color: var(--brand); }
-    .card-header-icon.green { background: #f0fdf4; color: var(--success); }
-    .card-header-icon.red { background: var(--danger-light); color: var(--danger); }
-    .card-header h2 { font-size: 15px; font-weight: 600; }
-    .card-header p { font-size: 13px; color: var(--text-secondary); margin-top: 1px; }
-    .card-body { padding: 24px; }
-    
-    .profile-summary { display: flex; flex-direction: column; align-items: center; text-align: center; }
-    .avatar-large { width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, var(--brand), #7c3aed); color: #fff; font-size: 28px; font-weight: 700; display: flex; align-items: center; justify-content: center; margin-bottom: 16px; box-shadow: 0 4px 16px rgba(37,99,235,.3); }
-    .profile-name { font-size: 18px; font-weight: 700; }
-    .profile-email { font-size: 13px; color: var(--text-secondary); margin-top: 4px; }
-    .profile-badge { margin-top: 12px; display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 20px; background: var(--brand-light); color: var(--brand-dark); font-size: 12px; font-weight: 600; }
-    
-    .profile-meta { margin-top: 20px; width: 100%; border-top: 1px solid var(--border); padding-top: 20px; display: flex; flex-direction: column; gap: 12px; }
-    .meta-item { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; }
-    .meta-item svg { color: var(--text-muted); flex-shrink: 0; margin-top: 2px; }
-    .meta-item strong { font-weight: 600; color: var(--text-primary); }
-    .meta-item span { color: var(--text-secondary); font-size: 12px; }
-    
-    .left-stack { display: flex; flex-direction: column; gap: 24px; }
-    .right-stack { display: flex; flex-direction: column; gap: 24px; }
-    
-    .form-group { margin-bottom: 20px; }
-    .form-group:last-of-type { margin-bottom: 0; }
-    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    
-    label { display: block; font-size: 13px; font-weight: 600; color: var(--text-primary); margin-bottom: 6px; }
-    
-    input[type="text"],
-    input[type="email"],
-    input[type="password"] {
-        width: 100%;
-        padding: 10px 14px;
-        border-radius: 8px;
-        border: 1.5px solid var(--border);
-        background: var(--input-bg);
-        font-size: 14px;
-        color: var(--text-primary);
-        outline: none;
-        transition: border-color .2s, box-shadow .2s;
-    }
-    
-    input:focus { border-color: var(--brand); box-shadow: 0 0 0 4px rgba(37,99,235,.15); background: #fff; }
-    
-    .input-hint { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
-    
-    .btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; border: none; transition: opacity .15s, transform .1s; }
-    .btn:active { transform: scale(.98); }
-    .btn-primary { background: var(--brand); color: #fff; }
-    .btn-primary:hover { opacity: .9; }
-    .btn-danger { background: var(--danger); color: #fff; }
-    .btn-danger:hover { opacity: .9; }
-    
-    .form-footer { display: flex; align-items: center; justify-content: space-between; padding-top: 8px; border-top: 1px solid var(--border); margin-top: 24px; font-size: 13px; }
-    
-    .danger-card { border-color: #fecaca; background: var(--danger-light); }
-    .danger-card .card-header { border-bottom-color: #fecaca; }
-    .danger-card .card-body p { font-size: 13px; color: #991b1b; line-height: 1.6; }
-    
-    .strength-bar { display: flex; gap: 4px; margin-top: 8px; }
-    .strength-bar span { flex: 1; height: 3px; border-radius: 3px; background: var(--border); transition: background .3s; }
-    
-    .timeline { display: flex; flex-direction: column; gap: 0; }
-    .timeline-item { display: flex; gap: 14px; padding: 12px 0; position: relative; }
-    .timeline-item + .timeline-item::before { content: ''; position: absolute; top: 0; left: 17px; width: 1px; height: 12px; background: var(--border); }
-    .timeline-dot { width: 10px; height: 10px; border-radius: 50%; border: 2px solid var(--brand); background: #fff; margin-top: 4px; flex-shrink: 0; margin-left: 13px; }
-    .timeline-dot.green { border-color: var(--success); }
-    .timeline-dot.orange { border-color: #f59e0b; }
-    .timeline-content { flex: 1; }
-    .timeline-content strong { font-size: 13px; font-weight: 600; display: block; }
-    .timeline-content span { font-size: 12px; color: var(--text-muted); }
-</style>
-
-<div class="profile-page">
-        <div class="page-header">
-            <h1>Profile Settings</h1>
-            <p>Kelola informasi akun dan preferensi Anda</p>
-        </div>
-
-        <div class="profile-grid">
-            <!-- LEFT: Profile Summary & Activity -->
-            <div class="left-stack">
-                <!-- Profile Card -->
-                <div class="card">
-                    <div class="card-body profile-summary">
-                        <div class="avatar-large">{{ strtoupper(substr($user->name, 0, 1)) }}</div>
-                        <div class="profile-name">{{ $user->name }}</div>
-                        <div class="profile-email">{{ $user->email }}</div>
-                        <div class="profile-badge">
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                            {{ $user->roles->first()->name ?? 'User' }}
-                        </div>
-
-                        <div class="profile-meta">
-                            <div class="meta-item">
-                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8 19.79 19.79 0 01.13 2.18 2 2 0 012.11 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.09a16 16 0 006 6l.46-.46a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
-                                <div>
-                                    <strong>{{ $user->phone_number ?? '-' }}</strong>
-                                    <span>Nomor HP</span>
-                                </div>
-                            </div>
-                            <div class="meta-item">
-                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                <div>
-                                    <strong>{{ optional($user->last_login_at)->format('d M Y') ?? '-' }}</strong>
-                                    <span>Login terakhir</span>
-                                </div>
-                            </div>
-                            <div class="meta-item">
-                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
-                                <div>
-                                    <strong>Aktif &amp; Terverifikasi</strong>
-                                    <span>Status akun</span>
-                                </div>
-                            </div>
-                        </div>
+    <div class="mx-auto w-full max-w-[1440px] p-4 sm:p-6 lg:p-8">
+        <div class="mb-6 overflow-hidden rounded-3xl border border-brand-100 bg-gradient-to-br from-white via-white to-brand-50 shadow-sm dark:border-gray-700 dark:from-dark-800 dark:via-dark-800 dark:to-dark-900">
+            <div class="flex flex-col gap-5 p-5 sm:flex-row sm:items-center sm:justify-between sm:p-7">
+                <div class="flex items-start gap-4">
+                    <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-brand-100 text-brand-700 dark:bg-brand-500/15 dark:text-brand-300">
+                        <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <circle cx="12" cy="8" r="4"></circle>
+                            <path d="M4 21a8 8 0 0 1 16 0"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="mb-1 text-xs font-semibold uppercase tracking-[0.18em] text-brand-700 dark:text-brand-300">Pengaturan akun</p>
+                        <h1 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-3xl">Profil Saya</h1>
+                        <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Kelola informasi pribadi dan keamanan akun Anda.</p>
                     </div>
                 </div>
-
-                <!-- Activity Card -->
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-header-icon blue">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-                        </div>
-                        <div>
-                            <h2>Aktivitas Terkini</h2>
-                            <p>Riwayat aksi akun</p>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="timeline">
-                            <div class="timeline-item">
-                                <div class="timeline-dot green"></div>
-                                <div class="timeline-content">
-                                    <strong>Login berhasil</strong>
-                                    <span>Hari ini, 13:06</span>
-                                </div>
-                            </div>
-                            <div class="timeline-item">
-                                <div class="timeline-dot"></div>
-                                <div class="timeline-content">
-                                    <strong>Password diperbarui</strong>
-                                    <span>7 Jun 2026</span>
-                                </div>
-                            </div>
-                            <div class="timeline-item">
-                                <div class="timeline-dot orange"></div>
-                                <div class="timeline-content">
-                                    <strong>Profil diubah</strong>
-                                    <span>25 Mei 2026</span>
-                                </div>
-                            </div>
-                            <div class="timeline-item">
-                                <div class="timeline-dot green"></div>
-                                <div class="timeline-content">
-                                    <strong>Akun dibuat</strong>
-                                    <span>25 Mei 2026</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div class="inline-flex w-fit items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-700 dark:border-emerald-900/50 dark:bg-emerald-500/10 dark:text-emerald-300">
+                    <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
+                    Akun aktif
                 </div>
             </div>
+        </div>
 
-            <!-- RIGHT: Edit Forms -->
-            <div class="right-stack">
-                <!-- Profile Info Card -->
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-header-icon blue">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
-                        </div>
-                        <div>
-                            <h2>Informasi Profil</h2>
-                            <p>Perbarui informasi pribadi Anda</p>
+        <div class="grid min-w-0 items-stretch gap-5 lg:grid-cols-[minmax(250px,320px)_minmax(0,1fr)] lg:grid-rows-[auto_auto]">
+            <div class="grid min-w-0 lg:col-start-1 lg:row-span-2 lg:row-start-1 lg:[grid-template-rows:subgrid]">
+            <aside class="min-w-0 overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-dark-800">
+                <div class="flex flex-col items-center border-b border-gray-100 bg-gradient-to-b from-gray-50 to-white px-5 py-7 text-center dark:border-gray-700 dark:from-dark-900/60 dark:to-dark-800">
+                    <div class="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-brand-500 to-indigo-600 text-3xl font-bold text-white shadow-lg shadow-brand-500/20 ring-4 ring-white dark:ring-dark-700">
+                        {{ strtoupper(substr($user->name, 0, 1)) }}
+                    </div>
+                    <h2 class="max-w-full break-words text-lg font-bold text-gray-900 dark:text-white">{{ $user->name }}</h2>
+                    <p class="mt-1 max-w-full break-all text-sm text-gray-500 dark:text-gray-400">{{ $user->email }}</p>
+                    <span class="mt-4 inline-flex items-center gap-1.5 rounded-full bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-700 dark:bg-brand-500/15 dark:text-brand-300">
+                        <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.6l6.2-.9L12 3Z"></path>
+                        </svg>
+                        {{ match ($user->roles->first()->name ?? 'User') { 'Admin' => 'Administrator', 'User' => 'Pengguna', default => $user->roles->first()->name ?? 'Pengguna' } }}
+                    </span>
+                </div>
+
+                <dl class="space-y-4 p-5">
+                    <div class="flex min-w-0 items-start gap-3">
+                        <span class="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gray-100 text-gray-500 dark:bg-gray-700 dark:text-gray-300">
+                            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M22 16.9v3a2 2 0 0 1-2.2 2A19.8 19.8 0 0 1 3.1 5.2 2 2 0 0 1 5.1 3h3a2 2 0 0 1 2 1.7l.4 2.8a2 2 0 0 1-.6 1.7L8.6 10.5a16 16 0 0 0 4.9 4.9l1.3-1.3a2 2 0 0 1 1.7-.6l2.8.4a2 2 0 0 1 1.7 2Z"></path>
+                            </svg>
+                        </span>
+                        <div class="min-w-0">
+                            <dt class="text-xs font-medium text-gray-500 dark:text-gray-400">Nomor HP</dt>
+                            <dd class="mt-0.5 break-words text-sm font-semibold text-gray-800 dark:text-gray-200">{{ $user->phone_number ?: 'Belum diisi' }}</dd>
                         </div>
                     </div>
-                    <div class="card-body">
+                    <div class="flex min-w-0 items-start gap-3">
+                        <span class="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gray-100 text-gray-500 dark:bg-gray-700 dark:text-gray-300">
+                            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <circle cx="12" cy="12" r="9"></circle>
+                                <path d="M12 7v5l3 2"></path>
+                            </svg>
+                        </span>
+                        <div class="min-w-0">
+                            <dt class="text-xs font-medium text-gray-500 dark:text-gray-400">Login terakhir</dt>
+                            <dd class="mt-0.5 text-sm font-semibold text-gray-800 dark:text-gray-200">{{ $lastLoginAt ? $lastLoginAt->locale('id')->translatedFormat('d F Y') : 'Belum tersedia' }}</dd>
+                        </div>
+                    </div>
+                    <div class="flex min-w-0 items-start gap-3">
+                        <span class="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gray-100 text-gray-500 dark:bg-gray-700 dark:text-gray-300">
+                            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <rect x="3" y="5" width="18" height="16" rx="2"></rect>
+                                <path d="M16 3v4M8 3v4M3 10h18"></path>
+                            </svg>
+                        </span>
+                        <div class="min-w-0">
+                            <dt class="text-xs font-medium text-gray-500 dark:text-gray-400">Bergabung sejak</dt>
+                            <dd class="mt-0.5 text-sm font-semibold text-gray-800 dark:text-gray-200">{{ optional($user->created_at)->locale('id')->translatedFormat('d F Y') ?? '-' }}</dd>
+                        </div>
+                    </div>
+                </dl>
+            </aside>
+            <section class="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-dark-800">
+                <div class="flex items-center gap-3 border-b border-gray-100 px-5 py-4 dark:border-gray-700">
+                    <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-violet-50 text-violet-600 dark:bg-violet-500/15 dark:text-violet-300">
+                        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M3 12a9 9 0 1 0 2.6-6.4L3 8"></path>
+                            <path d="M3 3v5h5m4-1v5l3 2"></path>
+                        </svg>
+                    </span>
+                    <div class="min-w-0">
+                        <h2 class="font-semibold text-gray-900 dark:text-white">Riwayat Aktivitas</h2>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">Aktivitas terbaru akun Anda.</p>
+                    </div>
+                </div>
+
+                @if ($activityLogs->isEmpty())
+                    <div class="flex flex-1 flex-col justify-center px-5 py-8 text-center">
+                        <p class="text-sm font-medium text-gray-700 dark:text-gray-300">Belum ada aktivitas yang tercatat.</p>
+                        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Aktivitas akun Anda akan muncul di sini.</p>
+                    </div>
+                @else
+                    <ol class="flex-1 divide-y divide-gray-100 overflow-y-auto dark:divide-gray-700">
+                        @foreach ($activityLogs as $activityLog)
+                            <li class="flex gap-3 px-4 py-3.5">
+                                <span class="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-50 text-brand-600 dark:bg-brand-500/15 dark:text-brand-300">
+                                    <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                        <path d="M12 8v4l3 2"></path>
+                                        <circle cx="12" cy="12" r="9"></circle>
+                                    </svg>
+                                </span>
+                                <div class="min-w-0 flex-1">
+                                    <p class="text-sm font-semibold leading-5 text-gray-900 dark:text-white">{{ $activityLogPresenter->action($activityLog) }}</p>
+                                    <p class="mt-1 break-words text-xs text-gray-500 dark:text-gray-400">
+                                        {{ $activityLogPresenter->entity($activityLog) }}
+                                        <span class="px-1 text-gray-300 dark:text-gray-600">·</span>
+                                        #{{ $activityLog->entity_id }}
+                                    </p>
+                                    <time class="mt-1.5 block text-[11px] text-gray-500 dark:text-gray-400" datetime="{{ $activityLog->created_at?->toIso8601String() }}">
+                                        {{ $activityLog->created_at?->locale('id')->translatedFormat('d M Y') }}
+                                        <span class="px-1 text-gray-300 dark:text-gray-600">·</span>
+                                        {{ $activityLog->created_at?->format('H:i') }}
+                                    </time>
+                                </div>
+                            </li>
+                        @endforeach
+                    </ol>
+                    @if ($activityLogs->hasPages())
+                        <div class="space-y-3 border-t border-gray-100 px-4 py-3 dark:border-gray-700">
+                            <p class="text-center text-xs text-gray-500 dark:text-gray-400">
+                                {{ $activityLogs->firstItem() }}–{{ $activityLogs->lastItem() }} dari {{ $activityLogs->total() }} aktivitas
+                            </p>
+                            <nav class="flex items-center justify-between gap-2" aria-label="Navigasi riwayat aktivitas">
+                                @if ($activityLogs->onFirstPage())
+                                    <span class="cursor-not-allowed rounded-lg border border-gray-200 px-2.5 py-1.5 text-xs font-medium text-gray-400 dark:border-gray-700 dark:text-gray-500">Sebelumnya</span>
+                                @else
+                                    <a href="{{ $activityLogs->previousPageUrl() }}" class="rounded-lg border border-gray-200 px-2.5 py-1.5 text-xs font-medium text-gray-700 transition hover:bg-gray-50 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-white/5">Sebelumnya</a>
+                                @endif
+                                <span class="text-xs font-medium text-gray-600 dark:text-gray-300">{{ $activityLogs->currentPage() }} / {{ $activityLogs->lastPage() }}</span>
+                                @if ($activityLogs->hasMorePages())
+                                    <a href="{{ $activityLogs->nextPageUrl() }}" class="rounded-lg border border-gray-200 px-2.5 py-1.5 text-xs font-medium text-gray-700 transition hover:bg-gray-50 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-white/5">Berikutnya</a>
+                                @else
+                                    <span class="cursor-not-allowed rounded-lg border border-gray-200 px-2.5 py-1.5 text-xs font-medium text-gray-400 dark:border-gray-700 dark:text-gray-500">Berikutnya</span>
+                                @endif
+                            </nav>
+                        </div>
+                    @endif
+                @endif
+            </section>
+            </div>
+
+            <div class="grid min-w-0 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:[grid-template-rows:subgrid]">
+                <section class="mt-5 overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-dark-800">
+                    <div class="flex items-center gap-3 border-b border-gray-100 px-5 py-4 dark:border-gray-700 sm:px-6">
+                        <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-50 text-brand-600 dark:bg-brand-500/15 dark:text-brand-300">
+                            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <circle cx="12" cy="8" r="4"></circle>
+                                <path d="M4 21a8 8 0 0 1 16 0"></path>
+                            </svg>
+                        </span>
+                        <div>
+                            <h2 class="font-semibold text-gray-900 dark:text-white">Informasi Profil</h2>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">Perbarui nama, nomor HP, dan alamat email.</p>
+                        </div>
+                    </div>
+
+                    <div class="p-5 sm:p-6">
                         <form id="send-verification" method="post" action="{{ route('verification.send') }}">
                             @csrf
                         </form>
 
-                        <form method="post" action="{{ route('profile.update') }}">
+                        <form method="post" action="{{ route('profile.update') }}" class="space-y-5">
                             @csrf
                             @method('patch')
 
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="name">Nama Lengkap</label>
-                                    <input type="text" id="name" name="name" value="{{ old('name', $user->name) }}" required autocomplete="name">
+                            <div class="grid gap-5 sm:grid-cols-2">
+                                <div>
+                                    <label for="name" class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-200">Nama Lengkap</label>
+                                    <input type="text" id="name" name="name" value="{{ old('name', $user->name) }}" required autocomplete="name" class="w-full rounded-xl border border-gray-300 bg-white px-3.5 py-2.5 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10 dark:border-gray-600 dark:bg-dark-900 dark:text-white dark:placeholder:text-gray-500">
                                     @if ($errors->has('name'))
-                                        <div style="font-size:12px;color:#dc2626;margin-top:4px;">{{ $errors->first('name') }}</div>
+                                        <p class="mt-1.5 text-sm text-red-600 dark:text-red-400">{{ $errors->first('name') }}</p>
                                     @endif
                                 </div>
-                                <div class="form-group">
-                                    <label for="phone">Nomor HP</label>
-                                    <input type="text" id="phone" name="phone_number" value="{{ old('phone_number', $user->phone_number) }}" autocomplete="tel">
-                                    <div class="input-hint">Format: 08xxxxxxxxxx atau 62xxxxxxxxxx</div>
+                                <div>
+                                    <label for="phone" class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-200">Nomor HP</label>
+                                    <input type="text" id="phone" name="phone_number" value="{{ old('phone_number', $user->phone_number) }}" autocomplete="tel" placeholder="08xxxxxxxxxx" class="w-full rounded-xl border border-gray-300 bg-white px-3.5 py-2.5 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10 dark:border-gray-600 dark:bg-dark-900 dark:text-white dark:placeholder:text-gray-500">
+                                    <p class="mt-1.5 text-xs text-gray-500 dark:text-gray-400">Gunakan format 08xxxxxxxxxx atau 62xxxxxxxxxx.</p>
                                     @if ($errors->has('phone_number'))
-                                        <div style="font-size:12px;color:#dc2626;margin-top:4px;">{{ $errors->first('phone_number') }}</div>
+                                        <p class="mt-1.5 text-sm text-red-600 dark:text-red-400">{{ $errors->first('phone_number') }}</p>
                                     @endif
                                 </div>
                             </div>
 
-                            <div class="form-group">
-                                <label for="email">Alamat Email</label>
-                                <input type="email" id="email" name="email" value="{{ old('email', $user->email) }}" required autocomplete="email">
-                                <div class="input-hint">Email verifikasi telah dikirim ke alamat ini</div>
+                            <div>
+                                <label for="email" class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-200">Alamat Email</label>
+                                <input type="email" id="email" name="email" value="{{ old('email', $user->email) }}" required autocomplete="email" class="w-full rounded-xl border border-gray-300 bg-white px-3.5 py-2.5 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10 dark:border-gray-600 dark:bg-dark-900 dark:text-white dark:placeholder:text-gray-500">
                                 @if ($errors->has('email'))
-                                    <div style="font-size:12px;color:#dc2626;margin-top:4px;">{{ $errors->first('email') }}</div>
+                                    <p class="mt-1.5 text-sm text-red-600 dark:text-red-400">{{ $errors->first('email') }}</p>
                                 @endif
                             </div>
 
                             @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! $user->hasVerifiedEmail())
-                                <div style="margin:20px 0; padding:12px; border-radius:8px; border:1px solid #fcd34d; background:#fef3c7;">
-                                    <p style="font-size:12px;color:#92400e;">
+                                <div class="rounded-xl border border-amber-200 bg-amber-50 p-4 dark:border-amber-900/50 dark:bg-amber-500/10">
+                                    <p class="text-sm text-amber-800 dark:text-amber-300">
                                         {{ __('Your email address is unverified.') }}
-                                        <button form="send-verification" type="button" style="font-weight:600;text-decoration:underline;color:#92400e;background:none;border:none;cursor:pointer;">
+                                        <button form="send-verification" type="submit" class="font-semibold underline underline-offset-2 hover:text-amber-900 dark:hover:text-amber-200">
                                             {{ __('Click here to re-send the verification email.') }}
                                         </button>
                                     </p>
                                     @if (session('status') === 'verification-link-sent')
-                                        <p style="margin-top:8px;font-size:12px;color:#15803d;">{{ __('A new verification link has been sent to your email address.') }}</p>
+                                        <p class="mt-2 text-sm font-medium text-emerald-700 dark:text-emerald-300">{{ __('A new verification link has been sent to your email address.') }}</p>
                                     @endif
                                 </div>
                             @endif
 
-                            <div class="form-footer">
-                                <span style="color:var(--text-muted);">Terakhir diperbarui: {{ $user->updated_at->format('d M Y') }}</span>
-                                <button type="submit" class="btn btn-primary">
-                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
-                                    Simpan Perubahan
-                                </button>
-                            </div>
-
-                            @if (session('status') === 'profile-updated')
-                                <div style="margin-top:16px; padding:12px; border-radius:8px; border:1px solid #86efac; background:#f0fdf4;">
-                                    <p style="font-size:12px;color:#15803d;font-weight:600;">✓ Profil berhasil diperbarui</p>
+                            <div class="flex flex-col gap-3 border-t border-gray-100 pt-4 dark:border-gray-700 sm:flex-row sm:items-center sm:justify-between">
+                                <p class="text-xs text-gray-500 dark:text-gray-400">Terakhir diperbarui: {{ optional($user->updated_at)->locale('id')->translatedFormat('d F Y') ?? '-' }}</p>
+                                <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
+                                    @if (session('status') === 'profile-updated')
+                                        <p class="text-sm font-medium text-emerald-700 dark:text-emerald-300" role="status">Profil berhasil diperbarui.</p>
+                                    @endif
+                                    <button type="submit" class="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-700 focus:outline-none focus:ring-4 focus:ring-brand-500/20">
+                                        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2Z"></path>
+                                            <path d="M17 21v-8H7v8M7 3v5h8"></path>
+                                        </svg>
+                                        Simpan Perubahan
+                                    </button>
                                 </div>
-                            @endif
+                            </div>
                         </form>
                     </div>
-                </div>
+                </section>
 
-                <!-- Password Card -->
-                <!-- <div class="card">
-                    <div class="card-header">
-                        <div class="card-header-icon green">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
-                        </div>
+                <section class="overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-dark-800">
+                    <div class="flex items-center gap-3 border-b border-gray-100 px-5 py-4 dark:border-gray-700 sm:px-6">
+                        <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 dark:bg-emerald-500/15 dark:text-emerald-300">
+                            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <rect x="3" y="11" width="18" height="11" rx="2"></rect>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                            </svg>
+                        </span>
                         <div>
-                            <h2>Ubah Password</h2>
-                            <p>Pastikan akun Anda menggunakan password yang kuat</p>
+                            <h2 class="font-semibold text-gray-900 dark:text-white">Keamanan Akun</h2>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">Perbarui password secara berkala.</p>
                         </div>
                     </div>
-                    <div class="card-body">
-                        <form method="post" action="{{ route('password.update') }}">
-                            @csrf
-                            @method('put')
-
-                            <div class="form-group">
-                                <label for="current_password">Password Saat Ini</label>
-                                <input type="password" id="current_password" name="current_password" placeholder="Masukkan password lama" autocomplete="current-password">
-                                @if ($errors->updatePassword->has('current_password'))
-                                    <div style="font-size:12px;color:#dc2626;margin-top:4px;">{{ $errors->updatePassword->first('current_password') }}</div>
-                                @endif
-                            </div>
-
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="new_password">Password Baru</label>
-                                    <input type="password" id="new_password" name="password" placeholder="Min. 8 karakter" autocomplete="new-password" oninput="checkStrength(this.value)">
-                                    <div class="strength-bar">
-                                        <span id="s1"></span><span id="s2"></span><span id="s3"></span><span id="s4"></span>
-                                    </div>
-                                    <div class="input-hint" id="strength-label">Masukkan password baru</div>
-                                    @if ($errors->updatePassword->has('password'))
-                                        <div style="font-size:12px;color:#dc2626;margin-top:4px;">{{ $errors->updatePassword->first('password') }}</div>
-                                    @endif
-                                </div>
-                                <div class="form-group">
-                                    <label for="confirm_password">Konfirmasi Password</label>
-                                    <input type="password" id="confirm_password" name="password_confirmation" placeholder="Ulangi password baru" autocomplete="new-password">
-                                    @if ($errors->updatePassword->has('password_confirmation'))
-                                        <div style="font-size:12px;color:#dc2626;margin-top:4px;">{{ $errors->updatePassword->first('password_confirmation') }}</div>
-                                    @endif
-                                </div>
-                            </div>
-
-                            <p style="font-size:12px;color:var(--text-muted);margin:20px 0;">Gunakan minimal 8 karakter dengan kombinasi huruf &amp; angka</p>
-
-                            <div class="form-footer">
-                                <span style="color:var(--text-muted);">Keamanan berlapis</span>
-                                <button type="submit" class="btn btn-primary">
-                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                                    Simpan Password
-                                </button>
-                            </div>
-
-                            @if (session('status') === 'password-updated')
-                                <div style="margin-top:16px; padding:12px; border-radius:8px; border:1px solid #86efac; background:#f0fdf4;">
-                                    <p style="font-size:12px;color:#15803d;font-weight:600;">✓ Password berhasil diperbarui</p>
-                                </div>
-                            @endif
-                        </form>
+                    <div class="p-5 sm:p-6">
+                        @include('profile.partials.update-password-form')
                     </div>
-                </div> -->
-
-                <!-- Danger Zone -->
-                <!-- <div class="card danger-card">
-                    <div class="card-header" style="border-bottom-color:#fecaca;">
-                        <div class="card-header-icon red">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-                        </div>
-                        <div>
-                            <h2 style="color:var(--danger);">Hapus Akun</h2>
-                            <p style="color:#991b1b;">Tindakan ini tidak dapat dibatalkan</p>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <p style="font-size:14px;color:#991b1b;line-height:1.7;margin-bottom:20px;">Setelah akun dihapus, semua data dan sumber daya terkait akan dihapus secara permanen. Pastikan Anda yakin sebelum melanjutkan.</p>
-                        <form method="post" action="{{ route('profile.destroy') }}" onsubmit="return confirm('Apakah Anda yakin? Tindakan ini tidak dapat diurungkan.');">
-                            @csrf
-                            @method('delete')
-
-                            <div class="form-group" style="margin-bottom:16px;">
-                                <label for="password_delete">Konfirmasi Password</label>
-                                <input type="password" id="password_delete" name="password" required placeholder="••••••••">
-                                @if ($errors->userDeletion->has('password'))
-                                    <div style="font-size:12px;color:#dc2626;margin-top:4px;">{{ $errors->userDeletion->first('password') }}</div>
-                                @endif
-                            </div>
-
-                            <div style="display:flex;gap:12px;align-items:center;">
-                                <button type="submit" class="btn btn-danger">
-                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6m5 0V4a1 1 0 011-1h2a1 1 0 011 1v2"/></svg>
-                                    Hapus Akun Saya
-                                </button>
-                                <span style="font-size:12px;color:#b91c1c;">Masukkan password untuk konfirmasi</span>
-                            </div>
-                        </form>
-                    </div>
-                </div> -->
+                </section>
             </div>
         </div>
     </div>
-</div>
-
-<script>
-function checkStrength(val) {
-    const bars = [document.getElementById('s1'), document.getElementById('s2'), document.getElementById('s3'), document.getElementById('s4')];
-    const label = document.getElementById('strength-label');
-    bars.forEach(b => b.style.background = 'var(--border)');
-
-    if (!val) { label.textContent = 'Masukkan password baru'; label.style.color = 'var(--text-muted)'; return; }
-
-    let score = 0;
-    if (val.length >= 8) score++;
-    if (/[A-Z]/.test(val)) score++;
-    if (/[0-9]/.test(val)) score++;
-    if (/[^A-Za-z0-9]/.test(val)) score++;
-
-    const colors = ['#ef4444', '#f59e0b', '#3b82f6', '#16a34a'];
-    const labels = ['Terlalu lemah', 'Lemah', 'Cukup kuat', 'Sangat kuat'];
-    const textColors = ['#dc2626', '#b45309', '#1d4ed8', '#15803d'];
-
-    for (let i = 0; i < score; i++) bars[i].style.background = colors[score - 1];
-    label.textContent = labels[score - 1];
-    label.style.color = textColors[score - 1];
-}
-</script>
 </x-app-layout>

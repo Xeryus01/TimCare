@@ -5,8 +5,10 @@ import vue from '@vitejs/plugin-vue';
 export default defineConfig(({ mode }) => {
     const env = loadEnv(mode, process.cwd(), '');
     const appUrl = env.APP_URL || '/';
-    const basePath = env.VITE_BASE || (appUrl.startsWith('http') ? new URL(appUrl).pathname : appUrl);
-    const base = basePath.endsWith('/') ? basePath : `${basePath}/`;
+    const configuredBase = process.env.VITE_BASE || env.VITE_BASE;
+    const appPath = appUrl.startsWith('http') ? new URL(appUrl).pathname : '/';
+    const basePath = (configuredBase || appPath).replace(/^\/+|\/+$/g, '');
+    const base = basePath ? `/${basePath}/` : '/';
 
     return {
         base,

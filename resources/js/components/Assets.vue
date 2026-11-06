@@ -2,7 +2,7 @@
     <div class="p-6">
         <h2 class="text-2xl font-bold mb-4">Assets</h2>
         <div class="mb-4" v-if="canManage">
-            <a href="/assets/create" class="px-4 py-2 bg-blue-600 text-white rounded">New Asset</a>
+            <a :href="`${baseUrl}assets/create`" class="px-4 py-2 bg-blue-600 text-white rounded">New Asset</a>
         </div>
         <table class="min-w-full bg-white">
             <thead class="bg-gray-200">
@@ -20,7 +20,7 @@
                     <td class="py-2 px-4">{{ a.name }}</td>
                     <td class="py-2 px-4">{{ a.status }}</td>
                     <td class="py-2 px-4">{{ a.location }}</td>
-                    <td class="py-2 px-4"><a :href="`/assets/${a.id}`" class="text-blue-500">View</a></td>
+                    <td class="py-2 px-4"><a :href="`${baseUrl}assets/${a.id}`" class="text-blue-500">View</a></td>
                 </tr>
             </tbody>
         </table>
@@ -38,13 +38,14 @@ export default {
     props: ['canManage'],
     data() {
         return {
+            baseUrl: import.meta.env.BASE_URL,
             assets: [],
             prevPage: null,
             nextPage: null,
         };
     },
     mounted() {
-        this.load('/api/assets');
+        this.load('api/assets');
     },
     methods: {
         load(url) {

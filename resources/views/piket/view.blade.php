@@ -100,50 +100,65 @@
             </div>
         </div>
 
-        <!-- Duties Section -->
-        <div class="mb-8 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-dark-800">
-            <div class="mb-6">
-                <h2 class="text-lg font-bold text-gray-900 dark:text-white">📋 Tugas Teknisi Saat Piket</h2>
-                <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Tanggung jawab yang harus dijalankan selama periode piket</p>
+        <section class="mb-8 rounded-3xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-dark-800 sm:p-6">
+            <div class="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                    <h2 class="text-lg font-bold text-gray-900 dark:text-white">Tugas Teknisi Saat Piket</h2>
+                    <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Tanggung jawab yang dijalankan selama periode piket.</p>
+                </div>
+                <span class="inline-flex w-fit items-center gap-2 rounded-full bg-gray-100 px-3 py-1.5 text-xs font-semibold text-gray-600 dark:bg-gray-700 dark:text-gray-300">
+                    <span class="h-2 w-2 rounded-full bg-brand-500"></span>
+                    5 jenis tugas
+                </span>
             </div>
-            <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                <div class="group rounded-xl border border-yellow-200 bg-gradient-to-br from-yellow-50 to-yellow-100/50 p-5 transition-all hover:shadow-md dark:border-yellow-900/30 dark:from-yellow-900/10 dark:to-yellow-900/5">
-                    <div class="mb-3 inline-flex rounded-lg bg-yellow-600 p-2.5 text-white">
-                        <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"/></svg>
+            <div class="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+                <article class="group flex h-full gap-4 rounded-2xl border border-gray-200 bg-gray-50/70 p-4 transition hover:-translate-y-0.5 hover:border-yellow-300 hover:bg-yellow-50/70 hover:shadow-sm dark:border-gray-700 dark:bg-gray-900/40 dark:hover:border-yellow-800 dark:hover:bg-yellow-900/10">
+                    <span class="mt-0.5 flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-yellow-100 text-yellow-700 ring-1 ring-yellow-200 dark:bg-yellow-900/30 dark:text-yellow-300 dark:ring-yellow-800">
+                        <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="12" height="12" rx="2"/><path stroke-linecap="round" stroke-linejoin="round" d="m15 10 6-3v10l-6-3"/></svg>
+                    </span>
+                    <div class="min-w-0">
+                        <h3 class="text-sm font-semibold leading-5 text-gray-900 dark:text-white">Penyiapan Video Conference</h3>
+                        <p class="mt-1.5 text-sm leading-6 text-gray-600 dark:text-gray-400">Siapkan perangkat, koneksi, dan pengaturan audio/video untuk pertemuan online.</p>
                     </div>
-                    <h3 class="font-semibold text-gray-900 dark:text-white">Penyiapan Video Conference</h3>
-                    <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">Siapkan perangkat, koneksi, dan pengaturan audio/video untuk pertemuan online.</p>
-                </div>
-                <div class="group rounded-xl border border-blue-200 bg-gradient-to-br from-blue-50 to-blue-100/50 p-5 transition-all hover:shadow-md dark:border-blue-900/30 dark:from-blue-900/10 dark:to-blue-900/5">
-                    <div class="mb-3 inline-flex rounded-lg bg-blue-600 p-2.5 text-white">
-                        <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101a.75.75 0 10-1.06-1.06l-1.102 1.101a2.5 2.5 0 01-3.536-3.536l4-4a2.5 2.5 0 013.536 0l.707.707a.75.75 0 001.06-1.06l-.707-.707z" clip-rule="evenodd"/></svg>
+                </article>
+                <article class="group flex h-full gap-4 rounded-2xl border border-gray-200 bg-gray-50/70 p-4 transition hover:-translate-y-0.5 hover:border-blue-300 hover:bg-blue-50/70 hover:shadow-sm dark:border-gray-700 dark:bg-gray-900/40 dark:hover:border-blue-800 dark:hover:bg-blue-900/10">
+                    <span class="mt-0.5 flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-blue-100 text-blue-700 ring-1 ring-blue-200 dark:bg-blue-900/30 dark:text-blue-300 dark:ring-blue-800">
+                        <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3 5 6v5c0 4.5 2.9 8.3 7 10 4.1-1.7 7-5.5 7-10V6l-7-3Z"/><path stroke-linecap="round" stroke-linejoin="round" d="m9 12 2 2 4-4"/></svg>
+                    </span>
+                    <div class="min-w-0">
+                        <h3 class="text-sm font-semibold leading-5 text-gray-900 dark:text-white">Troubleshooting Jaringan &amp; Keamanan</h3>
+                        <p class="mt-1.5 text-sm leading-6 text-gray-600 dark:text-gray-400">Tangani gangguan jaringan, konfigurasi keamanan, dan akses sistem.</p>
                     </div>
-                    <h3 class="font-semibold text-gray-900 dark:text-white">Troubleshooting Jaringan & Keamanan</h3>
-                    <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">Tangani gangguan jaringan, konfigurasi keamanan, dan akses sistem.</p>
-                </div>
-                <div class="group rounded-xl border border-green-200 bg-gradient-to-br from-green-50 to-green-100/50 p-5 transition-all hover:shadow-md dark:border-green-900/30 dark:from-green-900/10 dark:to-green-900/5">
-                    <div class="mb-3 inline-flex rounded-lg bg-green-600 p-2.5 text-white">
-                        <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4z"/></svg>
+                </article>
+                <article class="group flex h-full gap-4 rounded-2xl border border-gray-200 bg-gray-50/70 p-4 transition hover:-translate-y-0.5 hover:border-green-300 hover:bg-green-50/70 hover:shadow-sm dark:border-gray-700 dark:bg-gray-900/40 dark:hover:border-green-800 dark:hover:bg-green-900/10">
+                    <span class="mt-0.5 flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-green-100 text-green-700 ring-1 ring-green-200 dark:bg-green-900/30 dark:text-green-300 dark:ring-green-800">
+                        <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2"/><path stroke-linecap="round" stroke-linejoin="round" d="M8 21h8m-4-4v4"/></svg>
+                    </span>
+                    <div class="min-w-0">
+                        <h3 class="text-sm font-semibold leading-5 text-gray-900 dark:text-white">Troubleshooting Aset TIK</h3>
+                        <p class="mt-1.5 text-sm leading-6 text-gray-600 dark:text-gray-400">Perbaiki masalah hardware atau software pada perangkat TIK.</p>
                     </div>
-                    <h3 class="font-semibold text-gray-900 dark:text-white">Troubleshooting Aset TIK</h3>
-                    <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">Perbaiki masalah hardware atau software pada perangkat TIK.</p>
-                </div>
-                <div class="group rounded-xl border border-red-200 bg-gradient-to-br from-red-50 to-red-100/50 p-5 transition-all hover:shadow-md dark:border-red-900/30 dark:from-red-900/10 dark:to-red-900/5">
-                    <div class="mb-3 inline-flex rounded-lg bg-red-600 p-2.5 text-white">
-                        <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z"/><path d="M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H10a1 1 0 001-1V5a1 1 0 00-1-1H3zM14 7a1 1 0 00-1 1v6.05A2.5 2.5 0 0015.95 16H17a1 1 0 001-1v-5a1 1 0 00-.293-.707l-2-2A1 1 0 0015 7h-1z"/></svg>
+                </article>
+                <article class="group flex h-full gap-4 rounded-2xl border border-gray-200 bg-gray-50/70 p-4 transition hover:-translate-y-0.5 hover:border-red-300 hover:bg-red-50/70 hover:shadow-sm dark:border-gray-700 dark:bg-gray-900/40 dark:hover:border-red-800 dark:hover:bg-red-900/10">
+                    <span class="mt-0.5 flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-red-100 text-red-700 ring-1 ring-red-200 dark:bg-red-900/30 dark:text-red-300 dark:ring-red-800">
+                        <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M7 3h7l5 5v13H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z"/><path stroke-linecap="round" stroke-linejoin="round" d="M14 3v6h5m-9 5 2 2 4-4"/></svg>
+                    </span>
+                    <div class="min-w-0">
+                        <h3 class="text-sm font-semibold leading-5 text-gray-900 dark:text-white">Operator Rilis BRS</h3>
+                        <p class="mt-1.5 text-sm leading-6 text-gray-600 dark:text-gray-400">Bantu proses rilis BRS bulanan dan pastikan operasional berjalan lancar.</p>
                     </div>
-                    <h3 class="font-semibold text-gray-900 dark:text-white">Operator Rilis BRS</h3>
-                    <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">Bantu proses rilis BRS bulanan dan pastikan operasional berjalan lancar.</p>
-                </div>
-                <div class="group rounded-xl border border-indigo-200 bg-gradient-to-br from-indigo-50 to-indigo-100/50 p-5 transition-all hover:shadow-md dark:border-indigo-900/30 dark:from-indigo-900/10 dark:to-indigo-900/5">
-                    <div class="mb-3 inline-flex rounded-lg bg-indigo-600 p-2.5 text-white">
-                        <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/><path fill-rule="evenodd" d="M4 5a2 2 0 012-2 1 1 0 000 2H3a1 1 0 000 2h12a1 1 0 100-2h-3a1 1 0 000-2 2 2 0 00-2 2V3h1a1 1 0 000-2H7a1 1 0 000 2h1v2a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2v-5h-2.586l.293-.293a1 1 0 00-1.414-1.414L13 12.586l-1.293-1.293a1 1 0 00-1.414 1.414l.293.293H8v5a1 1 0 11-2 0V5z" clip-rule="evenodd"/></svg>
+                </article>
+                <article class="group flex h-full gap-4 rounded-2xl border border-gray-200 bg-gray-50/70 p-4 transition hover:-translate-y-0.5 hover:border-indigo-300 hover:bg-indigo-50/70 hover:shadow-sm dark:border-gray-700 dark:bg-gray-900/40 dark:hover:border-indigo-800 dark:hover:bg-indigo-900/10">
+                    <span class="mt-0.5 flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-indigo-100 text-indigo-700 ring-1 ring-indigo-200 dark:bg-indigo-900/30 dark:text-indigo-300 dark:ring-indigo-800">
+                        <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="6" r="2"/><circle cx="18" cy="6" r="2"/><circle cx="12" cy="18" r="2"/><path stroke-linecap="round" stroke-linejoin="round" d="M8 6h8m-9.2 1.6 4 8m6.4-8-4 8"/></svg>
+                    </span>
+                    <div class="min-w-0">
+                        <h3 class="text-sm font-semibold leading-5 text-gray-900 dark:text-white">Pemasangan Infrastruktur</h3>
+                        <p class="mt-1.5 text-sm leading-6 text-gray-600 dark:text-gray-400">Pasang dan verifikasi jaringan, perangkat, serta aspek keamanan TI.</p>
                     </div>
-                    <h3 class="font-semibold text-gray-900 dark:text-white">Pemasangan Infrastruktur</h3>
-                    <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">Pasang dan verifikasi jaringan, perangkat, serta aspek keamanan TI.</p>
-                </div>
+                </article>
             </div>
-        </div>
+        </section>
 
         <!-- Calendar Section -->
         <div class="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-dark-800">

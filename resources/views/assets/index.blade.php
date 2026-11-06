@@ -118,8 +118,8 @@
                     <label for="status" class="text-sm font-medium text-gray-900 dark:text-white">Status Aset</label>
                     <select id="status" name="status" class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 dark:border-gray-600 dark:bg-dark-800 dark:text-white">
                         <option value="">Semua Status</option>
-                        @foreach(\App\Models\Asset::statusOptions() as $value => $label)
-                            <option value="{{ $value }}"{{ request('status') === $value ? ' selected' : '' }}>{{ $label }}</option>
+                        @foreach(\App\Models\Asset::statusFilterOptions() as $value => $label)
+                            <option value="{{ $value }}"{{ request('status') === $value || in_array(request('status'), \App\Models\Asset::statusFilterValues($value), true) ? ' selected' : '' }}>{{ $label }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -128,18 +128,18 @@
                     <label for="condition" class="text-sm font-medium text-gray-900 dark:text-white">Kondisi</label>
                     <select id="condition" name="condition" class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 dark:border-gray-600 dark:bg-dark-800 dark:text-white">
                         <option value="">Semua Kondisi</option>
-                        <option value="GOOD"{{ request('condition') === 'GOOD' ? ' selected' : '' }}>Baik</option>
-                        <option value="LIGHT"{{ request('condition') === 'LIGHT' ? ' selected' : '' }}>Rusak Ringan</option>
-                        <option value="HEAVY"{{ request('condition') === 'HEAVY' ? ' selected' : '' }}>Rusak Berat</option>
+                        @foreach(\App\Models\Asset::conditionOptions() as $value => $label)
+                            <option value="{{ $value }}"{{ in_array(request('condition'), \App\Models\Asset::conditionFilterValues($value), true) ? ' selected' : '' }}>{{ $label }}</option>
+                        @endforeach
                     </select>
                 </div>
 
                 <div>
-                    <label for="type" class="text-sm font-medium text-gray-900 dark:text-white">Jenis Barang/Kategori</label>
+                    <label for="type" class="text-sm font-medium text-gray-900 dark:text-white">Kelompok Aset</label>
                     <select id="type" name="type" class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 dark:border-gray-600 dark:bg-dark-800 dark:text-white">
-                        <option value="">Semua Jenis Barang / Kategori</option>
-                        @foreach($assetTypes as $assetType)
-                            <option value="{{ $assetType }}"{{ request('type') === $assetType ? ' selected' : '' }}>{{ $assetType }}</option>
+                        <option value="">Semua Kelompok</option>
+                        @foreach($assetTypeGroups as $value => $label)
+                            <option value="{{ $value }}"{{ request('type') === $value ? ' selected' : '' }}>{{ $label }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -272,9 +272,9 @@
                                                 @break
                                             @case('condition')
                                                 <span class="inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium
-                                                    @if($asset->condition === 'GOOD') bg-green-100 text-green-700 dark:bg-green-500/15 dark:text-green-400
-                                                    @elseif($asset->condition === 'LIGHT') bg-yellow-100 text-yellow-700 dark:bg-yellow-500/15 dark:text-yellow-400
-                                                    @elseif($asset->condition === 'HEAVY') bg-red-100 text-red-700 dark:bg-red-500/15 dark:text-red-400
+                                                    @if(in_array($asset->condition, ['GOOD', 'Baik'], true)) bg-green-100 text-green-700 dark:bg-green-500/15 dark:text-green-400
+                                                    @elseif(in_array($asset->condition, ['LIGHT', 'Rusak Ringan'], true)) bg-yellow-100 text-yellow-700 dark:bg-yellow-500/15 dark:text-yellow-400
+                                                    @elseif(in_array($asset->condition, ['HEAVY', 'Rusak Berat'], true)) bg-red-100 text-red-700 dark:bg-red-500/15 dark:text-red-400
                                                     @else bg-gray-100 text-gray-700 dark:bg-gray-500/15 dark:text-gray-400
                                                     @endif">
                                                     {{ $asset->condition_label }}
@@ -282,9 +282,9 @@
                                                 @break
                                             @case('status')
                                                 <span class="inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium
-                                                    @if($asset->status === 'ACTIVE') bg-green-100 text-green-700 dark:bg-green-500/15 dark:text-green-400
-                                                    @elseif($asset->status === 'INACTIVE') bg-gray-100 text-gray-700 dark:bg-gray-500/15 dark:text-gray-400
-                                                    @elseif($asset->status === 'PENDING') bg-amber-100 text-amber-800 dark:bg-amber-500/15 dark:text-amber-400
+                                                    @if(in_array($asset->status, ['ACTIVE', 'Teralokasi'], true)) bg-green-100 text-green-700 dark:bg-green-500/15 dark:text-green-400
+                                                    @elseif(in_array($asset->status, ['PENDING', 'Siap Dialokasikan', 'Pengajuan Alokasi', 'Penetapan Pengembalian', 'Pengajuan Pengembalian'], true)) bg-amber-100 text-amber-800 dark:bg-amber-500/15 dark:text-amber-400
+                                                    @elseif(in_array($asset->status, ['INACTIVE', 'Tidak Dapat Dialokasikan'], true)) bg-gray-100 text-gray-700 dark:bg-gray-500/15 dark:text-gray-400
                                                     @elseif($asset->status === 'DECOMMISSIONED') bg-red-100 text-red-800 dark:bg-red-500/15 dark:text-red-400
                                                     @else bg-gray-100 text-gray-700 dark:bg-gray-500/15 dark:text-gray-400
                                                     @endif">
